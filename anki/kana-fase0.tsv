@@ -1,0 +1,155 @@
+#separator:tab
+#html:false
+#notetype:Basic (and reversed card)
+#deck:Japones::Fase 0 - Kana
+#tags column:3
+あ	a	hiragana hira-a
+い	i	hiragana hira-a
+う	u	hiragana hira-a
+え	e	hiragana hira-a
+お	o	hiragana hira-a
+か	ka	hiragana hira-ka
+き	ki	hiragana hira-ka
+く	ku	hiragana hira-ka
+け	ke	hiragana hira-ka
+こ	ko	hiragana hira-ka
+さ	sa	hiragana hira-sa
+し	shi	hiragana hira-sa
+す	su	hiragana hira-sa
+せ	se	hiragana hira-sa
+そ	so	hiragana hira-sa
+た	ta	hiragana hira-ta
+ち	chi	hiragana hira-ta
+つ	tsu	hiragana hira-ta
+て	te	hiragana hira-ta
+と	to	hiragana hira-ta
+な	na	hiragana hira-na
+に	ni	hiragana hira-na
+ぬ	nu	hiragana hira-na
+ね	ne	hiragana hira-na confundivel
+の	no	hiragana hira-na
+は	ha	hiragana hira-ha confundivel
+ひ	hi	hiragana hira-ha
+ふ	fu	hiragana hira-ha
+へ	he	hiragana hira-ha
+ほ	ho	hiragana hira-ha confundivel
+ま	ma	hiragana hira-ma confundivel
+み	mi	hiragana hira-ma
+む	mu	hiragana hira-ma
+め	me	hiragana hira-ma
+も	mo	hiragana hira-ma
+や	ya	hiragana hira-ya
+ゆ	yu	hiragana hira-ya
+よ	yo	hiragana hira-ya
+ら	ra	hiragana hira-ra
+り	ri	hiragana hira-ra
+る	ru	hiragana hira-ra
+れ	re	hiragana hira-ra confundivel
+ろ	ro	hiragana hira-ra
+わ	wa	hiragana hira-wa confundivel
+を	wo	hiragana hira-wa
+ん	n	hiragana hira-wa
+ア	a	katakana kata-a
+イ	i	katakana kata-a
+ウ	u	katakana kata-a
+エ	e	katakana kata-a
+オ	o	katakana kata-a
+カ	ka	katakana kata-ka
+キ	ki	katakana kata-ka
+ク	ku	katakana kata-ka confundivel
+ケ	ke	katakana kata-ka
+コ	ko	katakana kata-ka
+サ	sa	katakana kata-sa
+シ	shi	katakana kata-sa confundivel
+ス	su	katakana kata-sa confundivel
+セ	se	katakana kata-sa
+ソ	so	katakana kata-sa confundivel
+タ	ta	katakana kata-ta
+チ	chi	katakana kata-ta
+ツ	tsu	katakana kata-ta confundivel
+テ	te	katakana kata-ta
+ト	to	katakana kata-ta
+ナ	na	katakana kata-na
+ニ	ni	katakana kata-na
+ヌ	nu	katakana kata-na confundivel
+ネ	ne	katakana kata-na confundivel
+ノ	no	katakana kata-na
+ハ	ha	katakana kata-ha
+ヒ	hi	katakana kata-ha
+フ	fu	katakana kata-ha
+ヘ	he	katakana kata-ha
+ホ	ho	katakana kata-ha
+マ	ma	katakana kata-ma
+ミ	mi	katakana kata-ma
+ム	mu	katakana kata-ma
+メ	me	katakana kata-ma
+モ	mo	katakana kata-ma
+ヤ	ya	katakana kata-ya
+ユ	yu	katakana kata-ya
+ヨ	yo	katakana kata-ya
+ラ	ra	katakana kata-ra
+リ	ri	katakana kata-ra
+ル	ru	katakana kata-ra confundivel
+レ	re	katakana kata-ra confundivel
+ロ	ro	katakana kata-ra confundivel
+ワ	wa	katakana kata-wa confundivel
+ヲ	wo	katakana kata-wa
+ン	n	katakana kata-wa confundivel
+が	ga	hiragana dakuten-ga
+ぎ	gi	hiragana dakuten-ga
+ぐ	gu	hiragana dakuten-ga
+げ	ge	hiragana dakuten-ga
+ご	go	hiragana dakuten-ga
+ざ	za	hiragana dakuten-za
+じ	ji	hiragana dakuten-za
+ず	zu	hiragana dakuten-za
+ぜ	ze	hiragana dakuten-za
+ぞ	zo	hiragana dakuten-za
+だ	da	hiragana dakuten-da
+ぢ	ji	hiragana dakuten-da
+づ	zu	hiragana dakuten-da
+で	de	hiragana dakuten-da
+ど	do	hiragana dakuten-da
+ば	ba	hiragana dakuten-ba
+び	bi	hiragana dakuten-ba
+ぶ	bu	hiragana dakuten-ba
+べ	be	hiragana dakuten-ba
+ぼ	bo	hiragana dakuten-ba
+ぱ	pa	hiragana dakuten-pa
+ぴ	pi	hiragana dakuten-pa
+ぷ	pu	hiragana dakuten-pa
+ぺ	pe	hiragana dakuten-pa
+ぽ	po	hiragana dakuten-pa
+きゃ	kya	hiragana yoon
+きゅ	kyu	hiragana yoon
+きょ	kyo	hiragana yoon
+しゃ	sha	hiragana yoon
+しゅ	shu	hiragana yoon
+しょ	sho	hiragana yoon
+ちゃ	cha	hiragana yoon
+ちゅ	chu	hiragana yoon
+ちょ	cho	hiragana yoon
+にゃ	nya	hiragana yoon
+にゅ	nyu	hiragana yoon
+にょ	nyo	hiragana yoon
+ひゃ	hya	hiragana yoon
+ひゅ	hyu	hiragana yoon
+ひょ	hyo	hiragana yoon
+みゃ	mya	hiragana yoon
+みゅ	myu	hiragana yoon
+みょ	myo	hiragana yoon
+りゃ	rya	hiragana yoon
+りゅ	ryu	hiragana yoon
+りょ	ryo	hiragana yoon
+ぎゃ	gya	hiragana yoon
+ぎゅ	gyu	hiragana yoon
+ぎょ	gyo	hiragana yoon
+じゃ	ja	hiragana yoon
+じゅ	ju	hiragana yoon
+じょ	jo	hiragana yoon
+びゃ	bya	hiragana yoon
+びゅ	byu	hiragana yoon
+びょ	byo	hiragana yoon
+ぴゃ	pya	hiragana yoon
+ぴゅ	pyu	hiragana yoon
+ぴょ	pyo	hiragana yoon

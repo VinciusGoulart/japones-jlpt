@@ -1,0 +1,40 @@
+{
+  "meta": {
+    "objetivo_trabalho": "JLPT N5/N4/N3 — defina a SUA meta",
+    "data_alvo": "AAAA-MM-DD",
+    "nivel_inicial": "zero absoluto",
+    "minutos_dia_mesa": 60,
+    "minutos_dia_trajeto": 0,
+    "horas_projetadas_total": 0,
+    "inicio_plano": "AAAA-MM-DD"
+  },
+  "progresso": {
+    "fase_atual": 0,
+    "nome_fase": "Silabarios e fundamentos",
+    "dia_do_plano": 0,
+    "sessoes_completas": 0,
+    "sessoes_parciais": 0,
+    "streak_atual": 0,
+    "streak_recorde": 0,
+    "ultima_sessao": null,
+    "marcos": []
+  },
+  "mesa": { "minutos_acumulados": 0 },
+  "trajeto": {
+    "minutos_acumulados": 0,
+    "minutos_hoje": null,
+    "cartoes_revisados": null,
+    "fila_atrasados": 0
+  },
+  "dominio": {
+    "hiragana": { "aprendidos": 0, "total": 46 },
+    "katakana": { "aprendidos": 0, "total": 46 },
+    "kanji": { "aprendidos": 0 },
+    "vocabulario": { "aprendidos": 0 },
+    "gramatica": { "aprendidos": 0 }
+  },
+  "pontos_fracos": [],
+  "vigiar": [],
+  "exames": [],
+  "pontos_de_decisao": []
+}

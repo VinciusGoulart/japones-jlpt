@@ -1,0 +1,9 @@
+{
+  "permissions": {
+    "allow": [
+      "Skill(estudo)",
+      "Skill(progresso)",
+      "Bash(date:*)"
+    ]
+  }
+}

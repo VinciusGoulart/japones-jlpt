@@ -1,0 +1,438 @@
+#separator:tab
+#html:true
+#notetype:Basic
+#deck:Japones::Vocabulario
+#tags column:3
+あい	ai — amor	fase0 vocab dia1
+あお	ao — azul (a cor)	fase0 vocab dia1
+いえ	ie — casa	fase0 vocab dia1
+うえ	ue — em cima, sobre	fase0 vocab dia1
+え	e — quadro, desenho	fase0 vocab dia1
+あう	au — encontrar(-se) com alguem	fase0 vocab dia1
+いう	iu — dizer	fase0 vocab dia1
+いいえ	iie — nao (a resposta)<br>4 tempos: i-i-e, com o い segurado	fase0 vocab dia1
+おおい	ooi — muitos, muito (em quantidade)<br>3 tempos, com o お segurado	fase0 vocab dia1
+あおい	aoi — azul (adjetivo)<br>3 tempos: a-o-i. Sem ditongo: cada vogal tem seu tempo.	fase0 vocab dia1
+かお	kao — rosto	fase0 vocab dia2
+こえ	koe — voz	fase0 vocab dia2
+えき	eki — estacao (de trem)	fase0 vocab dia2
+いけ	ike — lago, tanque	fase0 vocab dia2
+ここ	koko — aqui	fase0 vocab dia2
+くうき	kuuki — ar<br>3 moras: ku-u-ki, com o く segurado	fase0 vocab dia2
+あかい	akai — vermelho	fase0 vocab dia2
+おおきい	ookii — grande<br>4 moras: o-o-ki-i. Conte os kana, nao os sons.	fase0 vocab dia2
+かく	kaku — escrever (verbo, forma de dicionario)	fase0 vocab dia2
+きく	kiku — ouvir; perguntar (verbo, forma de dicionario)	fase0 vocab dia2
+かう	kau — comprar (verbo, forma de dicionario)	fase0 vocab dia2
+すし	sushi — sushi	fase0 vocab dia3
+した	shita — embaixo, sob<br>oposto de うえ	fase0 vocab dia3
+あした	ashita — amanha<br>3 moras	fase0 vocab dia3
+あさ	asa — manha	fase0 vocab dia3
+そと	soto — fora<br>CUIDADO: と, nao こ	fase0 vocab dia3
+くつ	kutsu — sapato<br>CUIDADO: く (ku), nao こ (ko)	fase0 vocab dia3
+とけい	tokei — relogio	fase0 vocab dia3
+つくえ	tsukue — mesa, escrivaninha	fase0 vocab dia3
+いす	isu — cadeira	fase0 vocab dia3
+ちいさい	chiisai — pequeno<br>4 moras: chi-i-sa-i. Oposto de おおきい.	fase0 vocab dia3
+たかい	takai — alto; caro	fase0 vocab dia3
+ちかい	chikai — perto<br>Difere de たかい por um unico kana: た/ち	fase0 vocab dia3
+そこ	soko — ai (perto de quem ouve)	fase0 vocab dia3
+あそこ	asoko — la (longe dos dois)	fase0 vocab dia3
+つかい	tsukai — uso; recado<br>De つかう (usar). Comum em おつかい (fazer um recado).	fase0 vocab dia3
+ねこ	neko — gato<br>ね esta no gato; ぬ esta no cachorro (いぬ)	fase0 vocab dia4
+いぬ	inu — cachorro	fase0 vocab dia4
+はな	hana — flor; nariz	fase0 vocab dia4
+ほし	hoshi — estrela<br>CUIDADO: ほ (com chapeu), nao は nem と	fase0 vocab dia4
+はし	hashi — ponte; palitinhos; borda<br>Tres palavras diferentes com a mesma leitura — o kanji e que as separa	fase0 vocab dia4
+ふね	fune — barco	fase0 vocab dia4
+なつ	natsu — verao	fase0 vocab dia4
+ひと	hito — pessoa	fase0 vocab dia4
+なに	nani — o que<br>Primeira palavra de pergunta	fase0 vocab dia4
+はこ	hako — caixa	fase0 vocab dia4
+にく	niku — carne	fase0 vocab dia4
+ふく	fuku — roupa	fase0 vocab dia4
+なか	naka — dentro, meio	fase0 vocab dia4
+ひとつ	hitotsu — um (contando coisas)	fase0 vocab dia4
+ふたつ	futatsu — dois (contando coisas)	fase0 vocab dia4
+とし	toshi — ano; idade	fase0 vocab dia4
+め	me — olho<br>め e ぬ sem a voltinha da cauda	fase0 vocab dia5
+みみ	mimi — orelha	fase0 vocab dia5
+やま	yama — montanha<br>CUIDADO ao digitar: Y e U sao vizinhas no teclado	fase0 vocab dia5
+うみ	umi — mar	fase0 vocab dia5
+ゆき	yuki — neve	fase0 vocab dia5
+あめ	ame — chuva	fase0 vocab dia5
+むし	mushi — inseto	fase0 vocab dia5
+いま	ima — agora	fase0 vocab dia5
+まち	machi — cidade	fase0 vocab dia5
+もの	mono — coisa	fase0 vocab dia5
+なまえ	namae — nome<br>De outra pessoa: おなまえ	fase0 vocab dia5
+かみ	kami — papel; cabelo; deus<br>Tres palavras, mesma leitura — o kanji separa	fase0 vocab dia5
+はやい	hayai — rapido	fase0 vocab dia5
+まいにち	mainichi — todo dia<br>CUIDADO ao digitar: 'mainichu' vira まいにちゅ	fase0 vocab dia5
+やすみ	yasumi — descanso, folga	fase0 vocab dia5
+おやすみ	oyasumi — "boa noite" (ao se despedir para dormir)<br>お = prefixo de polidez, nao muda o significado	fase0 vocab dia5
+そら	sora — ceu	fase0 vocab dia6
+さくら	sakura — cerejeira	fase0 vocab dia6
+とり	tori — passaro	fase0 vocab dia6
+くるま	kuruma — carro	fase0 vocab dia6
+しろ	shiro — branco	fase0 vocab dia6
+くろ	kuro — preto	fase0 vocab dia6
+いろ	iro — cor	fase0 vocab dia6
+ひる	hiru — meio-dia, tarde	fase0 vocab dia6
+よる	yoru — noite	fase0 vocab dia6
+わたし	watashi — eu	fase0 vocab dia6
+ほん	hon — livro	fase0 vocab dia6
+にほん	nihon — Japao<br>DIGITACAO: nihonn (o n final precisa de nn)	fase0 vocab dia6
+せんせい	sensei — professor	fase0 vocab dia6
+こんにちは	konnichiwa — ola<br>Termina em は porque e a particula: soa 'wa'.<br>DIGITACAO: konnnichiha, com TRES n	fase0 vocab dia6
+すみません	sumimasen — desculpe; com licenca	fase0 vocab dia6
+さようなら	sayounara — adeus	fase0 vocab dia6
+はい	hai — sim<br>Par de いいえ (nao), aprendido no dia 1	fase0 vocab dia6
+ありがとう	arigatou — obrigado	fase0 vocab dia7
+ごめんなさい	gomennasai — desculpe<br>DIGITACAO: gomen'nasai (com apostrofo) ou gomennnasai (3 n)	fase0 vocab dia7
+ともだち	tomodachi — amigo	fase0 vocab dia7
+かぞく	kazoku — familia	fase0 vocab dia7
+みず	mizu — agua	fase0 vocab dia7
+でんわ	denwa — telefone	fase0 vocab dia7
+だいがく	daigaku — universidade	fase0 vocab dia7
+げんき	genki — animado, bem de saude	fase0 vocab dia7
+じかん	jikan — tempo, hora	fase0 vocab dia7
+たべもの	tabemono — comida	fase0 vocab dia7
+のみもの	nomimono — bebida	fase0 vocab dia7
+ごはん	gohan — arroz cozido; refeicao	fase0 vocab dia7
+でぐち	deguchi — saida	fase0 vocab dia7
+いりぐち	iriguchi — entrada	fase0 vocab dia7
+かばん	kaban — bolsa, mala	fase0 vocab dia7
+えんぴつ	enpitsu — lapis	fase0 vocab dia7
+ぜんぶ	zenbu — tudo	fase0 vocab dia7
+おかね	okane — dinheiro<br>かね com o prefixo de polidez お	fase0 vocab extra
+とき	toki — tempo, momento	fase0 vocab extra
+ときはかねなり	toki wa kane nari — "tempo e dinheiro"<br>Proverbio: 時は金なり. なり e uma forma arcaica de です.	fase0 vocab extra
+じかんはおかねです	jikan wa okane desu — "tempo e dinheiro"<br>Estrutura A は B です. Sem を: です nao recebe objeto.	fase0 gramatica extra
+テスト	tesuto — teste	fase0 katakana dia8
+テキスト	tekisuto — texto	fase0 katakana dia8
+アクセス	akusesu — acesso	fase0 katakana dia8
+スタート	sutaato — start, inicio	fase0 katakana dia8
+コスト	kosuto — custo	fase0 katakana dia8
+カード	kaado — cartao<br>CUIDADO: vogal longa no katakana e ー, nunca a vogal repetida	fase0 katakana dia8
+タクシー	takushii — taxi	fase0 katakana dia8
+ケーキ	keeki — bolo<br>3 moras: ke-e-ki	fase0 katakana dia8
+スキー	sukii — esqui	fase0 katakana dia8
+チーズ	chiizu — queijo<br>ズ = ス + dakuten	fase0 katakana dia8
+サッカー	sakkaa — futebol<br>4 moras: sa-tsu(pausa)-ka-a. ッ e ー nao tem som, mas ocupam tempo.	fase0 katakana dia8
+アイス	aisu — sorvete, gelo	fase0 katakana dia8
+サイズ	saizu — tamanho	fase0 katakana dia8
+スーツ	suutsu — terno	fase0 katakana dia8
+ヴィニシウス・ベルムデス・ゴウラルト	Vinicius Bermudes Goulart<br>Regra: consoante solta pede ウ, exceto t/d que pedem オ.<br>O ・ (nakaguro) separa nomes estrangeiros — japones nao usa espaco.	fase0 katakana dia8
+ネット	netto — net, internet	fase0 katakana dia9
+データ	deeta — dados<br>デ = テ + dakuten	fase0 katakana dia9
+サーバー	saabaa — servidor<br>4 moras: sa-a-ba-a. Tem ー nas DUAS posicoes.	fase0 katakana dia9
+ソフト	sofuto — software	fase0 katakana dia9
+ハード	haado — hardware	fase0 katakana dia9
+コード	koodo — codigo	fase0 katakana dia9
+メソッド	mesoddo — metodo<br>4 moras: me-so-(pausa)-do	fase0 katakana dia9
+ホスト	hosuto — host	fase0 katakana dia9
+モニター	monitaa — monitor	fase0 katakana dia9
+ホーム	hoomu — home	fase0 katakana dia9
+メモ	memo — anotacao	fase0 katakana dia9
+ミス	misu — erro	fase0 katakana dia9
+ノート	nooto — caderno; notebook	fase0 katakana dia9
+マップ	mappu — mapa	fase0 katakana dia9
+テニス	tenisu — tenis	fase0 katakana dia9
+ナイフ	naifu — faca	fase0 katakana dia9
+バグ	bagu — bug<br>2 moras. O /u/ ingles de bug/bus/cup vira ア, nao ウ: バス (bus), カップ (cup).	fase0 katakana dia9
+ユーザー	yuuzaa — usuario<br>ユーザ (sem o ー) aparece em documentacao tecnica	fase0 katakana dia10
+リスト	risuto — lista	fase0 katakana dia10
+ログ	rogu — log	fase0 katakana dia10
+リンク	rinku — link	fase0 katakana dia10
+エラー	eraa — erro	fase0 katakana dia10
+ファイル	fairu — arquivo	fase0 katakana dia10
+メール	meeru — e-mail	fase0 katakana dia10
+ルール	ruuru — regra	fase0 katakana dia10
+ライブラリ	raiburari — biblioteca	fase0 katakana dia10
+クラウド	kuraudo — nuvem, cloud	fase0 katakana dia10
+デプロイ	depuroi — deploy<br>4 moras. O -oy final e DITONGO: vira ロ + イ, nao consoante + vogal.	fase0 katakana dia10
+ロボット	robotto — robo	fase0 katakana dia10
+パソコン	pasokon — computador<br>De "personal computer", cortado em duas moras por pedaco	fase0 katakana dia10
+ラーメン	raamen — lamen	fase0 katakana dia10
+レストラン	resutoran — restaurante	fase0 katakana dia10
+コーヒー	koohii — cafe<br>4 moras	fase0 katakana dia10
+テレビ	terebi — televisao	fase0 katakana dia10
+ビール	biiru — cerveja	fase0 katakana dia10
+ブラジル	burajiru — Brasil	fase0 katakana dia10
+きょう	kyou — hoje<br>2 moras: kyo-u. O yoon e 1 mora, mas o う que vem depois e outra.	fase0 yoon dia11
+とうきょう	Toukyou — Toquio<br>4 moras: to-u-kyo-u	fase0 yoon dia11
+きょうと	Kyouto — Kyoto	fase0 yoon dia11
+おちゃ	ocha — cha<br>CUIDADO: ちゃ (cha), nao しゃ (sha)	fase0 yoon dia11
+でんしゃ	densha — trem	fase0 yoon dia11
+じてんしゃ	jitensha — bicicleta<br>4 moras: ji-te-n-sha	fase0 yoon dia11
+しゃしん	shashin — foto	fase0 yoon dia11
+しゅくだい	shukudai — dever de casa	fase0 yoon dia11
+りょこう	ryokou — viagem	fase0 yoon dia11
+りょうり	ryouri — culinaria, prato	fase0 yoon dia11
+ひゃく	hyaku — cem	fase0 yoon dia11
+じゅう	juu — dez	fase0 yoon dia11
+しゅみ	shumi — hobby	fase0 yoon dia11
+ちょっと	chotto — um pouco<br>3 moras: cho-(pausa)-to	fase0 yoon dia11
+びょういん	byouin — hospital<br>4 moras. よ PEQUENO funde com o び.	fase0 yoon dia11
+びよういん	biyouin — salao de beleza<br>5 moras. よ NORMAL e mora independente.	fase0 yoon dia11
+ニュース	nyuusu — noticia	fase0 yoon dia11
+ジュース	juusu — suco	fase0 yoon dia11
+ショップ	shoppu — loja	fase0 yoon dia11
+キャッシュ	kyasshu — cache	fase0 yoon dia11
+チョコレート	chokoreeto — chocolate	fase0 yoon dia11
+です	desu — e (copula, polido)<br>NAO conjuga por pessoa: わたしです / せんせいです<br>Passado でした; negativo ではありません (falado: じゃありません)	fase0 gramatica dia12
+きのう	kinou — ontem	fase0 vocab dia12
+がくせい	gakusei — estudante	fase0 vocab dia12
+しごと	shigoto — trabalho	fase0 vocab dia12
+にほんご	nihongo — lingua japonesa	fase0 vocab dia12
+あなた	anata — voce	fase0 vocab dia12
+エンジニア	enjinia — engenheiro	fase0 vocab dia12
+にほんじん	nihonjin — japones (pessoa)<br>~じん gruda em qualquer pais	fase0 vocab dia12
+ブラジルじん	burajirujin — brasileiro<br>Pais em katakana + じん em hiragana	fase0 vocab dia12
+たのしい	tanoshii — divertido, prazeroso<br>Adjetivo い: passado e たのしかった, NAO たのしいでした	fase0 vocab dia12
+つよい	tsuyoi — forte	fase0 vocab dia12
+きょうはやすみです。	"Hoje e folga."<br>A は B です — a estrutura basica	fase0 gramatica dia12
+きょうはたのしかったです。	"Hoje foi divertido."<br>Adjetivo い carrega o tempo sozinho; o です so da polidez	fase0 gramatica dia12
+は	wa (particula) — TOPICO: "quanto a X..."<br>Informacao ja conhecida. Escreve-se は, le-se wa.	fase0 gramatica dia13
+が	ga (particula) — SUJEITO<br>Informacao NOVA: apresenta, identifica, responde "qual?"	fase0 gramatica dia13
+ぞうははながながいです。	"Quanto ao elefante, a tromba e longa."<br>は e が na mesma frase: は marca o tema, が marca o sujeito do predicado	fase0 gramatica dia13
+だれ	dare — quem<br>Interrogativa como SUJEITO pede が. だれは nao existe.	fase0 vocab dia13
+どこ	doko — onde<br>CUIDADO: どろ e lama	fase0 vocab dia13
+どれ	dore — qual (entre tres ou mais)	fase0 vocab dia13
+えきはどこですか。	"Onde e a estacao?"<br>Interrogativa no PREDICADO: o topico fica com は	fase0 gramatica dia13
+ぞう	zou — elefante	fase0 vocab dia13
+ながい	nagai — longo, comprido	fase0 vocab dia13
+すき	suki — gostar de<br>Usa が para a coisa gostada: にほんごがすきです	fase0 vocab dia13
+あに	ani — meu irmao mais velho<br>O irmao mais velho de OUTRA pessoa e おにいさん	fase0 vocab dia13
+あね	ane — minha irma mais velha<br>A de outra pessoa e おねえさん	fase0 vocab dia13
+にっぽん	Nippon — Japao<br>Leitura alternativa e mais enfatica de にほん	fase0 vocab dia13
+ゲーマー	geemaa — gamer<br>Todo "-er" do ingles vira ー: サーバー, ユーザー, モニター	fase0 vocab dia13
+を	o (particula) — OBJETO da acao<br>So aparece com verbo transitivo. です nao leva を; いきます tambem nao.	fase0 gramatica dia14
+ます	masu — sufixo de POLIDEZ do verbo<br>ます / ません / ました / ませんでした<br>Cobre presente E futuro	fase0 gramatica dia14
+たべます	tabemasu — comer	fase0 verbo dia14
+のみます	nomimasu — beber	fase0 verbo dia14
+みます	mimasu — ver, assistir	fase0 verbo dia14
+よみます	yomimasu — ler	fase0 verbo dia14
+ききます	kikimasu — ouvir; perguntar	fase0 verbo dia14
+かいます	kaimasu — comprar	fase0 verbo dia14
+します	shimasu — fazer<br>Cola em substantivo e gera verbo: べんきょうします	fase0 verbo dia14
+べんきょうします	benkyou shimasu — estudar<br>べんきょう (estudo) + します (fazer)	fase0 verbo dia14
+はたらきます	hatarakimasu — trabalhar<br>しごと e SUBSTANTIVO (trabalho); para "trabalhar" use はたらきます ou しごとをします	fase0 verbo dia14
+まめ	mame — feijao, grao	fase0 vocab dia14
+ポッドキャスト	poddokyasuto — podcast	fase0 katakana dia14
+べんきょうがすきです。	"Gosto de estudar."<br>すき e ADJETIVO, nao verbo: vai com です e が, nunca com ます nem を	fase0 gramatica dia14
+あしたはたらきます。	"Trabalho amanha."<br>Expressao de tempo NAO leva を	fase0 gramatica dia14
+に	ni (particula) — um PONTO: destino, instante, posicao<br>がっこうにいきます / しちじにおきます<br>Tempo RELATIVO (きょう, あした, きのう) NAO leva に	fase0 gramatica dia15
+で	de (particula) — um CONTEXTO: onde a acao acontece, ou o meio<br>がっこうでべんきょうします / でんしゃでいきます	fase0 gramatica dia15
+がっこうにいます。	"Estou na escola."<br>に = posicao. Compare com がっこうでべんきょうします (で = onde a acao acontece)	fase0 gramatica dia15
+あしたがっこうにいきます。	"Amanha vou para a escola."<br>あした vai SOZINHO — sem に, sem で, sem を	fase0 gramatica dia15
+はちじはんにしごとにいきました。	"Fui ao trabalho as 8h30."<br>はん = "e meia". Hora ABSOLUTA leva に.	fase0 gramatica dia15
+がっこう	gakkou — escola	fase0 vocab dia15
+こうえん	kouen — parque	fase0 vocab dia15
+うち	uchi — casa (o proprio lar)<br>Para a propria casa usa-se かえります (voltar), nao いきます	fase0 vocab dia15
+いきます	ikimasu — ir	fase0 verbo dia15
+きます	kimasu — vir	fase0 verbo dia15
+かえります	kaerimasu — voltar, ir para casa	fase0 verbo dia15
+あいます	aimasu — encontrar(-se) com<br>A pessoa leva に: ともだちにあいます	fase0 verbo dia15
+はん	han — e meia (hora)<br>はちじはん = 8h30	fase0 vocab dia15
+オフィス	ofisu — escritorio	fase0 katakana dia15
+ウーバー	uubaa — Uber	fase0 katakana dia15
+これ	kore — isto (perto de quem fala)<br>PRONOME: fica sozinho. これはほんです	fase0 gramatica dia16
+それ	sore — isso (perto de quem ouve)	fase0 gramatica dia16
+あれ	are — aquilo (longe dos dois)	fase0 gramatica dia16
+この	kono — este (+ SUBSTANTIVO)<br>NUNCA sozinho: このほんはたかいです	fase0 gramatica dia16
+その	sono — esse (+ substantivo)	fase0 gramatica dia16
+あの	ano — aquele (+ substantivo)	fase0 gramatica dia16
+どの	dono — qual (+ substantivo)	fase0 gramatica dia16
+こちら	kochira — este lado; esta pessoa (POLIDO)<br>こちらはせんせいです e mais educado que このひと	fase0 gramatica dia16
+の	no (particula) — A の B = "B de A"<br>わたしのくるま (meu carro) · テッペイのポッドキャスト	fase0 gramatica dia16
+これはわたしのパソコンです。	"Isto e o meu computador."<br>これ (pronome) + の (possessivo)	fase0 gramatica dia16
+わたしのくるまはどれですか。	"Qual e o meu carro?"	fase0 gramatica dia16
+なん	nan — variante de なに antes de です<br>これはなんですか (nao なにですか)	fase0 vocab dia16
+おもしろい	omoshiroi — interessante, divertido	fase0 vocab dia16
+パソコン	pasokon — computador<br>CUIDADO: パ, nao ポ	fase0 katakana dia16
+いち・に・さん・よん・ご	1 2 3 4 5<br>4 = よん (evita-se し = 死, morte)	fase0 numero dia17
+ろく・なな・はち・きゅう・じゅう	6 7 8 9 10<br>7 = なな, 9 = きゅう (evita-se く = 苦, sofrimento)	fase0 numero dia17
+はちじゅうに	82 = 8x10 + 2<br>10 e じゅう, NUNCA いちじゅう	fase0 numero dia17
+いちまん	10.000<br>Ate せん o "um" fica implicito; a partir de まん ele e OBRIGATORIO, porque まん e unidade que se conta	fase0 numero dia17
+にじゅうまん	200.000 = 20 x 10.000<br>O japones agrupa de 4 em 4 digitos, nao de 3 em 3. Nao existe "milhao": ひゃくまん = 100 まん	fase0 numero dia17
+ひとつ・ふたつ・みっつ	1 2 3 (contador generico つ)<br>Se nao souber o contador certo, use つ ate 10. とお (10) nao leva つ.	fase0 numero dia17
+ひとり・ふたり・さんにん	1 2 3 pessoas<br>にん e regular a partir do 3; ひとり e ふたり vem das mesmas raizes de ひとつ/ふたつ	fase0 numero dia17
+なんにん	nannin — quantas pessoas?<br>なん + contador = como se pergunta qualquer quantidade. CUIDADO: せんにん e "mil pessoas"	fase0 numero dia17
+いくつ	ikutsu — quantos? (objetos)	fase0 numero dia17
+ください	kudasai — por favor, me de<br>コーヒーをふたつください	fase0 vocab dia17
+おもしろいはなはいつつです。	"Sao cinco flores interessantes."<br>ADJETIVO vem ANTES do substantivo, sem particula. E com です a particula e は, nunca を.	fase0 gramatica dia17
+しろい	shiroi — branco (adjetivo)<br>しろ e o substantivo (a cor); しろい modifica: しろいひこうき	fase0 vocab dia17
+ひこうき	hikouki — aviao	fase0 vocab dia17
+りんご	ringo — maca	fase0 vocab dia17
+フレーズ	fureezu — frase	fase0 katakana dia17
+コカ・コーラ	Koka Koora — Coca-Cola	fase0 katakana dia17
+おおきいくるま	"carro grande"<br>い-adjetivo NAO perde o い antes do substantivo	fase0 gramatica dia18
+しずかなまち	"cidade quieta"<br>な-adjetivo GANHA な antes do substantivo	fase0 gramatica dia18
+ほんはおもしろいです。	"O livro e interessante."<br>PREDICADO: adjetivo vem DEPOIS do は, antes do です	fase0 gramatica dia18
+おもしろいほん	"livro interessante"<br>MODIFICADOR: adjetivo gruda no substantivo, antes dele	fase0 gramatica dia18
+たかい→たかくない→たかかった→たかくなかった	い-adjetivo conjuga SOZINHO<br>Por isso たかいでした nao existe: poria o tempo em dois lugares	fase0 gramatica dia18
+いい→よくない→よかった	"bom" — UNICO irregular<br>A raiz vira よ, porque いい era よい ha seculos.<br>よかった = "que bom!"	fase0 gramatica dia18
+きれい	kirei — bonito; limpo<br>PEGADINHA: termina em い mas e な-adjetivo. きれいなはな, きれいでした	fase0 vocab dia18
+ゆうめい	yuumei — famoso (な-adjetivo, apesar do い)	fase0 vocab dia18
+きらい	kirai — detestar (な-adjetivo, apesar do い)	fase0 vocab dia18
+しずか	shizuka — quieto (な)	fase0 vocab dia18
+べんり	benri — conveniente (な)	fase0 vocab dia18
+あたらしい	atarashii — novo (い)	fase0 vocab dia18
+ふるい	furui — velho (い)	fase0 vocab dia18
+わるい	warui — ruim (い)	fase0 vocab dia18
+おおきいくるま / くるまはおおきいです	MODIFICADOR vs PREDICADO<br>"carro grande" (nao e frase) vs "o carro e grande" (e frase)	fase0 gramatica dia19
+しずかなまち / まちはしずかです	な-adjetivo nas duas posicoes<br>Ganha な antes do substantivo; usa です como predicado	fase0 gramatica dia19
+おおきくないです	NEGATIVO de い-adjetivo<br>Tira o い, poe くない. NUNCA おおきいではありません.	fase0 gramatica dia19
+しずかではありません	NEGATIVO de な-adjetivo<br>Usa o です negado. NUNCA しずかくない.	fase0 gramatica dia19
+あのきれいなはなはしろいです。	"Aquela flor bonita e branca."<br>あの + [きれいな はな] + は + しろい + です	fase0 gramatica dia19
+かのじょ	kanojo — ela; namorada	fase0 vocab dia19
+ゲーム	geemu — jogo<br>CUIDADO: ガム e chiclete	fase0 katakana dia19
+ガム	gamu — chiclete	fase0 katakana dia19
+おおきいくるま / おおきくないです	QUANDO o い sai: so quando o adjetivo CONJUGA<br>modificador e afirmativo -> い FICA<br>negativo e passado -> い SAI (くない/かった ocupam o lugar dele)	fase0 gramatica dia20
+おもしろくなかったです	"nao era interessante"<br>Negativo do passado de い-adjetivo: くなかった, uma peca so. NUNCA かったません.	fase0 gramatica dia20
+わたしはくるまがすきではありません。	"Eu nao gosto de carro."<br>すき pede が para a coisa gostada, e o negativo e ではありません (com o は)	fase0 gramatica dia20
+おそい	osoi — lento (い-adjetivo)<br>ゆっくり e ADVERBIO (devagar), nao modifica substantivo	fase0 vocab dia20
+ゆっくり	yukkuri — devagar (adverbio)	fase0 vocab dia20
+きれい・きらい・ゆうめい・とくい・しつれい	As 5 excecoes que voce vai encontrar: terminam em い mas sao な-ADJETIVOS<br>bonito · detestar · famoso · bom em algo · descortes	fase0 gramatica extra
+一	ichi (on) / hito (kun) — um<br>一つ = ひとつ (kanji+kana -> kun) · 一月 = いちがつ (kanji+kanji -> on)	fase0 kanji dia21
+二	ni / futa — dois<br>二つ = ふたつ	fase0 kanji dia21
+三	san / mi — tres<br>三十五 = さんじゅうご (composto -> on, nunca みつ)	fase0 kanji dia21
+四	yon, shi / yo — quatro	fase0 kanji dia21
+五	go / itsu — cinco	fase0 kanji dia21
+六	roku / mu — seis	fase0 kanji dia21
+七	nana, shichi — sete	fase0 kanji dia21
+八	hachi / ya — oito	fase0 kanji dia21
+九	kyuu, ku / kokono — nove	fase0 kanji dia21
+十	juu / too — dez	fase0 kanji dia21
+百	hyaku — cem	fase0 kanji dia21
+千	sen — mil<br>NAO se compoe: 1000 e 千, nunca 十百	fase0 kanji dia21
+万	man — dez mil<br>二十万 = にじゅうまん = 200.000	fase0 kanji dia21
+kanji+kana=kun / kanji+kanji=on	A regra pratica das duas leituras<br>一つ (ひとつ) vs 一月 (いちがつ)	fase0 kanji dia21
+日曜日	にちようび — domingo (dia do Sol — Sunday)<br>例: 日曜日ににほんごをべんきょうします。	fase0 kanji dia22
+月曜日	げつようび — segunda-feira (Lua — Monday)	fase0 kanji dia22
+火曜日	かようび — terca-feira (fogo, Marte)<br>か, nao が	fase0 kanji dia22
+水曜日	すいようび — quarta-feira (agua, Mercurio)<br>すい, nao つい	fase0 kanji dia22
+木曜日	もくようび — quinta-feira (madeira, Jupiter)	fase0 kanji dia22
+金曜日	きんようび — sexta-feira (ouro, Venus)	fase0 kanji dia22
+土曜日	どようび — sabado (terra, Saturno — Saturday)	fase0 kanji dia22
+曜日	ようび — dia da semana (bloco fixo)<br>o 日 final le び = ひ vozeado, excecao contida ao on/kun	fase0 kanji dia22
+日	ひ — sol; dia<br>sozinho: ひ (kun). Homofono de 火	fase0 kanji dia22
+月	つき — lua; mes	fase0 kanji dia22
+火	ひ — fogo<br>homofono de 日 (ひ) — o kanji separa o que o som mistura	fase0 kanji dia22
+水	みず — agua<br>a palavra voce ja sabia; agora o simbolo	fase0 kanji dia22
+木	き — arvore, madeira	fase0 kanji dia22
+金	かね — ouro, metal	fase0 kanji dia22
+お金	おかね — dinheiro<br>例: わたしはお金がすきです。	fase0 vocab dia22
+土	つち — terra, solo	fase0 kanji dia22
+ポッドキャスト	poddokyasuto — podcast<br>ッ pequeno (poDDo), nao ー	fase0 vocab dia22
+いつも	itsumo — sempre<br>げんき e "bem/saudavel" — nao confundir	fase0 vocab dia22
+人	ひと — pessoa<br>にん apos numero (三人), じん apos pais (ブラジル人)	fase0 kanji dia23
+本	ほん — livro; raiz, origem<br>e o 木 com um traco na raiz. 日本 = origem do sol	fase0 kanji dia23
+年	とし — ano<br>ねん em composto: 二千二十六年 = 2026	fase0 kanji dia23
+日本	にほん — Japao<br>sol + origem = terra do sol nascente	fase0 kanji dia23
+日本人	にほんじん — japones (pessoa)<br>pais + 人(じん) = nacionalidade	fase0 kanji dia23
+ブラジル人	ブラジルじん — brasileiro<br>例: わたしはブラジル人です。	fase0 kanji dia23
+〜じ	いちじ、にじ、さんじ… — as horas<br>IRREGULARES: よじ (4h), しちじ (7h), くじ (9h)	fase0 vocab dia23
+〜じはん	さんじはん — tres e meia<br>はん = meia (hora)	fase0 vocab dia23
+ごぜん	gozen — da manha (AM)<br>ごぜんくじ = 9h da manha. Com dakuten: ぜ	fase0 vocab dia23
+ごご	gogo — da tarde/noite (PM)<br>ごごじゅうじ = 22h	fase0 vocab dia23
+れいじ	reiji — meia-noite, hora zero<br>ごぜんれいじ = 00h	fase0 vocab dia23
+なんじ	nanji — que horas?<br>いまなんじですか。なん+contador, como なんにん	fase0 vocab dia23
+よみます	yomimasu — leio<br>例: 本をよみます。	fase0 vocab dia23
+ひるごはん	hirugohan — almoco<br>例: ごごにじにひるごはんをたべます。	fase0 vocab dia23
+やきゅう	yakyuu — beisebol<br>trazido por ele; 日本のやきゅう = beisebol japones	fase0 vocab dia23
+まんが	manga — manga, quadrinhos<br>例: あのまんがをよみました。	fase0 vocab dia23
+日本の〜	にほんの — do Japao, japones (coisa)<br>日本のやきゅう ≠ 日本語の (da lingua)	fase0 vocab dia23
+〜月	がつ — contador de mes<br>一月 いちがつ … 十二月 じゅうにがつ. Irregulares: 四月 しがつ, 七月 しちがつ, 九月 くがつ	fase0 vocab dia24
+ついたち	tsuitachi — dia 1º do mes<br>o unico opaco: "inicio do mes"	fase0 vocab dia24
+ふつか	futsuka — dia 2<br>parente de ふたつ	fase0 vocab dia24
+みっか	mikka — dia 3<br>parente de みっつ	fase0 vocab dia24
+よっか	yokka — dia 4<br>parente de よっつ	fase0 vocab dia24
+いつか	itsuka — dia 5<br>parente de いつつ	fase0 vocab dia24
+むいか	muika — dia 6	fase0 vocab dia24
+なのか	nanoka — dia 7	fase0 vocab dia24
+ようか	youka — dia 8<br>NAO e "agosto" (agosto = はちがつ)	fase0 vocab dia24
+ここのか	kokonoka — dia 9<br>parente de ここのつ	fase0 vocab dia24
+とおか	tooka — dia 10<br>parente de とお	fase0 vocab dia24
+じゅうよっか	juuyokka — dia 14<br>excecao: nao e じゅうよんにち	fase0 vocab dia24
+はつか	hatsuka — dia 20<br>excecao, opaco como ついたち	fase0 vocab dia24
+何月何日	なんがつなんにち — que dia (mes+dia)?<br>例: きょうは何月何日ですか。	fase0 vocab dia24
+〜分	ふん/ぷん — minutos<br>いっぷん・さんぷん・ろっぷん・はっぷん・じゅっぷん endurecem e/ou dobram; 2,5,7,9 = ふん	fase0 vocab dia24
+〜円	えん — iene<br>300 さんびゃく, 600 ろっぴゃく, 800 はっぴゃく; 3000 さんぜん, 8000 はっせん	fase0 vocab dia24
+いくら	ikura — quanto custa<br>例: この本はいくらですか。	fase0 vocab dia24
+たんじょうび	tanjoubi — aniversario<br>tan-jo-u-bi: um う so. 例: わたしのたんじょうびは〜月〜日です。	fase0 vocab dia24
+はじめます	hajimemasu — comecar (algo)<br>例: べんきょうをはじめました。は「じ」め, nao ぎ	fase0 vocab dia24
+テスト	tesuto — teste, prova<br>SEM ー (テースト seria "taste")	fase0 vocab dia24
+ゲーム	geemu — videogame, jogo<br>substantivo: ゲームをします (nunca ゲームます)	fase0 vocab dia25
+ハゲ	hage — careca<br>coloquial; katakana. A primeira piada dele em japones	fase0 vocab dia25
+まど	mado — janela<br>例: まどをあけます。	fase0 vocab dia25
+ドア	doa — porta<br>emprestimo: KATAKANA, nao どあ	fase0 vocab dia25
+あけます	akemasu — abro<br>例: ドアをあけます。	fase0 vocab dia25
+バッグ	baggu — bolsa, mochila<br>ッ pequeno	fase0 vocab dia25
+いれます	iremasu — coloco (dentro)<br>例: 本をバッグにいれます。に marca o destino	fase0 vocab dia25
+アニメ	anime — anime<br>例: アニメもすきです。	fase0 vocab dia25
+すみません	sumimasen — com licenca; desculpe<br>abre pedido: すみません、〜をください。ABSORVIDO DO AUDIO na prova	fase0 vocab dia26
+〜をください	o kudasai — me da ~, por favor<br>例: すしとおちゃをください。ABSORVIDO DO AUDIO/KAISHI	fase0 vocab dia26
+ぎゅうにく	gyuuniku — carne bovina<br>do Kaishi; ele tentou na prova (ぎゅうにき)	fase0 vocab dia26
+あります	arimasu — existe / tem (COISAS, inanimado)<br>お金がありません。	fase1 vocab dia28
+います	imasu — existe / esta (SERES VIVOS)<br>ともだちがレストランにいます。	fase1 vocab dia28
+なか	naka — dentro<br>バッグのなかに本があります。	fase1 vocab dia28
+まえ	mae — frente<br>いえのまえにねこがいます。	fase1 vocab dia28
+うしろ	ushiro — atras<br>いえのうしろに	fase1 vocab dia28
+となり	tonari — ao lado<br>テーブルのとなりに	fase1 vocab dia28
+テーブル	teeburu — mesa<br>テーブルのうえに	fase1 vocab dia28
+レストラン	resutoran — restaurante	fase1 vocab dia28
+ねこ	neko — gato<br>ね-KO (saiu ねく 2x em 31/08)	fase1 vocab dia28
+いぬ	inu — cachorro<br>conta-se com ひき: にひきのいぬ	fase1 vocab dia28
+ノート	nooto — caderno<br>laptop = ノートパソコン	fase1 vocab dia28
+がっこう	gakkou — escola<br>がっこうでべんきょうします (acao -> で)	fase1 vocab dia28
+せんせい	sensei — professor(a)<br>titulo DEPOIS do nome: クロードせんせい	fase1 vocab dia28
+行きます	いきます — vou (afastar-se de quem fala)<br>がっこうに行きます。	fase1 vocab dia29
+来ます	きます — venho (aproximar-se de quem fala)<br>ともだちが家に来ます。	fase1 vocab dia29
+帰ります	かえります — volto (para a BASE: casa, pais)<br>家に帰ります。	fase1 vocab dia29
+へ	e — particula de direcao (le-se E!)<br>irma do は=wa e を=o. がっこうへ行きます	fase1 vocab dia29
+どこ	doko — onde?<br>どこに行きますか。primo de ここ	fase1 vocab dia29
+家	いえ — casa<br>ele produziu o kanji sozinho via Kaishi	fase1 vocab dia29
+彼女	かのじょ — ELA; NAMORADA<br>nao e "garota" (garota = 女の子 onnanoko)	fase1 vocab dia29
+ピザ	piza — pizza<br>sem sokuon: ピザ, nao ピッザ	fase1 vocab dia29
+よる	yoru — noite<br>よる十一時 = 23h	fase1 vocab dia29
+よく	yoku — frequentemente<br>よくポッドキャストをききます。	fase1 vocab dia30
+ときどき	tokidoki — as vezes<br>ときどきレストランに行きます。	fase1 vocab dia30
+あまり	amari — quase nao<br>SO com negativo: あまり見ません	fase1 vocab dia30
+ぜんぜん	zenzen — nunca, zero<br>SO com negativo: ぜんぜん食べません	fase1 vocab dia30
+いっしょに	isshoni — juntos<br>いっしょにみませんか。	fase1 vocab dia30
+ばんごはん	bangohan — jantar<br>irmao de ひるごはん	fase1 vocab dia30
+〜ませんか	masen ka — convite ("nao quer...?")<br>いっしょにたべませんか。	fase1 vocab dia30
+〜ましょう	mashou — "vamos!" (aceite/proposta)<br>行きましょう！	fase1 vocab dia30
+いいですね	ii desu ne — "boa!/legal!" (aceitando)	fase1 vocab dia30
+ちょっと…	chotto… — a recusa japonesa<br>すみません、ちょっと… (a frase morre ai — e o "nao" educado)	fase1 vocab dia30
+うそ	uso — mentira	fase1 vocab dia30
+うそつき	usotsuki — mentiroso(a)	fase1 vocab dia30
+じゃない	janai — nao e (casual de ではありません)<br>absorvido do audio por ele	fase1 vocab dia30
+ハンバーガー	hanbaagaa — hamburguer (o lanche)<br>ハンバーグ = so o bife. DOIS ー	fase1 vocab dia30
+毎日	まいにち — todo dia<br>毎日勉強します。	fase1 kanji dia30
+とても	totemo — muito (intensidade)<br>とてもおもしろいです。て sem dakuten (とでも = "mesmo que")	fase1 vocab dia31
+せいじ	seiji — politica<br>ブラジルのせいじ	fase1 vocab dia31
+あきれる	akireru — ficar chocado, farto, de saco cheio<br>〜にあきれています。absorvido do anime; ています oficial na Fase 1	fase1 vocab dia31
+かたい	katai — duro, rigido<br>nasceu de uma metatese de たかい — agora e vocabulario	fase1 vocab dia31
+なに／なん	nani / nan — o que<br>なん antes de です e contador (なんじ); なに antes de particula (なにを)	fase1 vocab dia32
+いつ	itsu — quando<br>SEM particula: いつ行きますか。clube do きょう/あした	fase1 vocab dia32
+しんじます	shinjimasu — acredito<br>なにをしんじますか。trazido por ele	fase1 vocab dia32
+しんや	shin'ya — madrugada<br>ん+や: digite shin'ya com apostrofo! ときどきしんやにべんきょうします	fase1 vocab dia32
+どこにも〜ません	dokonimo -masen — a lugar nenhum<br>どこにもいきません。absorvido por ele	fase1 vocab dia32
+ひとりで	hitoride — sozinho<br>ひとりでアニメをみます。	fase1 vocab dia32
+しゅうまつ	shuumatsu — fim de semana<br>しゅうまつ、どこにいきますか。	fase1 vocab dia32
+ようこそ	youkoso — bem-vindo! (quem diz e o ANFITRIAO)<br>yo-U-ko-so, com vogal longa	fase1 vocab dia32
+こんばんは	konbanha — boa noite (na chegada)<br>o は le wa, como sempre	fase1 vocab dia32
+それから	sorekara — e entao, depois disso<br>o conector de narrativa	fase1 vocab dia33
+おきます	okimasu — acordo, levanto<br>ごぜんくじにおきました。	fase1 vocab dia33
+シャワーをあびます	shawaa o abimasu — tomo banho de chuveiro<br>trazido por ele no 1o diario; て-form: あびて	fase1 vocab dia33
+はをみがきます	ha o migakimasu — escovo os dentes	fase1 vocab dia33
+〜ながら	nagara — enquanto (faz X)<br>radical + ながら: 話しながらゲームをしました。PESQUISOU e acertou	fase1 vocab dia33
+さいごに	saigoni — por ultimo, finalmente	fase1 vocab dia33
+うんどうします	undou shimasu — faco exercicio<br>substantivo+します correto de primeira	fase1 vocab dia33
+話します	はなします — falo, converso<br>友達と話します。	fase1 vocab dia33
+にっき	nikki — diario (日記)<br>o primeiro dele: 05/09/2026	fase1 vocab dia33
+じゅぎょう	jugyou — aula<br>せんせいのじゅぎょう	fase1 vocab dia33

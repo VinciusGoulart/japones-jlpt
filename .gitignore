@@ -1,0 +1,14 @@
+# Progresso pessoal — fica FORA do repositório público de propósito.
+# O diário conta a vida do estudante; o método não precisa dele para ser útil.
+# Backup privado: ~/.local/share/japones/backup-progresso/ (copiado no fechamento de cada sessão)
+progresso/diario.md
+progresso/estado.json
+
+# Gerados / cache
+tools/__pycache__/
+*.pyc
+
+# Nunca, jamais: credenciais vivem em ~/.config/japones/, fora da árvore.
+# (Esta linha é cinto e suspensório — o arquivo nem deveria chegar perto daqui.)
+trello.env
+*.env
