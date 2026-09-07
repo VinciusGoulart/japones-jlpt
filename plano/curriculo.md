@@ -173,3 +173,17 @@ Shin Kanzen Master N3 ou Quartet I.
 | 34 | dom 06/09 | Kanji de tempo: **時・分・半・今** — as horas ganham símbolo |
 
 **Drills fixos herdados da prova** (entram em qualquer dia, 2 min cada): がすき em toda sessão (até 5 limpas); adjetivo semanal; discriminação 五・万・九; で de lugar.
+
+## Fase 1 — Semana 2 (dias 35–41, 07 a 13/09): a forma て
+
+*Detalhada em 06/09. Ele já produziu て-form e ながら sozinho, pesquisando — a semana oficializa o que a curiosidade começou.*
+
+| Dia | Data | Conteúdo |
+|---|---|---|
+| 35 | seg 07/09 | **Forma て** — a regra de formação pelas classes de verbo (る/う/irregulares) |
+| 36 | ter 08/09 | **〜ています** — ação em curso e estado (a forma que ele já usou em あきれています) |
+| 37 | qua 09/09 | **〜てください** (pedido) + てもいいですか (permissão) |
+| 38 | qui 10/09 | Drill de adjetivos #3 (alvo: いくない) + contadores ひき・まい・ほん |
+| 39 | sex 11/09 | Conversa integrada: perguntas e respostas encadeadas com て |
+| 40 | sáb 12/09 | **Diário #2** — agora com て e ています |
+| 41 | dom 13/09 | Kanji: 週・末・毎 (+ consolidar 晩) — 週末, 毎日, 今晩 completos |
