@@ -1,0 +1,40 @@
+#separator:tab
+#colunas: sentido (frente) | resposta a digitar | nota (aparece no verso) | tags
+# Deck de DIGITACAO DE PRECISAO: cada linha nasceu de um erro real documentado
+# em pontos_fracos. O cartao pede para digitar a palavra e o Anki mostra o diff.
+agua	みず	dakuten no ず (ja saiu みす)	escrita dakuten
+da manha (AM)	ごぜん	ぜ com dakuten (ja saiu ごせん)	escrita dakuten
+terca-feira	かようび	か SEM dakuten (ja saiu がようび)	escrita dakuten
+jantar	ばんごはん	ご com dakuten (ja saiu ばんほはん)	escrita dakuten
+aula	じゅぎょう	じゅ, nao しゅ (ja saiu しゅぎょう = treino de monge)	escrita dakuten
+cafe (bebida)	コーヒー	ヒ sem dakuten (ja saiu コービー = Kobe)	escrita dakuten katakana
+muito (intensidade)	とても	て sem dakuten (ja saiu とでも)	escrita dakuten
+computador	パソコン	ソ e ン sao diferentes	escrita katakana
+podcast	ポッドキャスト	ッ pequeno + ー	escrita sokuon katakana
+10 minutos	じゅっぷん	dobra e endurece (ja saiu じゅうぷん)	escrita sokuon
+800	はっぴゃく	dobra e endurece (ja saiu はちぴゃく)	escrita sokuon
+bolsa, mochila	バッグ	ッ pequeno	escrita sokuon katakana
+juntos	いっしょに	っ pequeno + しょ	escrita sokuon
+cartao	カード	ー, nunca vogal repetida (ja saiu カアド)	escrita vogal-longa katakana
+hamburguer (o lanche)	ハンバーガー	DOIS ー (ja saiu ハンバグ)	escrita vogal-longa katakana
+bem-vindo	ようこそ	yo-U-ko-so (ja saiu よこそ)	escrita vogal-longa
+aniversario	たんじょうび	um う so (ja saiu たんじょおうび)	escrita vogal-longa
+hoje (em kana)	きょう	ょ pequeno + う (ja saiu きよ)	escrita yoon
+game	ゲーム	katakana + ー (ja saiu げーむ)	escrita katakana vogal-longa
+taxi	タクシー	katakana + ー (ja saiu たくしい)	escrita katakana vogal-longa
+porta	ドア	emprestimo = katakana (ja saiu どあ 2x)	escrita katakana
+madrugada	しんや	digite shin'ya, com apostrofo (ja saiu しにゃ)	escrita n
+boa noite (na chegada)	こんばんは	termina em は que le wa	escrita n
+que horas?	なんじ	o ん no meio (ja saiu なじ)	escrita n
+Japao	にほん	ほ, nao お (ja saiu におんご)	escrita
+eu	わたし	し, nao ち (ja saiu わたち)	escrita shi-chi
+amigo	ともだち	と-MO-da-chi (ja saiu とまだち)	escrita
+ano	ねん	ね, nao れ (ja saiu れん)	escrita ne-re
+vamos! (proposta)	ましょう	しょ, nao ちょ (ja saiu まちょう)	escrita shi-chi yoon
+um pouco; a recusa educada	ちょっと	ちょ + っ	escrita yoon sokuon
+gato	ねこ	ko no final (ja saiu ねく 2x)	escrita
+almoco	ひるごはん	hi-RU + go-HAN (ja saiu ひろごがん)	escrita
+estudo (substantivo)	べんきょう	きょ + う (ja saiu べんきょ e べんこよう)	escrita yoon vogal-longa
+tomo banho (chuveiro)	シャワーをあびます	あ, nao お (ja saiu おびました)	escrita katakana
+e entao, depois disso	それから	so-re-ka-ra (ja saiu ぞれにら e そりから)	escrita
+lamen	ラーメン	ン katakana ate o fim (ja saiu ラーメん)	escrita katakana
