@@ -187,3 +187,15 @@ Shin Kanzen Master N3 ou Quartet I.
 | 39 | sex 11/09 | Conversa integrada: perguntas e respostas encadeadas com て |
 | 40 | sáb 12/09 | **Diário #2** — agora com て e ています |
 | 41 | dom 13/09 | Kanji: 週・末・毎 (+ consolidar 晩) — 週末, 毎日, 今晩 completos |
+
+## Fase 1 — Semana 3 (dias 42–48, 14 a 20/09): desejos e nominalização
+
+| Dia | Data | Conteúdo |
+|---|---|---|
+| 42 | seg 14/09 | **〜たいです** — querer FAZER (日本に行きたいです!) |
+| 43 | ter 15/09 | **〜のがすきです** — gostar de fazer (nominalização com の) |
+| 44 | qua 16/09 | **もう／まだ** + recapitulação do passado |
+| 45 | qui 17/09 | Drill de adjetivos #4 (alvo: negativo-passado) + revisão de contadores |
+| 46 | sex 18/09 | Conversa dirigida #2 (radar: で, が, contadores) |
+| 47 | sáb 19/09 | **Diário #3** |
+| 48 | dom 20/09 | Kanji de verbos: 行・来・見・食・飲 |
