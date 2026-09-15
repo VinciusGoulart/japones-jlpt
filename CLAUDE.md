@@ -74,6 +74,12 @@ progresso/
 - ⚠️ As credenciais do Trello ficam no prompt da rotina, num **único bloco no topo** (`TRELLO_KEY` e `TRELLO_TOKEN`). Ao rotacionar, edite só essas duas linhas — elas não se repetem em nenhum outro ponto do prompt. Rotacionar a chave invalida o token junto, então **troque os dois sempre**.
 - O `PASSO 0` do prompt testa as credenciais antes de qualquer coisa e aborta com "FALHA CRÍTICA" se estiverem inválidas, para que a rotina nunca falhe em silêncio.
 
+**4. Projeto Japão (desde 14/09/2026).** A mudança para o Japão (embarque-alvo: abril/2028) tem roadmap mês a mês em `plano/japao.md` (PRIVADO, no .gitignore — contém finanças). Acompanhamento em três camadas:
+- **`plano/japao.md`** é a fonte de verdade (rota, números verificados, gates, roadmap mensal).
+- **Lista "🇯🇵 Projeto Japão" no Trello**: os 5 GATES com vencimento (marcos estáveis) + o card "AÇÃO DO MÊS". Na **primeira sessão de cada mês**, o tutor lê o roadmap e cria o card do mês seguinte — janela rolante, como os cards de semana (card criado longe demais vira ficção; foi a lição da Fase 0).
+- **Pendências pontuais** continuam na lista de Pendências, como sempre.
+- Recheck trimestral (câmbio, custos, regras de visto) — próximo: dez/2026. A rotina vigia do JLPT segue cobrindo as janelas de inscrição do exame.
+
 ## Regras de Conduta do Tutor
 
 1. **Nunca inventar japonês.** Se não houver certeza de uma leitura, conjugação ou nuance, dizer que não tem certeza e indicar onde verificar. Um erro ensinado vira erro fossilizado, que custa muito mais caro para desfazer do que uma dúvida honesta.
