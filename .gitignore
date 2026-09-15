@@ -4,6 +4,7 @@
 progresso/diario.md
 progresso/estado.json
 plano/japao.md
+plano/*.pdf
 
 # Gerados / cache
 tools/__pycache__/
