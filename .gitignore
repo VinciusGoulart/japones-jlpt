@@ -3,6 +3,7 @@
 # Backup privado: ~/.local/share/japones/backup-progresso/ (copiado no fechamento de cada sessão)
 progresso/diario.md
 progresso/estado.json
+plano/japao.md
 
 # Gerados / cache
 tools/__pycache__/
