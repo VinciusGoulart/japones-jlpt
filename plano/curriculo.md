@@ -199,3 +199,17 @@ Shin Kanzen Master N3 ou Quartet I.
 | 46 | sex 18/09 | Conversa dirigida #2 (radar: で, が, contadores) |
 | 47 | sáb 19/09 | **Diário #3** |
 | 48 | dom 20/09 | Kanji de verbos: 行・来・見・食・飲 |
+
+## Fase 1 — Semana 4 (dias 49–55, 20 a 26/09): as formas casuais
+
+*A semana que destrava o anime: o japonês como ele é falado de verdade.*
+
+| Dia | Data | Conteúdo |
+|---|---|---|
+| 49 | dom 20/09 | **Forma た** — passado casual (o mesmo switch da て: った/んだ/いた/した) |
+| 50 | seg 21/09 | **Forma ない** — negativo casual (destrava 分からない, a negação interna do の, ないでください) |
+| 51 | ter 22/09 | **だ e a frase casual** — como o anime fala; escuta ativa comparada |
+| 52 | qua 23/09 | **〜と思います** — "acho que" (usa a forma casual + と) |
+| 53 | qui 24/09 | Drill de adjetivos #4 (alvo: negativo-passado くなかった) + type-in |
+| 54 | sex 25/09 | Conversa dirigida #3 |
+| 55 | sáb 26/09 | **Diário #4** + kanji 思・言・読・書 |
