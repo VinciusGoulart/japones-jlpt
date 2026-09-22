@@ -213,3 +213,5 @@ Shin Kanzen Master N3 ou Quartet I.
 | 53 | qui 24/09 | Drill de adjetivos #4 (alvo: negativo-passado くなかった) + type-in |
 | 54 | sex 25/09 | Conversa dirigida #3 |
 | 55 | sáb 26/09 | **Diário #4** + kanji 思・言・読・書 |
+
+*Ajuste 21/09: o dia 50 virou a aula de kanji 始/初/強/勉 (pedido dele, sessão curta de madrugada). A forma ない passa para o dia 51 e a Semana 4 desliza um dia.*
