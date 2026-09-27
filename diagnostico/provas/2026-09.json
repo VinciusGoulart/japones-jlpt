@@ -1,0 +1,104 @@
+{
+  "id": "2026-09",
+  "numero": 1,
+  "titulo": "Diagnóstico #1 · setembro/2026",
+  "periodo": "Fase 0 inteira + Fase 1, semanas 1 a 4 (até 26/09)",
+  "secoes": [
+    {
+      "id": "moji",
+      "nome": "文字・語彙",
+      "pt": "Vocabulário e kanji",
+      "instrucao_jp": "いちばん いい ものを ひとつ えらんで ください。",
+      "instrucao_pt": "Escolha a melhor opção. Nas perguntas de leitura, a palavra sublinhada é a que importa.",
+      "questoes": [
+        {"id": "m1", "tipo": "読み", "enunciado": "{来年}、日本に 行きたいです。", "opcoes": ["らいねん", "きねん", "らいとし", "くるとし"], "correta": 0, "explicacao": "来 em composto lê らい (leitura on): 来年, 来週. O camaleão き/く/こ só aparece nas formas do verbo 来る.", "tag": "kanji"},
+        {"id": "m2", "tipo": "読み", "enunciado": "{毎晩}、アニメを 見ます。", "opcoes": ["まいにち", "まいあさ", "まいばん", "まいよる"], "correta": 2, "explicacao": "晩 = ばん (noite). 毎晩 = toda noite; 毎朝 = まいあさ; 毎日 = まいにち.", "tag": "kanji"},
+        {"id": "m3", "tipo": "読み", "enunciado": "{今週}は 学校に 行きます。", "opcoes": ["いましゅう", "こんしゅう", "こんしゅ", "きょうしゅう"], "correta": 1, "explicacao": "今 em composto lê こん (今週, 今晩). いま é a leitura sozinha. E しゅう tem vogal longa.", "tag": "kanji"},
+        {"id": "m4", "tipo": "読み", "enunciado": "あしたは {九時}に おきます。", "opcoes": ["きゅうじ", "くじ", "ここのじ", "くうじ"], "correta": 1, "explicacao": "Hora irregular: 9h = くじ, nunca きゅうじ. As outras duas: 4h = よじ, 7h = しちじ.", "tag": "numeros"},
+        {"id": "m5", "tipo": "読み", "enunciado": "友達と {話しました}。", "opcoes": ["はなしました", "わしました", "かいしました", "ききました"], "correta": 0, "explicacao": "話す = はなす (leitura kun, com o し escrito depois). わ é a leitura on, de palavras como 会話（かいわ）.", "tag": "kanji"},
+        {"id": "m6", "tipo": "表記", "enunciado": "日本語の ことばを {わすれました}。", "opcoes": ["忙れました", "忘れました", "志れました", "亡れました"], "correta": 1, "explicacao": "忘 = 亡 (perdido) + 心 (coração) EMBAIXO. 忙 (いそがしい, ocupado) tem as mesmas peças com o 心 de lado (忄). Mesmas peças, posição diferente, palavra diferente.", "tag": "kanji"},
+        {"id": "m7", "tipo": "表記", "enunciado": "くるまが {うごきません}。", "opcoes": ["働きません", "重きません", "動きません", "勉きません"], "correta": 2, "explicacao": "動 = 重 (pesado) + 力 (força). 働 (はたらく, trabalhar) é 亻 + 動: pessoa em movimento.", "tag": "kanji"},
+        {"id": "m8", "tipo": "文脈", "enunciado": "日本語が （　　） から、もういちど いって ください。", "opcoes": ["分かった", "分からない", "好きだ", "見た"], "correta": 1, "explicacao": "Pede-se para repetir porque NÃO entendeu: 分からない. 分かった quer dizer 'entendi'.", "tag": "vocab"},
+        {"id": "m9", "tipo": "文脈", "enunciado": "きのう、ミライに メールを （　　）。", "opcoes": ["のみました", "あびました", "おくりました", "みがきました"], "correta": 2, "explicacao": "メールを おくる = enviar e-mail. のむ = beber, あびる = tomar (banho), みがく = escovar.", "tag": "vocab"},
+        {"id": "m10", "tipo": "文脈", "enunciado": "（　　）、N4に 合格したいです。", "opcoes": ["きのう", "子どものとき", "毎晩", "来年"], "correta": 3, "explicacao": "たい fala de um desejo no futuro: 来年 (ano que vem). きのう e 子どものとき são passado; 毎晩 não combina com passar numa prova.", "tag": "vocab"}
+      ]
+    },
+    {
+      "id": "bunpo",
+      "nome": "文法",
+      "pt": "Gramática",
+      "instrucao_jp": "（　　）に 何を 入れますか。いちばん いい ものを ひとつ えらんで ください。",
+      "instrucao_pt": "O que entra no espaço? Escolha a melhor opção.",
+      "questoes": [
+        {"id": "b1", "enunciado": "わたしは すし（　　）好きです。", "opcoes": ["を", "が", "に", "で"], "correta": 1, "explicacao": "すき é な-adjetivo: a coisa gostada é o sujeito, então leva が.", "tag": "particula"},
+        {"id": "b2", "enunciado": "毎日、家（　　）日本語を 勉強します。", "opcoes": ["に", "を", "で", "が"], "correta": 2, "explicacao": "Lugar onde a ação acontece: で. に serviria para existência (家に います) ou destino (家に 帰ります).", "tag": "particula"},
+        {"id": "b3", "enunciado": "あした、学校（　　）行きます。", "opcoes": ["に", "で", "を", "が"], "correta": 0, "explicacao": "Destino de verbo de movimento: に (ou へ).", "tag": "particula"},
+        {"id": "b4", "enunciado": "明日は 雨（　　）と思います。", "opcoes": ["な", "だ", "の", "に"], "correta": 1, "explicacao": "Substantivo + と思う precisa do だ: 雨だと思います.", "tag": "casual"},
+        {"id": "b5", "enunciado": "この ラーメンは （　　） と思います。", "opcoes": ["おいしいだ", "おいしくだ", "おいしい", "おいしな"], "correta": 2, "explicacao": "い-adjetivo NUNCA leva だ, nem antes do と: おいしいと思います.", "tag": "adjetivo"},
+        {"id": "b6", "enunciado": "きのうの テストは （　　）。", "opcoes": ["むずかしいだった", "むずかしかった", "むずかしくだった", "むずかしいでした"], "correta": 1, "explicacao": "O passado do い-adjetivo é interno: むずかし + かった. Em むずかしいでした, o です tenta carregar um passado que não é dele.", "tag": "adjetivo"},
+        {"id": "b7", "enunciado": "まだ ばんごはんを （　　）。", "opcoes": ["食べました", "食べていません", "食べませんでした", "食べたいです"], "correta": 1, "explicacao": "まだ + negativo = ainda pendente: 食べていません. 食べませんでした fecha o assunto ('não comi, ponto') e não combina com まだ.", "tag": "mou-mada"},
+        {"id": "b8", "enunciado": "まどを （　　） も いいですか。", "opcoes": ["あける", "あけた", "あけて", "あけない"], "correta": 2, "explicacao": "Pedido de permissão = forma て + もいいですか: あけても いいですか.", "tag": "forma-te"},
+        {"id": "b9", "enunciado": "きょうは ゲームを （　　）。", "opcoes": ["すない", "しない", "さない", "しらない"], "correta": 1, "explicacao": "する é irregular: しない. しらない vem de 知る (não sei).", "tag": "forma-nai"},
+        {"id": "b10", "enunciado": "この まちは （　　）。", "opcoes": ["きれくない", "きれいくない", "きれいじゃない", "きらいくない"], "correta": 2, "explicacao": "きれい termina em い, mas é な-adjetivo: o negativo é じゃない. E きらい é outra palavra (detesto).", "tag": "adjetivo"}
+      ]
+    },
+    {
+      "id": "dokkai",
+      "nome": "読解",
+      "pt": "Leitura",
+      "instrucao_jp": "つぎの ぶんを よんで、しつもんに こたえて ください。",
+      "instrucao_pt": "Leia o texto e responda.",
+      "texto_titulo": "わたしの 日曜日",
+      "texto": "きのうは 日曜日でした。わたしは 九時に おきて、シャワーを あびました。十時に 友達と こうえんに 行きました。こうえんで サンドイッチを 食べて、コーヒーを 飲みました。\n午後は 家で 日本語を 勉強しました。よるは アニメを 見ませんでした。十一時に ねました。",
+      "questoes": [
+        {"id": "d1", "enunciado": "この人は こうえんで 何を しましたか。", "opcoes": ["日本語を 勉強しました", "サンドイッチを 食べて、コーヒーを 飲みました", "アニメを 見ました", "シャワーを あびました"], "correta": 1, "explicacao": "こうえんで サンドイッチを 食べて、コーヒーを 飲みました. O estudo foi em casa, à tarde.", "tag": "leitura"},
+        {"id": "d2", "enunciado": "この人は 午後、どこに いましたか。", "opcoes": ["こうえん", "学校", "家", "友達の 家"], "correta": 2, "explicacao": "午後は 家で 日本語を 勉強しました: à tarde, estava em casa.", "tag": "leitura"},
+        {"id": "d3", "enunciado": "正（ただ）しい ものは どれですか。", "opcoes": ["この人は ひとりで こうえんに 行きました。", "この人は 九時に ねました。", "この人は よる、アニメを 見ました。", "この人は 十時に こうえんに 行きました。"], "correta": 3, "explicacao": "十時に 友達と こうえんに 行きました. Foi com um amigo (não sozinho); 九時 foi a hora de acordar; à noite NÃO viu anime.", "tag": "leitura"}
+      ]
+    },
+    {
+      "id": "chokai",
+      "nome": "聴解",
+      "pt": "Audição",
+      "instrucao_jp": "しつもんを きいて、いちばん いい ものを ひとつ えらんで ください。",
+      "instrucao_pt": "Ouça e escolha. A pergunta é falada antes e depois do diálogo, como no JLPT. Cada áudio toca no máximo 2 vezes (na prova real, 1).",
+      "questoes": [
+        {"id": "l1", "pergunta": "男の人は あした 何時に 学校に 行きますか。", "pergunta_tts": "おとこの ひとは あした なんじに がっこうに いきますか。",
+         "falas": [
+           {"v": "F", "t": "あした、学校に 何時に 行きますか。", "tts": "あした、がっこうに なんじに いきますか。"},
+           {"v": "M", "t": "九時に 行きます。", "tts": "くじに いきます。"},
+           {"v": "F", "t": "九時ですか。", "tts": "くじですか。"},
+           {"v": "M", "t": "あ、すみません。八時です。八時に 行きます。", "tts": "あ、すみません。はちじです。はちじに いきます。"}
+         ],
+         "opcoes": ["八時", "九時", "四時", "七時"], "correta": 0, "explicacao": "Ele se corrige: 九時 → 八時. Em prova de audição, a primeira informação muitas vezes é a armadilha.", "tag": "numeros"},
+        {"id": "l2", "pergunta": "女の人は 週末、どこに 行きましたか。", "pergunta_tts": "おんなの ひとは しゅうまつ、どこに いきましたか。",
+         "falas": [
+           {"v": "M", "t": "週末は 何を しましたか。", "tts": "しゅうまつは なにを しましたか。"},
+           {"v": "F", "t": "友達と レストランに 行きました。それから、家で アニメを 見ました。"},
+           {"v": "M", "t": "いいですね。"}
+         ],
+         "opcoes": ["学校", "レストラン", "友達の 家", "こうえん"], "correta": 1, "explicacao": "友達と レストランに 行きました. Depois (それから) ficou em casa vendo anime.", "tag": "movimento"},
+        {"id": "l3", "pergunta": "男の人は 何を 飲みますか。", "pergunta_tts": "おとこの ひとは なにを のみますか。",
+         "falas": [
+           {"v": "F", "t": "何を 飲みますか。コーヒーと 水が ありますよ。", "tts": "なにを のみますか。コーヒーと みずが ありますよ。"},
+           {"v": "M", "t": "コーヒーは ちょっと…。水を ください。", "tts": "コーヒーは ちょっと。みずを ください。"}
+         ],
+         "opcoes": ["コーヒー", "ジュース", "水", "おちゃ"], "correta": 2, "explicacao": "コーヒーは ちょっと… é a recusa à japonesa (aula do dia 30): ele NÃO quer café, e pede 水.", "tag": "social"},
+        {"id": "l4", "pergunta": null,
+         "falas": [
+           {"v": "F", "t": "もう ばんごはんを 食べましたか。", "tts": "もう ばんごはんを たべましたか。"}
+         ],
+         "opcoes": ["はい、まだです。", "いいえ、まだです。", "いいえ、もう 食べます。", "はい、食べません。"], "correta": 1, "explicacao": "もう〜ましたか se responde com はい、もう / いいえ、まだです (o quadrante de 16/09).", "tag": "mou-mada"},
+        {"id": "l5", "pergunta": "女の人は テストが どうでしたか。", "pergunta_tts": "おんなの ひとは テストが どうでしたか。",
+         "falas": [
+           {"v": "M", "t": "きのうの テスト、どうだった？"},
+           {"v": "F", "t": "むずかしかった。ぜんぜん 分からなかった。", "tts": "むずかしかった。ぜんぜん わからなかった。"},
+           {"v": "M", "t": "そうか…。", "tts": "そうか。"}
+         ],
+         "opcoes": ["たのしかった", "よかった", "むずかしかった", "おもしろかった"], "correta": 2, "explicacao": "Fala casual: どうだった？ = como foi? Ela responde むずかしかった e 分からなかった: difícil, não entendeu nada (formas た e なかった, dias 49 a 51).", "tag": "casual"}
+      ]
+    }
+  ],
+  "oficial": {"url": "https://www.jlpt.jp/e/samples/n5/", "descricao": "Questões-exemplo oficiais do JLPT N5, com áudio de voz real. Não entram na nota: faça a parte de 聴解 e anote quantas acertou."},
+  "cortes": {"total_pct": 44, "secao_pct": 32, "nota": "No JLPT N5 real: aprovação com 80 de 180 pontos (44%) e pelo menos 19 de 60 (32%) em cada seção."}
+}

@@ -1,0 +1,509 @@
+<title>月例診断</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=Klee+One:wght@400;600&family=Zen+Kaku+Gothic+New:wght@500;700&display=swap">
+<style>
+:root{
+  --ground:#EEF2F7; --sheet:#FFFFFF; --ink:#1F4E8C; --ink-soft:#5E7BA3; --rule:#D3DCE8;
+  --text:#18202C; --muted:#5A6576; --graphite:#2B2F36; --graphite-ink:#FFFFFF;
+  --good:#1F7A48; --good-bg:#E3F2E9; --bad:#B42318; --bad-bg:#FBE8E6; --warn:#7A5100; --warn-bg:#FFF3D6;
+  --f-jp:"Klee One","Hiragino Mincho ProN","Noto Serif JP","Yu Mincho",serif;
+  --f-ui:"Zen Kaku Gothic New","Hiragino Sans","Noto Sans JP","Yu Gothic",sans-serif;
+  --f-pt:"Atkinson Hyperlegible","Segoe UI",system-ui,sans-serif;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    color-scheme:dark;
+    --ground:#0D1219; --sheet:#141B25; --ink:#86AEEA; --ink-soft:#6F89AF; --rule:#27334A;
+    --text:#E4E9F0; --muted:#95A2B6; --graphite:#E6E9EE; --graphite-ink:#141B25;
+    --good:#6CC792; --good-bg:#15291E; --bad:#F28B82; --bad-bg:#301816; --warn:#E9B458; --warn-bg:#2B220F;
+  }
+}
+:root[data-theme="dark"]{
+  color-scheme:dark;
+  --ground:#0D1219; --sheet:#141B25; --ink:#86AEEA; --ink-soft:#6F89AF; --rule:#27334A;
+  --text:#E4E9F0; --muted:#95A2B6; --graphite:#E6E9EE; --graphite-ink:#141B25;
+  --good:#6CC792; --good-bg:#15291E; --bad:#F28B82; --bad-bg:#301816; --warn:#E9B458; --warn-bg:#2B220F;
+}
+*{box-sizing:border-box}
+body{background:var(--ground);color:var(--text);font-family:var(--f-pt);font-size:16px;line-height:1.55}
+.wrap{max-width:760px;margin:0 auto;padding-inline:16px;padding-block:28px 72px;display:flex;flex-direction:column;gap:20px}
+button{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--ink);outline-offset:2px}
+
+/* cabeçalho */
+.top{display:flex;flex-direction:column;gap:6px}
+.eyebrow{font-family:var(--f-ui);font-size:.8rem;letter-spacing:.08em;text-transform:uppercase;color:var(--ink);font-weight:700}
+h1{font-family:var(--f-ui);font-weight:700;font-size:clamp(2rem,6vw,2.8rem);line-height:1.1;margin:0;letter-spacing:.04em;text-wrap:balance}
+.lede{color:var(--muted);max-width:62ch;margin:0}
+.meta{display:flex;flex-wrap:wrap;gap:8px;margin-top:6px}
+.chip{font-family:var(--f-ui);font-size:.8rem;padding:3px 10px;border:1px solid var(--rule);border-radius:999px;color:var(--muted);background:var(--sheet)}
+
+/* abas de seção */
+.tabs{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;display:flex;gap:6px;overflow-x:auto;padding-block:8px;background:var(--ground)}
+.tab{flex:none;display:flex;align-items:baseline;gap:8px;padding:6px 12px;border:1px solid var(--rule);border-radius:8px;background:var(--sheet);cursor:pointer}
+.tab b{font-family:var(--f-ui);font-weight:700;font-size:.95rem}
+.tab span{font-family:var(--f-ui);font-size:.78rem;color:var(--muted);font-variant-numeric:tabular-nums}
+.tab.full span{color:var(--good)}
+
+/* folha */
+.sheet{background:var(--sheet);border:1px solid var(--rule);border-radius:12px;overflow:hidden}
+.sheet-head{padding:16px 18px 12px;display:flex;flex-direction:column;gap:4px}
+.sheet-head h2{margin:0;display:flex;align-items:baseline;gap:10px;flex-wrap:wrap}
+.sheet-head h2 .jp{font-family:var(--f-ui);font-weight:700;font-size:1.35rem;color:var(--ink)}
+.sheet-head h2 .pt{font-size:.95rem;color:var(--muted);font-weight:400}
+.instr-jp{font-family:var(--f-jp);font-size:1.02rem;margin:0}
+.instr-pt{font-size:.88rem;color:var(--muted);margin:0}
+
+.q{padding:16px 18px;border-top:1px solid var(--rule);display:flex;flex-direction:column;gap:12px}
+.qline{display:flex;gap:12px;align-items:flex-start}
+.qnum{flex:none;min-width:2em;height:2em;padding-inline:4px;border:1.5px solid var(--ink);color:var(--ink);font-family:var(--f-ui);font-weight:700;display:grid;place-items:center;font-variant-numeric:tabular-nums;border-radius:4px;font-size:.9rem}
+.qbody{display:flex;flex-direction:column;gap:4px;min-width:0}
+.qtype{font-family:var(--f-ui);font-size:.72rem;letter-spacing:.06em;color:var(--ink-soft)}
+.stem{font-family:var(--f-jp);font-size:1.3rem;line-height:1.7;overflow-wrap:anywhere}
+.stem u{text-decoration:none;border-bottom:2px solid var(--ink);padding-bottom:1px}
+
+.opts{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+@media (max-width:540px){.opts{grid-template-columns:1fr}}
+.opt{display:flex;align-items:center;gap:12px;padding:9px 12px;border:1px solid var(--rule);border-radius:10px;background:transparent;text-align:left;cursor:pointer;min-height:48px}
+.opt:hover{border-color:var(--ink-soft)}
+.opt .mk{flex:none;width:1.45em;height:2.1em;border-radius:999px;border:1.5px solid var(--ink);color:var(--ink);display:grid;place-items:center;font-family:var(--f-ui);font-size:.85rem;font-weight:700}
+.opt .tx{font-family:var(--f-jp);font-size:1.15rem;line-height:1.45;overflow-wrap:anywhere}
+.opt[aria-pressed="true"]{border-color:var(--graphite)}
+.opt[aria-pressed="true"] .mk{background:var(--graphite);border-color:var(--graphite);color:var(--graphite-ink)}
+.opt:disabled{cursor:default}
+.opt.is-right{border-color:var(--good);background:var(--good-bg)}
+.opt.is-right .mk{border-color:var(--good);color:var(--good)}
+.opt.is-right[aria-pressed="true"] .mk{background:var(--good);color:var(--sheet)}
+.opt.is-wrong{border-color:var(--bad);background:var(--bad-bg)}
+.opt.is-wrong .mk{background:var(--bad);border-color:var(--bad);color:var(--sheet)}
+
+.verdict{font-size:.92rem;padding:10px 12px;border-radius:8px;border:1px solid var(--rule);display:flex;flex-direction:column;gap:4px}
+.verdict .head{font-family:var(--f-ui);font-weight:700}
+.verdict.ok{background:var(--good-bg);border-color:transparent}
+.verdict.ok .head{color:var(--good)}
+.verdict.no{background:var(--bad-bg);border-color:transparent}
+.verdict.no .head{color:var(--bad)}
+
+/* leitura */
+.passage{margin:0 18px 4px;padding:14px 16px;border:1px dashed var(--rule);border-radius:8px;font-family:var(--f-jp);font-size:1.2rem;line-height:1.9;white-space:pre-line}
+.passage h3{font-family:var(--f-ui);font-size:1rem;margin:0 0 6px;color:var(--ink)}
+
+/* audição */
+.voicebar{margin:12px 18px 0;padding:10px 12px;border-radius:8px;font-size:.88rem;display:flex;flex-direction:column;gap:6px;background:var(--warn-bg);color:var(--text)}
+.voicebar.ok{background:transparent;border:1px solid var(--rule);color:var(--muted)}
+.player{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.play{display:inline-flex;align-items:center;gap:8px;padding:8px 14px;border-radius:999px;border:1.5px solid var(--ink);background:transparent;color:var(--ink);font-family:var(--f-ui);font-weight:700;cursor:pointer}
+.play:disabled{opacity:.45;cursor:default}
+.play .tri{width:0;height:0;border-left:9px solid currentColor;border-top:6px solid transparent;border-bottom:6px solid transparent}
+.plays{font-size:.85rem;color:var(--muted);font-variant-numeric:tabular-nums}
+.linkbtn{background:none;border:0;padding:0;color:var(--ink);text-decoration:underline;cursor:pointer;font-size:.85rem}
+.transcript{margin:0;padding:10px 12px;border-left:3px solid var(--rule);font-family:var(--f-jp);font-size:1.05rem;line-height:1.8;display:flex;flex-direction:column;gap:2px}
+.transcript .who{font-family:var(--f-ui);font-size:.75rem;color:var(--ink-soft);margin-right:6px}
+
+/* envio e resultado */
+.submit{display:flex;flex-direction:column;gap:10px;padding:16px 18px;background:var(--sheet);border:1px solid var(--rule);border-radius:12px}
+.submit .row{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.count{font-family:var(--f-ui);font-variant-numeric:tabular-nums}
+.primary{padding:11px 20px;border-radius:10px;border:0;background:var(--ink);color:var(--sheet);font-family:var(--f-ui);font-weight:700;cursor:pointer}
+.primary:disabled{opacity:.5;cursor:default}
+.note{font-size:.88rem;color:var(--muted);margin:0}
+.note.warn{color:var(--warn)}
+.note.err{color:var(--bad)}
+
+.score{display:flex;flex-direction:column;gap:14px;padding:18px;background:var(--sheet);border:1px solid var(--rule);border-radius:12px}
+.score h2{margin:0;font-family:var(--f-ui);font-size:1.2rem}
+.total{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap}
+.total .big{font-family:var(--f-ui);font-weight:700;font-size:2.6rem;line-height:1;font-variant-numeric:tabular-nums;color:var(--ink)}
+.bars{display:flex;flex-direction:column;gap:10px}
+.bar{display:grid;grid-template-columns:7.5em 1fr 5.5em;align-items:center;gap:10px}
+.bar .nm{font-family:var(--f-ui);font-weight:700;font-size:.92rem}
+.bar .track{position:relative;height:12px;border-radius:999px;background:var(--rule);overflow:visible}
+.bar .fill{position:absolute;inset:0 auto 0 0;border-radius:999px;background:var(--ink)}
+.bar .fill.low{background:var(--bad)}
+.bar .cut{position:absolute;top:-4px;bottom:-4px;width:2px;background:var(--text);opacity:.55}
+.bar .val{font-family:var(--f-ui);font-size:.88rem;font-variant-numeric:tabular-nums;text-align:right;color:var(--muted)}
+@media (max-width:480px){.bar{grid-template-columns:5.5em 1fr 4.5em}}
+
+.card{padding:16px 18px;background:var(--sheet);border:1px solid var(--rule);border-radius:12px;display:flex;flex-direction:column;gap:10px}
+.card h2{margin:0;font-family:var(--f-ui);font-size:1.05rem}
+.card a{color:var(--ink)}
+.inline{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.inline input{padding:8px 10px;border:1px solid var(--rule);border-radius:8px;background:transparent;color:var(--text);font:inherit;min-width:0;width:12em}
+.ghost{padding:8px 14px;border-radius:8px;border:1px solid var(--ink);background:transparent;color:var(--ink);font-family:var(--f-ui);font-weight:700;cursor:pointer}
+.tablewrap{overflow-x:auto}
+table{border-collapse:collapse;width:100%;font-variant-numeric:tabular-nums;font-size:.92rem}
+th,td{padding:8px 10px;border-bottom:1px solid var(--rule);text-align:left;white-space:nowrap}
+th{font-family:var(--f-ui);font-size:.8rem;color:var(--muted);font-weight:700}
+.status{padding:24px 18px;text-align:center;color:var(--muted)}
+@media (prefers-reduced-motion:no-preference){.opt,.tab,.play{transition:border-color .15s,background-color .15s}}
+</style>
+
+<div class="wrap">
+  <header class="top">
+    <span class="eyebrow" id="eyebrow">Diagnóstico mensal · formato JLPT</span>
+    <h1>月例診断</h1>
+    <p class="lede" id="lede">Uma prova curta por mês, montada só com o que você já estudou. Sem consulta. No fim, a página corrige, explica cada erro e guarda o resultado para o seu tutor ler.</p>
+    <div class="meta" id="meta"><span class="chip">4 seções: 文字・語彙 · 文法 · 読解 · 聴解</span><span class="chip">~30 min</span></div>
+  </header>
+  <nav class="tabs" id="tabs" aria-label="Seções" hidden></nav>
+  <div id="summary"></div>
+  <main id="exam" class="wrap" style="padding:0"><div class="sheet"><p class="status" id="status">Carregando a prova do mês…</p></div></main>
+  <div id="after"></div>
+</div>
+
+<script>
+(function(){
+  "use strict";
+  const $ = (s) => document.querySelector(s);
+  function el(tag, attrs, ...kids){
+    const n = document.createElement(tag);
+    for (const [k, v] of Object.entries(attrs || {})) {
+      if (v === false || v == null) continue;
+      if (k === "class") n.className = v;
+      else if (k === "text") n.textContent = v;
+      else if (k.startsWith("on")) n.addEventListener(k.slice(2), v);
+      else n.setAttribute(k, v === true ? "" : v);
+    }
+    for (const c of kids.flat()) { if (c != null) n.append(c instanceof Node ? c : document.createTextNode(String(c))); }
+    return n;
+  }
+  function stem(text){
+    const f = document.createDocumentFragment();
+    for (const p of String(text).split(/(\{[^}]+\})/)) {
+      if (p.startsWith("{") && p.endsWith("}")) f.append(el("u", null, p.slice(1, -1)));
+      else if (p) f.append(p);
+    }
+    return f;
+  }
+
+  const S = { db: null, id: null, prova: null, answers: {}, plays: {}, revealed: {}, startedAt: null,
+              result: null, armed: false, busy: false, error: "", history: [] };
+  const MAX_PLAYS = 2;
+  const draftKey = () => "shindan-draft-" + S.id;
+  function saveDraft(){
+    try { localStorage.setItem(draftKey(), JSON.stringify({ answers: S.answers, plays: S.plays, revealed: S.revealed, startedAt: S.startedAt })); } catch (e) {}
+  }
+  function loadDraft(){
+    try { const d = JSON.parse(localStorage.getItem(draftKey()) || "null"); if (d) Object.assign(S, { answers: d.answers || {}, plays: d.plays || {}, revealed: d.revealed || {}, startedAt: d.startedAt || null }); } catch (e) {}
+  }
+  function clearDraft(){ try { localStorage.removeItem(draftKey()); } catch (e) {} }
+
+  const allQs = () => S.prova.secoes.flatMap(s => s.questoes.map(q => ({ q, s })));
+
+  /* ---------- voz ---------- */
+  const T = { supported: "speechSynthesis" in window, voices: [], playing: null, keep: [] };
+  function refreshVoices(){
+    if (!T.supported) return;
+    const all = speechSynthesis.getVoices() || [];
+    T.voices = all.filter(v => (v.lang || "").toLowerCase().replace("_", "-").startsWith("ja"));
+    T.voices.sort((a, b) => (/google/i.test(b.name) ? 1 : 0) - (/google/i.test(a.name) ? 1 : 0));
+    renderVoiceBar();
+  }
+  if (T.supported) { refreshVoices(); speechSynthesis.addEventListener("voiceschanged", refreshVoices); }
+  function voiceFor(who){
+    const v = T.voices;
+    if (!v.length) return { voice: null, pitch: 1 };
+    if (who === "M") return v.length > 1 ? { voice: v[1], pitch: 0.9 } : { voice: v[0], pitch: 0.7 };
+    if (who === "F") return { voice: v[0], pitch: 1.12 };
+    return { voice: v[0], pitch: 1 };
+  }
+  function speak(lines){
+    return new Promise(resolve => {
+      speechSynthesis.cancel();
+      T.keep = [];
+      let i = 0;
+      const next = () => {
+        if (i >= lines.length) { resolve(); return; }
+        const L = lines[i++];
+        if (L.pause) { setTimeout(next, L.pause); return; }
+        const u = new SpeechSynthesisUtterance(L.t);
+        u.lang = "ja-JP"; u.rate = 0.9;
+        const { voice, pitch } = voiceFor(L.v);
+        if (voice) u.voice = voice;
+        u.pitch = pitch;
+        u.onend = () => setTimeout(next, 380);
+        u.onerror = () => setTimeout(next, 380);
+        T.keep.push(u);
+        speechSynthesis.speak(u);
+      };
+      next();
+    });
+  }
+  function scriptFor(q){
+    const falas = q.falas.map(f => ({ v: f.v, t: f.tts || f.t }));
+    if (!q.pergunta) return falas;
+    const p = { v: "N", t: q.pergunta_tts || q.pergunta };
+    return [p, { pause: 700 }, ...falas, { pause: 700 }, p];
+  }
+  function renderVoiceBar(){
+    const bar = $("#voicebar");
+    if (!bar) return;
+    bar.replaceChildren();
+    if (!T.supported) {
+      bar.className = "voicebar";
+      bar.append(el("strong", null, "Este navegador não tem síntese de voz."), el("span", null, "Abra esta página no Chrome (PC ou celular) para fazer a parte de audição."));
+    } else if (!T.voices.length) {
+      bar.className = "voicebar";
+      bar.append(
+        el("strong", null, "Nenhuma voz japonesa encontrada neste aparelho."),
+        el("span", null, "No Chrome do PC ela costuma vir pronta. No Android: Configurações › Sistema › Idiomas › Saída de texto para voz › Mecanismo do Google › instale os dados de voz em japonês. Depois, recarregue a página."),
+        el("span", null, "Sem voz, você pode ler o diálogo, mas a questão fica marcada como lida, não ouvida.")
+      );
+    } else {
+      bar.className = "voicebar ok";
+      const names = T.voices.slice(0, 2).map(v => v.name).join(" + ");
+      bar.append(el("span", null, "Voz japonesa: " + names + (T.voices.length < 2 ? " (uma só voz; o homem sai com tom mais grave)" : "")));
+    }
+  }
+
+  /* ---------- prova ---------- */
+  function mark(i){ return String(i + 1); }
+  function renderTabs(){
+    const tabs = $("#tabs");
+    tabs.hidden = false;
+    tabs.replaceChildren(...S.prova.secoes.map(s => {
+      const done = s.questoes.filter(q => S.answers[q.id] != null).length;
+      return el("button", { class: "tab" + (done === s.questoes.length ? " full" : ""), type: "button",
+        onclick: () => document.getElementById("sec-" + s.id).scrollIntoView({ behavior: "smooth", block: "start" }) },
+        el("b", null, s.nome), el("span", null, done + "/" + s.questoes.length));
+    }));
+  }
+  function choose(q, i){
+    if (S.result) return;
+    if (!S.startedAt) S.startedAt = Date.now();
+    S.answers[q.id] = i;
+    S.armed = false;
+    saveDraft();
+    renderExam();
+  }
+  function questionBlock(q, n, sec){
+    const graded = !!S.result;
+    const mine = S.answers[q.id];
+    const block = el("div", { class: "q", id: "q-" + q.id });
+    const body = el("div", { class: "qbody" });
+    if (q.tipo) body.append(el("span", { class: "qtype" }, q.tipo));
+    if (sec.id === "chokai") {
+      body.append(playerFor(q));
+    } else {
+      body.append(el("div", { class: "stem", lang: "ja" }, stem(q.enunciado)));
+    }
+    block.append(el("div", { class: "qline" }, el("span", { class: "qnum", "aria-hidden": "true" }, n), body));
+    const opts = el("div", { class: "opts", role: "group", "aria-label": "Questão " + n });
+    q.opcoes.forEach((o, i) => {
+      let cls = "opt";
+      if (graded && i === q.correta) cls += " is-right";
+      else if (graded && i === mine) cls += " is-wrong";
+      opts.append(el("button", { class: cls, type: "button", "aria-pressed": String(mine === i), disabled: graded,
+        onclick: () => choose(q, i) }, el("span", { class: "mk" }, mark(i)), el("span", { class: "tx", lang: "ja" }, o)));
+    });
+    block.append(opts);
+    if (sec.id === "chokai" && (graded || S.revealed[q.id])) block.append(transcript(q));
+    if (graded) {
+      const ok = mine === q.correta;
+      const v = el("div", { class: "verdict " + (ok ? "ok" : "no") },
+        el("span", { class: "head" }, ok ? "Certo" : (mine == null ? "Sem resposta · correta: " + mark(q.correta) : "Você marcou " + mark(mine) + " · correta: " + mark(q.correta))),
+        el("span", null, q.explicacao));
+      block.append(v);
+    }
+    return block;
+  }
+  function playerFor(q){
+    const used = S.plays[q.id] || 0;
+    const left = MAX_PLAYS - used;
+    const wrap = el("div", { class: "player" });
+    const canPlay = T.supported && T.voices.length > 0 && left > 0 && !S.result && T.playing == null;
+    const btn = el("button", { class: "play", type: "button", disabled: !canPlay,
+      onclick: async () => {
+        if (!canPlay) return;
+        if (!S.startedAt) S.startedAt = Date.now();
+        S.plays[q.id] = used + 1; saveDraft();
+        T.playing = q.id; renderExam();
+        await speak(scriptFor(q));
+        T.playing = null; renderExam();
+      } }, el("span", { class: "tri", "aria-hidden": "true" }), T.playing === q.id ? "Tocando…" : "Ouvir");
+    wrap.append(btn);
+    if (!S.result) wrap.append(el("span", { class: "plays" }, left > 0 ? left + (left === 1 ? " vez restante" : " vezes restantes") : "Sem mais repetições"));
+    if (!S.result && !S.revealed[q.id] && (!T.supported || !T.voices.length)) {
+      wrap.append(el("button", { class: "linkbtn", type: "button", onclick: () => { S.revealed[q.id] = true; saveDraft(); renderExam(); } }, "Ler o diálogo (conta como lido)"));
+    }
+    return wrap;
+  }
+  function transcript(q){
+    const who = { M: "男", F: "女", N: "質問" };
+    const box = el("div", { class: "transcript", lang: "ja" });
+    if (q.pergunta) box.append(el("div", null, el("span", { class: "who" }, who.N), q.pergunta));
+    q.falas.forEach(f => box.append(el("div", null, el("span", { class: "who" }, who[f.v] || ""), f.t)));
+    return box;
+  }
+  function renderExam(){
+    renderTabs();
+    let n = 0;
+    const main = $("#exam");
+    main.replaceChildren(...S.prova.secoes.map(sec => {
+      const sheet = el("section", { class: "sheet", id: "sec-" + sec.id, "aria-labelledby": "h-" + sec.id });
+      sheet.append(el("div", { class: "sheet-head" },
+        el("h2", { id: "h-" + sec.id }, el("span", { class: "jp", lang: "ja" }, sec.nome), el("span", { class: "pt" }, sec.pt)),
+        el("p", { class: "instr-jp", lang: "ja" }, sec.instrucao_jp),
+        el("p", { class: "instr-pt" }, sec.instrucao_pt)));
+      if (sec.texto) sheet.append(el("div", { class: "passage", lang: "ja" }, el("h3", null, sec.texto_titulo || ""), sec.texto));
+      if (sec.id === "chokai") sheet.append(el("div", { id: "voicebar", class: "voicebar" }));
+      sec.questoes.forEach(q => sheet.append(questionBlock(q, ++n, sec)));
+      return sheet;
+    }));
+    renderVoiceBar();
+    renderAfter();
+  }
+
+  /* ---------- envio ---------- */
+  function grade(){
+    const acertos = {}, totais = {}, erradas = [];
+    for (const s of S.prova.secoes) {
+      totais[s.id] = s.questoes.length;
+      acertos[s.id] = s.questoes.filter(q => S.answers[q.id] === q.correta).length;
+      s.questoes.forEach(q => { if (S.answers[q.id] !== q.correta) erradas.push(q.id); });
+    }
+    return { acertos, totais, erradas };
+  }
+  async function submit(){
+    const total = allQs().length;
+    const answered = allQs().filter(({ q }) => S.answers[q.id] != null).length;
+    if (answered < total && !S.armed) { S.armed = true; renderAfter(); return; }
+    S.busy = true; S.error = ""; renderAfter();
+    const g = grade();
+    const doc = {
+      prova: S.id, enviado_em: new Date().toISOString(),
+      duracao_min: S.startedAt ? Math.round((Date.now() - S.startedAt) / 60000) : null,
+      respostas: S.answers, audio_toques: S.plays, dialogo_lido: S.revealed,
+      acertos: g.acertos, totais: g.totais, erradas: g.erradas,
+      voz: T.voices.length ? T.voices.slice(0, 2).map(v => v.name) : [],
+      oficiais_autoavaliacao: ""
+    };
+    try {
+      await S.db.doc("resultados/" + S.id).set(doc);
+      S.result = doc; clearDraft();
+      S.history = S.history.filter(h => h.prova !== S.id).concat([doc]);
+      renderAll();
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    } catch (e) {
+      S.error = (e && e.code === "invalid_argument")
+        ? "Esta conta não pode salvar resultados aqui. Abra a página com a conta dona dela."
+        : "Não consegui salvar agora. Suas respostas continuam marcadas; tente de novo em alguns segundos.";
+    }
+    S.busy = false; renderAfter();
+  }
+  function renderAfter(){
+    const box = $("#after");
+    if (!S.prova) return;
+    if (S.result) { box.replaceChildren(officialCard(), historyCard()); return; }
+    const total = allQs().length;
+    const answered = allQs().filter(({ q }) => S.answers[q.id] != null).length;
+    const submitBox = el("section", { class: "submit", "aria-label": "Enviar a prova" },
+      el("div", { class: "row" },
+        el("span", { class: "count" }, "Respondidas: " + answered + " de " + total),
+        el("button", { class: "primary", type: "button", disabled: S.busy, onclick: submit }, S.busy ? "Salvando…" : (S.armed ? "Enviar assim mesmo" : "Terminar e corrigir"))));
+    if (S.armed && answered < total) submitBox.append(el("p", { class: "note warn" }, "Faltam " + (total - answered) + ". As que ficarem em branco contam como erro. Clique de novo para enviar assim mesmo."));
+    if (S.error) submitBox.append(el("p", { class: "note err" }, S.error));
+    submitBox.append(el("p", { class: "note" }, "Enviar corrige na hora e guarda o resultado. Não dá para refazer depois; o próximo diagnóstico vem no mês seguinte."));
+    box.replaceChildren(submitBox, officialCard(), historyCard());
+  }
+
+  /* ---------- resultado ---------- */
+  function renderSummary(){
+    const box = $("#summary");
+    if (!S.result) { box.replaceChildren(); return; }
+    const r = S.result, cut = S.prova.cortes || { total_pct: 44, secao_pct: 32 };
+    const tot = Object.values(r.acertos).reduce((a, b) => a + b, 0);
+    const max = Object.values(r.totais).reduce((a, b) => a + b, 0);
+    const pct = Math.round(100 * tot / max);
+    const bars = S.prova.secoes.map(s => {
+      const a = r.acertos[s.id] || 0, t = r.totais[s.id] || 1, p = Math.round(100 * a / t);
+      return el("div", { class: "bar" },
+        el("span", { class: "nm", lang: "ja" }, s.nome),
+        el("span", { class: "track", role: "img", "aria-label": s.pt + ": " + p + "%" },
+          el("span", { class: "fill" + (p < cut.secao_pct ? " low" : ""), style: "width:" + p + "%" }),
+          el("span", { class: "cut", style: "left:" + cut.secao_pct + "%" })),
+        el("span", { class: "val" }, a + "/" + t + " · " + p + "%"));
+    });
+    const below = S.prova.secoes.filter(s => 100 * (r.acertos[s.id] || 0) / (r.totais[s.id] || 1) < cut.secao_pct).map(s => s.pt.toLowerCase());
+    const verdict = below.length
+      ? "Abaixo do corte de seção em: " + below.join(", ") + ". É por aí que o próximo mês começa."
+      : (pct >= cut.total_pct ? "Acima dos dois cortes do N5 real." : "Todas as seções acima do corte, mas o total ainda abaixo de " + cut.total_pct + "%.");
+    box.replaceChildren(el("section", { class: "score", "aria-label": "Resultado" },
+      el("h2", null, "Resultado · " + (S.prova.titulo || S.id)),
+      el("div", { class: "total" }, el("span", { class: "big" }, pct + "%"), el("span", { class: "note" }, tot + " de " + max + " questões" + (r.duracao_min != null ? " · " + r.duracao_min + " min" : ""))),
+      el("div", { class: "bars" }, bars),
+      el("p", { class: "note" }, "A linha vertical marca " + cut.secao_pct + "%, o mínimo por seção do N5 real. " + (cut.nota || "")),
+      el("p", null, verdict)));
+  }
+  function officialCard(){
+    const o = S.prova.oficial;
+    if (!o) return document.createDocumentFragment();
+    const card = el("section", { class: "card", "aria-label": "Questões oficiais" },
+      el("h2", null, "Voz real: questões oficiais do JLPT"),
+      el("p", { class: "note" }, o.descricao),
+      el("a", { href: o.url, target: "_blank", rel: "noopener" }, o.url));
+    if (S.result) {
+      const inp = el("input", { id: "oficiais", type: "text", placeholder: "ex.: 4 de 6", value: S.result.oficiais_autoavaliacao || "" });
+      const msg = el("span", { class: "note", role: "status" });
+      const btn = el("button", { class: "ghost", type: "button", onclick: async () => {
+        const v = inp.value.trim();
+        btn.disabled = true;
+        try { await S.db.doc("resultados/" + S.id).update({ oficiais_autoavaliacao: v }); S.result = Object.assign({}, S.result, { oficiais_autoavaliacao: v }); msg.textContent = "Guardado."; }
+        catch (e) { msg.textContent = "Não consegui guardar agora. Tente de novo."; }
+        btn.disabled = false;
+      } }, "Guardar");
+      card.append(el("label", { for: "oficiais", class: "note" }, "Quantas questões de 聴解 você acertou lá?"), el("div", { class: "inline" }, inp, btn, msg));
+    }
+    return card;
+  }
+  function historyCard(){
+    const rows = S.history.slice().sort((a, b) => String(a.prova).localeCompare(String(b.prova)));
+    if (!rows.length) return document.createDocumentFragment();
+    const secs = S.prova.secoes;
+    const head = el("tr", null, el("th", null, "Mês"), secs.map(s => el("th", { lang: "ja" }, s.nome)), el("th", null, "Total"));
+    const body = rows.map(r => {
+      const tot = Object.values(r.acertos || {}).reduce((a, b) => a + b, 0), max = Object.values(r.totais || {}).reduce((a, b) => a + b, 0) || 1;
+      return el("tr", null, el("td", null, r.prova),
+        secs.map(s => el("td", null, r.totais && r.totais[s.id] ? Math.round(100 * (r.acertos[s.id] || 0) / r.totais[s.id]) + "%" : "–")),
+        el("td", null, Math.round(100 * tot / max) + "%"));
+    });
+    return el("section", { class: "card", "aria-label": "Histórico" }, el("h2", null, "Histórico"),
+      el("div", { class: "tablewrap" }, el("table", null, el("thead", null, head), el("tbody", null, body))));
+  }
+  function renderAll(){
+    $("#eyebrow").textContent = S.prova.titulo || "Diagnóstico mensal";
+    const n = allQs().length;
+    $("#meta").replaceChildren(
+      el("span", { class: "chip" }, n + " questões"),
+      el("span", { class: "chip" }, "~30 min"),
+      el("span", { class: "chip" }, S.prova.periodo || ""));
+    renderSummary();
+    renderExam();
+  }
+
+  /* ---------- início ---------- */
+  function fail(msg){ $("#exam").replaceChildren(el("div", { class: "sheet" }, el("p", { class: "status" }, msg))); }
+  async function start(){
+    const db = window.claude && window.claude.use ? await window.claude.use("db") : null;
+    if (!db) { fail("A prova fica guardada na sua conta. Abra este link logado no claude.ai para fazer o diagnóstico."); return; }
+    S.db = db;
+    try {
+      const cfg = await db.doc("config/atual").get();
+      if (!cfg.exists) { fail("Ainda não há prova publicada para este mês."); return; }
+      S.id = cfg.data().prova;
+      const pv = await db.doc("provas/" + S.id).get();
+      if (!pv.exists) { fail("A prova " + S.id + " não foi encontrada."); return; }
+      S.prova = JSON.parse(JSON.stringify(pv.data()));
+      const res = await db.doc("resultados/" + S.id).get();
+      if (res.exists) { S.result = JSON.parse(JSON.stringify(res.data())); S.answers = S.result.respostas || {}; S.plays = S.result.audio_toques || {}; }
+      else loadDraft();
+      try { const hs = await db.collection("resultados").get(); S.history = hs.docs.map(d => JSON.parse(JSON.stringify(d.data()))); } catch (e) { S.history = S.result ? [S.result] : []; }
+      renderAll();
+    } catch (e) {
+      fail("Não consegui carregar a prova agora. Recarregue a página em alguns segundos.");
+    }
+  }
+  start();
+})();
+</script>

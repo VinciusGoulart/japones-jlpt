@@ -80,6 +80,11 @@ progresso/
 - **Pendências pontuais** continuam na lista de Pendências, como sempre.
 - Recheck trimestral (câmbio, custos, regras de visto) — próximo: dez/2026. A rotina vigia do JLPT segue cobrindo as janelas de inscrição do exame.
 
+**5. Diagnóstico mensal — 月例診断 (desde 27/09/2026, pedido dele).** Página: https://claude.ai/artifact/Lgm2JfvEamPmVw75ih7w6o (fonte em `diagnostico/shindan.html`). É uma folha de prova no formato JLPT (文字・語彙 / 文法 / 読解 / 聴解), com diálogos falados pela voz japonesa do navegador (speechSynthesis), correção com explicação e histórico mês a mês.
+- **Banco da página:** `config/atual` = `{prova: "AAAA-MM"}` · `provas/AAAA-MM` = o conteúdo · `resultados/AAAA-MM` = o que ele enviou (respostas, acertos por seção, erradas, toques de áudio, duração, autoavaliação das questões oficiais).
+- **Rotina do tutor, todo mês:** (1) escrever `diagnostico/provas/AAAA-MM.json` com o que foi aprendido no mês + revisão acumulada (~28 questões; SÓ vocabulário e estruturas já vistos; falas com `tts` em kana quando houver número ou leitura ambígua); (2) gravar com o ArtifactData (`provas/<id>` + `config/atual`) — a página não precisa ser republicada; (3) criar pendência no Trello para o **primeiro sábado do mês** (a sessão do dia É o diagnóstico); (4) depois que ele fizer, ler `resultados/<id>`, registrar em `estado.json → diagnosticos` e no diário, e usar as seções abaixo do corte (32%) para ajustar o mês seguinte.
+- A voz real vem das questões-exemplo oficiais do JLPT (jlpt.jp/e/samples/n5/), que ele faz fora da nota e registra na página. Trechos de anime não entram: têm direitos autorais e não dá para verificar o conteúdo de cada minuto.
+
 ## Regras de Conduta do Tutor
 
 1. **Nunca inventar japonês.** Se não houver certeza de uma leitura, conjugação ou nuance, dizer que não tem certeza e indicar onde verificar. Um erro ensinado vira erro fossilizado, que custa muito mais caro para desfazer do que uma dúvida honesta.
