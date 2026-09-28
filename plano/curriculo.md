@@ -215,3 +215,17 @@ Shin Kanzen Master N3 ou Quartet I.
 | 55 | sáb 26/09 | **Diário #4** + kanji 思・言・読・書 |
 
 *Ajuste 21/09: o dia 50 virou a aula de kanji 始/初/強/勉 (pedido dele, sessão curta de madrugada). A forma ない passa para o dia 51 e a Semana 4 desliza um dia.*
+
+## Fase 1 — Semana 5 (dias 57–63, 28/09 a 04/10): ligar frases, sequência e comparação
+
+*Detalhada em 28/09. Mira as lacunas de N5 que a avaliação de 27/09 apontou: ligar orações e comparar.*
+
+| Dia | Data | Conteúdo |
+|---|---|---|
+| 57 | seg 28/09 | **から (porque) e が／けど (mas)**: ligar duas frases |
+| 58 | ter 29/09 | **〜てから / 〜前に**: depois de, antes de |
+| 59 | qua 30/09 | **なる**: tornar-se (い→く, な/substantivo→に); 上手になる |
+| 60 | qui 01/10 | **Comparações**: より・ほうが・いちばん · *1ª sessão de outubro: card "Ação do mês" do Projeto Japão* |
+| 61 | sex 02/10 | **〜たり〜たり** + aquecimento para o diagnóstico |
+| 62 | sáb 03/10 | **📝 DIAGNÓSTICO #1**: a sessão é a prova |
+| 63 | dom 04/10 | **Diário #5** + kanji 上・下・前・後 |

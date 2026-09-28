@@ -38,17 +38,13 @@ CHECKLIST_MESA = "Mesa (1h)"
 RAIZ = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 DIARIO = os.path.join(RAIZ, "progresso", "diario.md")
 
-# (nome do card, primeira data, dias) — mesma divisao de plano/curriculo.md
-SEMANAS = [
-    ("Semana 1", ["03/08", "04/08", "05/08", "06/08", "07/08", "08/08", "09/08"]),
-    ("Semana 2", ["10/08", "11/08", "12/08", "13/08", "14/08", "15/08", "16/08"]),
-    ("Semana 3", ["17/08", "18/08", "19/08", "20/08", "21/08", "22/08", "23/08"]),
-    ("Semana 4", ["24/08", "25/08", "26/08", "27/08", "28/08", "29/08", "30/08"]),
-    ("Semana 5", ["31/08", "01/09", "02/09", "03/09", "04/09", "05/09", "06/09"]),
-    ("Semana 6", ["07/09", "08/09", "09/09", "10/09", "11/09", "12/09", "13/09"]),
-    ("Semana 7", ["14/09", "15/09", "16/09", "17/09", "18/09", "19/09", "20/09"]),
-    ("Semana 8", ["21/09", "22/09", "23/09", "24/09", "25/09", "26/09", "27/09"]),
-]
+# (nome do card, dias) — semanas de 7 dias contadas a partir do inicio do plano (03/08/2026).
+# Geradas, nao listadas: a lista fixa acabava na Semana 8 e o setup parava de criar checklists.
+import datetime as _dt
+_INICIO_PLANO = _dt.date(2026, 8, 3)
+SEMANAS = [(f"Semana {i + 1}",
+            [(_INICIO_PLANO + _dt.timedelta(weeks=i, days=k)).strftime("%d/%m") for k in range(7)])
+           for i in range(60)]
 DIA_SEMANA = ["Seg", "Ter", "Qua", "Qui", "Sex", "Sab", "Dom"]
 
 
