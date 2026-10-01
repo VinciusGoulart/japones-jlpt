@@ -229,3 +229,5 @@ Shin Kanzen Master N3 ou Quartet I.
 | 61 | sex 02/10 | **〜たり〜たり** + aquecimento para o diagnóstico |
 | 62 | sáb 03/10 | **📝 DIAGNÓSTICO #1**: a sessão é a prova |
 | 63 | dom 04/10 | **Diário #5** + kanji 上・下・前・後 |
+
+*Ajuste 30/09: em 29/09 não houve mesa (limite de uso do Claude). A Semana 5 desliza um dia: dia 58 (てから/前に) em 30/09, dia 59 (なる) em 01/10, dia 60 (comparações) em 02/10. **O Diagnóstico #1 continua no sábado 03/10** e o Diário #5 com os kanji no domingo 04/10. O 〜たり〜たり passa para a Semana 6.*

@@ -150,3 +150,39 @@ Se ele avisar que tem pouco tempo: faça só os Passos 1 e 2 (30 min), registre 
 3. **Uma coisa nova por sessão.** Volume é trabalho do trajeto, não da mesa.
 4. **A mesa não repete o Anki.** Nada de quiz de vocabulário aqui.
 5. **Registre antes de encerrar.** Sessão sem registro é sessão perdida para o planejamento.
+
+---
+
+## Rituais vigentes (atualizado em 30/09/2026)
+
+Esta seção registra o que mudou desde que a skill foi escrita. **Quando conflitar com o texto acima, vale o que está aqui.** Ela existe para que uma conversa nova (`/clear` + `/estudo`) conduza a aula igual à anterior: todo o estado vive em arquivos.
+
+**Passo 0**
+- **Regra das 04:00:** sessão iniciada antes das 4h conta como o dia anterior (mesmo relógio do Anki).
+- **Horário de início:** gravar em `estado.json → mesa.horarios_inicio`. Combinado de 22/09: a mesa vem antes do jogo, meta de começar até 23h. Mostrar a tendência no resumo de domingo, sem sermão.
+- Ler `lembrete_abertura` no estado, se existir, e cobrar antes do conteúdo.
+- **Primeira sessão do mês:** criar o card "Ação do mês" do Projeto Japão e cuidar do diagnóstico mensal (CLAUDE.md, itens 4 e 5).
+- O `anki_status.py` lê a coleção do Anki do PC. Se a leitura estiver velha, pedir para ele abrir o Anki.
+
+**Passo 1**
+- Perguntar o **áudio (Teppei)** e **marcar o checklist de áudio no Trello a partir da resposta**. Ele ouve todo dia e esquece de marcar.
+- Ele costuma **abrir a sessão em japonês**: responder com o diff da frase dele (certo / errado e por quê / corrigido).
+- **Kanji travados:** se ele trouxer kanji do Kaishi (3 a 5), decompor por componentes (radical + história) antes do conteúdo novo. É o método que ele pediu em 20/09.
+
+**Passo 3**
+- **Produção dirigida:** além das frases livres, perguntas que forçam a partícula ou estrutura que a rotina dele não usa (で, が, contadores).
+- Dicionário liberado para palavras na produção; proibido na verificação. Respostas em kana/kanji, sem romaji.
+- Padrões em vigília e protocolos abertos estão no topo de `pontos_fracos` no estado.
+
+**Passo 4**
+1. Vocabulário novo → append em `progresso/vocabulario.tsv` e rodar `python3 tools/gerar_vocab_apkg.py`. Ele importa no Anki pelo AnkiConnect e sincroniza. Se o Anki do PC estiver fechado, não é problema: o deck é cumulativo e entra na próxima.
+2. **Erro de execução que se repete** (dakuten, い final, katakana, partícula) → alvo novo em `progresso/escrita.tsv` e rodar `python3 tools/gerar_escrita_apkg.py` (deck de digitação com diff).
+3. `estado.json` e `diario.md`, como sempre.
+4. `python3 tools/trello.py sync`.
+5. **Backup:** copiar `progresso/diario.md`, `progresso/estado.json` (e `plano/japao.md`, se mudou) para `~/.local/share/japones/backup-progresso/`.
+6. Commit e push se mudaram ferramentas, plano, currículo ou os `.tsv`.
+7. Fechar com o **音読**: duas frases do dia para ele ler em voz alta, duas vezes.
+
+**Domingo:** planejar a semana seguinte em `plano/curriculo.md` e criar os cards da semana no Trello (mesa e áudio).
+
+**Limite de uso:** a sessão deve começar com `/clear` e depois `/estudo`. Conversa longa reenvia o histórico inteiro a cada mensagem e esgota o limite dele (aconteceu em 27/09 e 29/09).
