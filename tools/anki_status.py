@@ -229,6 +229,22 @@ def main():
         print(f"\n▸ RETENCAO (30 dias, so revisoes): {ok}/{tot} = {ok/tot*100:.0f}%", end="")
         print("   — alvo saudavel: 85-90%" if ok/tot < 0.85 or ok/tot > 0.95 else "   🟢")
 
+    # ---- botoes: a retencao so mede alguma coisa se o Again estiver em uso.
+    # Em 28/08 e de novo em 02/10 ele marcava erro como Hard (que o Anki conta
+    # como acerto): retencao 100%, lapses vazios, cartoes esquecidos sem reaprender.
+    # O numero parecia otimo e era ruido — por isso o alerta aparece sozinho.
+    botoes = dict(con.execute(
+        "SELECT ease, COUNT(*) FROM revlog WHERE id >= ? AND type = 1 GROUP BY ease", (ini,)
+    ).fetchall())
+    tot_b = sum(botoes.values())
+    if tot_b:
+        pct = lambda e: botoes.get(e, 0) / tot_b * 100
+        print(f"▸ BOTOES (30 dias, revisoes): Again {pct(1):.0f}% · Hard {pct(2):.0f}% · "
+              f"Good {pct(3):.0f}% · Easy {pct(4):.0f}%")
+        if pct(1) < 2 and tot_b >= 200:
+            print("   ⚠️  Again quase nunca usado: erro marcado como Hard conta como acerto.\n"
+                  "      A retencao acima NAO vale para decidir ritmo de novos.")
+
     # ---- cartoes problematicos: alimentam pontos_fracos no estado.json
     print("\n▸ CARTOES QUE MAIS TRAVAM (lapses ≥ 3)")
     piores = con.execute("""
