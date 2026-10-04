@@ -9,6 +9,7 @@ plano/*.pdf
 # Gerados / cache
 tools/__pycache__/
 *.pyc
+diagnostico/audio/
 
 # Nunca, jamais: credenciais vivem em ~/.config/japones/, fora da árvore.
 # (Esta linha é cinto e suspensório — o arquivo nem deveria chegar perto daqui.)

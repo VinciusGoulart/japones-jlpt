@@ -1,6 +1,8 @@
 {
   "id": "2026-09",
   "numero": 1,
+  "rev": 2,
+  "audio": {"voz": "Nanami + Keita (gravado)", "base": "audio/2026-09/", "teste": "audio/teste.mp3"},
   "titulo": "Diagnóstico #1 · setembro/2026",
   "periodo": "Fase 0 inteira + Fase 1, semanas 1 a 4 (até 26/09)",
   "secoes": [

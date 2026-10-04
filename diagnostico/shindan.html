@@ -131,6 +131,7 @@ h1{font-family:var(--f-ui);font-weight:700;font-size:clamp(2rem,6vw,2.8rem);line
 .inline{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
 .inline input{padding:8px 10px;border:1px solid var(--rule);border-radius:8px;background:transparent;color:var(--text);font:inherit;min-width:0;width:12em}
 .ghost{padding:8px 14px;border-radius:8px;border:1px solid var(--ink);background:transparent;color:var(--ink);font-family:var(--f-ui);font-weight:700;cursor:pointer}
+.ghost:disabled{opacity:.45;cursor:default}
 .tablewrap{overflow-x:auto}
 table{border-collapse:collapse;width:100%;font-variant-numeric:tabular-nums;font-size:.92rem}
 th,td{padding:8px 10px;border-bottom:1px solid var(--rule);text-align:left;white-space:nowrap}
@@ -180,7 +181,7 @@ th{font-family:var(--f-ui);font-size:.8rem;color:var(--muted);font-weight:700}
   const S = { db: null, id: null, prova: null, answers: {}, plays: {}, revealed: {}, startedAt: null,
               result: null, armed: false, busy: false, error: "", history: [] };
   const MAX_PLAYS = 2;
-  const draftKey = () => "shindan-draft-" + S.id;
+  const draftKey = () => "shindan-draft-" + S.id + (S.prova && S.prova.rev ? "-r" + S.prova.rev : "");
   function saveDraft(){
     try { localStorage.setItem(draftKey(), JSON.stringify({ answers: S.answers, plays: S.plays, revealed: S.revealed, startedAt: S.startedAt })); } catch (e) {}
   }
@@ -204,8 +205,8 @@ th{font-family:var(--f-ui);font-size:.8rem;color:var(--muted);font-weight:700}
   function voiceFor(who){
     const v = T.voices;
     if (!v.length) return { voice: null, pitch: 1 };
-    if (who === "M") return v.length > 1 ? { voice: v[1], pitch: 0.9 } : { voice: v[0], pitch: 0.7 };
-    if (who === "F") return { voice: v[0], pitch: 1.12 };
+    if (who === "M") return v.length > 1 ? { voice: v[1], pitch: 0.9 } : { voice: v[0], pitch: 0.85 };
+    if (who === "F") return { voice: v[0], pitch: 1.05 };
     return { voice: v[0], pitch: 1 };
   }
   function speak(lines){
@@ -236,10 +237,77 @@ th{font-family:var(--f-ui);font-size:.8rem;color:var(--muted);font-weight:700}
     const p = { v: "N", t: q.pergunta_tts || q.pergunta };
     return [p, { pause: 700 }, ...falas, { pause: 700 }, p];
   }
+  /* ---------- áudio gravado ---------- */
+  // Prova com o campo "audio" toca mp3 publicado ao lado da página, pelo Web Audio.
+  // A voz do navegador fica só de reserva: ela varia por aparelho (no Firefox do Linux é o espeak, ininteligível).
+  const A = { ctx: null, raw: {}, buf: {}, state: {}, failed: false };
+  const recorded = () => !!(S.prova && S.prova.audio && S.prova.audio.base);
+  const audioUrl = (key) => key === "teste" ? S.prova.audio.teste : S.prova.audio.base + key + ".mp3";
+  const audioQs = () => S.prova.secoes.filter(s => s.id === "chokai").flatMap(s => s.questoes.map(q => q.id));
+  const audioKeys = () => audioQs().concat(S.prova.audio.teste ? ["teste"] : []);
+  async function fetchAudio(key){
+    A.state[key] = "loading";
+    try {
+      const r = await fetch(audioUrl(key));
+      if (!r.ok) throw new Error("http " + r.status);
+      A.raw[key] = await r.arrayBuffer();
+      A.state[key] = "ok";
+    } catch (e) { A.state[key] = "erro"; }
+  }
+  async function preloadAudio(){
+    if (!recorded()) return;
+    A.failed = false;
+    const todo = audioKeys().filter(k => A.state[k] !== "ok");
+    todo.forEach(k => { A.state[k] = "loading"; });
+    renderVoiceBar();
+    await Promise.all(todo.map(fetchAudio));
+    renderExam();
+  }
+  async function playRecorded(key){
+    const C = window.AudioContext || window.webkitAudioContext;
+    if (!A.ctx) A.ctx = new C();
+    if (A.ctx.state === "suspended") await A.ctx.resume();
+    if (!A.buf[key]) A.buf[key] = await new Promise((ok, no) => A.ctx.decodeAudioData(A.raw[key].slice(0), ok, no));
+    await new Promise(done => {
+      const src = A.ctx.createBufferSource();
+      src.buffer = A.buf[key];
+      src.connect(A.ctx.destination);
+      src.onended = done;
+      src.start();
+    });
+  }
+  function recordedBar(bar){
+    if (S.result) { bar.className = "voicebar ok"; bar.append(el("span", null, "Áudio gravado. O diálogo de cada questão está escrito abaixo dela.")); return; }
+    const qs = audioQs();
+    const bad = qs.filter(k => A.state[k] === "erro").length;
+    if (audioKeys().some(k => A.state[k] == null || A.state[k] === "loading")) {
+      bar.className = "voicebar ok";
+      bar.append(el("span", null, "Carregando o áudio gravado…"));
+    } else if (bad || A.failed) {
+      bar.className = "voicebar";
+      bar.append(
+        el("strong", null, bad ? "O áudio de " + bad + (bad === 1 ? " questão" : " questões") + " não carregou." : "O som não tocou neste navegador."),
+        el("span", null, "Confira a conexão e tente de novo. Se continuar, avise o tutor antes de responder a audição."),
+        el("div", { class: "inline" }, el("button", { class: "ghost", type: "button", onclick: preloadAudio }, "Tentar de novo")));
+    } else {
+      bar.className = "voicebar ok";
+      bar.append(el("span", null, "Áudio gravado, com uma voz de mulher e uma de homem. Toca igual em qualquer navegador."));
+      if (!S.result && A.state.teste === "ok") bar.append(el("div", { class: "inline" },
+        el("button", { class: "ghost", type: "button", disabled: T.playing != null, onclick: async () => {
+          if (T.playing != null) return;
+          T.playing = "teste"; renderExam();
+          try { await playRecorded("teste"); } catch (e) { A.failed = true; }
+          T.playing = null; renderExam();
+        } }, T.playing === "teste" ? "Tocando…" : "Testar o som"),
+        el("span", null, "Frase de exemplo, fora da prova. Não gasta repetição.")));
+    }
+  }
+
   function renderVoiceBar(){
     const bar = $("#voicebar");
     if (!bar) return;
     bar.replaceChildren();
+    if (recorded()) { recordedBar(bar); return; }
     if (!T.supported) {
       bar.className = "voicebar";
       bar.append(el("strong", null, "Este navegador não tem síntese de voz."), el("span", null, "Abra esta página no Chrome (PC ou celular) para fazer a parte de audição."));
@@ -251,9 +319,11 @@ th{font-family:var(--f-ui);font-size:.8rem;color:var(--muted);font-weight:700}
         el("span", null, "Sem voz, você pode ler o diálogo, mas a questão fica marcada como lida, não ouvida.")
       );
     } else {
-      bar.className = "voicebar ok";
+      bar.className = "voicebar";
       const names = T.voices.slice(0, 2).map(v => v.name).join(" + ");
-      bar.append(el("span", null, "Voz japonesa: " + names + (T.voices.length < 2 ? " (uma só voz; o homem sai com tom mais grave)" : "")));
+      bar.append(
+        el("strong", null, "Esta prova não tem áudio gravado."),
+        el("span", null, "A voz é a do navegador: " + names + (T.voices.length < 2 ? " (uma só voz; o homem sai com tom mais grave)" : "") + ". A qualidade varia; no Firefox do Linux ela é ruim, prefira o Chrome."));
     }
   }
 
@@ -312,19 +382,27 @@ th{font-family:var(--f-ui);font-size:.8rem;color:var(--muted);font-weight:700}
     const used = S.plays[q.id] || 0;
     const left = MAX_PLAYS - used;
     const wrap = el("div", { class: "player" });
-    const canPlay = T.supported && T.voices.length > 0 && left > 0 && !S.result && T.playing == null;
+    const rec = recorded();
+    const ready = rec ? A.state[q.id] === "ok" : (T.supported && T.voices.length > 0);
+    const canPlay = ready && left > 0 && !S.result && T.playing == null;
     const btn = el("button", { class: "play", type: "button", disabled: !canPlay,
       onclick: async () => {
         if (!canPlay) return;
         if (!S.startedAt) S.startedAt = Date.now();
         S.plays[q.id] = used + 1; saveDraft();
         T.playing = q.id; renderExam();
-        await speak(scriptFor(q));
+        try {
+          if (rec) await playRecorded(q.id); else await speak(scriptFor(q));
+        } catch (e) {
+          // áudio que não tocou não gasta repetição
+          S.plays[q.id] = used; saveDraft();
+          A.failed = true;
+        }
         T.playing = null; renderExam();
       } }, el("span", { class: "tri", "aria-hidden": "true" }), T.playing === q.id ? "Tocando…" : "Ouvir");
     wrap.append(btn);
     if (!S.result) wrap.append(el("span", { class: "plays" }, left > 0 ? left + (left === 1 ? " vez restante" : " vezes restantes") : "Sem mais repetições"));
-    if (!S.result && !S.revealed[q.id] && (!T.supported || !T.voices.length)) {
+    if (!S.result && !S.revealed[q.id] && (rec ? (A.state[q.id] === "erro" || A.failed) : (!T.supported || !T.voices.length))) {
       wrap.append(el("button", { class: "linkbtn", type: "button", onclick: () => { S.revealed[q.id] = true; saveDraft(); renderExam(); } }, "Ler o diálogo (conta como lido)"));
     }
     return wrap;
@@ -376,7 +454,7 @@ th{font-family:var(--f-ui);font-size:.8rem;color:var(--muted);font-weight:700}
       duracao_min: S.startedAt ? Math.round((Date.now() - S.startedAt) / 60000) : null,
       respostas: S.answers, audio_toques: S.plays, dialogo_lido: S.revealed,
       acertos: g.acertos, totais: g.totais, erradas: g.erradas,
-      voz: T.voices.length ? T.voices.slice(0, 2).map(v => v.name) : [],
+      voz: recorded() ? [S.prova.audio.voz || "gravado"] : (T.voices.length ? T.voices.slice(0, 2).map(v => v.name) : []),
       oficiais_autoavaliacao: ""
     };
     try {
@@ -500,6 +578,7 @@ th{font-family:var(--f-ui);font-size:.8rem;color:var(--muted);font-weight:700}
       else loadDraft();
       try { const hs = await db.collection("resultados").get(); S.history = hs.docs.map(d => JSON.parse(JSON.stringify(d.data()))); } catch (e) { S.history = S.result ? [S.result] : []; }
       renderAll();
+      if (!S.result) preloadAudio();
     } catch (e) {
       fail("Não consegui carregar a prova agora. Recarregue a página em alguns segundos.");
     }
