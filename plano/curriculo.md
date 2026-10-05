@@ -231,3 +231,17 @@ Shin Kanzen Master N3 ou Quartet I.
 | 63 | dom 04/10 | **Diário #5** + kanji 上・下・前・後 |
 
 *Ajuste 30/09: em 29/09 não houve mesa (limite de uso do Claude). A Semana 5 desliza um dia: dia 58 (てから/前に) em 30/09, dia 59 (なる) em 01/10, dia 60 (comparações) em 02/10. **O Diagnóstico #1 continua no sábado 03/10** e o Diário #5 com os kanji no domingo 04/10. O 〜たり〜たり passa para a Semana 6.*
+
+## Fase 1 — Semana 6 (dias 63–69, 05/10 a 11/10): listar ações, ligar adjetivos e os consertos do Diagnóstico #1
+
+*Detalhada em 04/10. Entram o 〜たり〜たり adiado, três pontos novos de N5 e o que o Diagnóstico #1 (82%) e o Diário #5 apontaram: かった×だった, てもいい, もう/まだ pelo ouvido e a partícula de quem faz a ação.*
+
+| Dia | Data | Conteúdo |
+|---|---|---|
+| 63 | seg 05/10 | **〜たり〜たり**: listar ações de exemplo · *abertura: as duas rápidas e os itens que faltaram no Diário #5* |
+| 64 | ter 06/10 | **Adjetivo em て: 〜くて／〜で** (ligar adjetivos: 安くておいしい) · reforça かった×だった |
+| 65 | qua 07/10 | **〜てはいけません** (proibição), em contraste com 〜てもいいです |
+| 66 | qui 08/10 | **〜たことがあります** (experiência) + もう／まだ pelo ouvido (respostas rápidas) |
+| 67 | sex 09/10 | Conversa dirigida #4: **quem faz × quem recebe** (は/が × を × に × と), com sujeitos que não são ele + で de palco |
+| 68 | sáb 10/10 | **Diário #6**, em casual |
+| 69 | dom 11/10 | Kanji de posição, parte 2: 中・外・右・左 + planejamento da Semana 7 |
