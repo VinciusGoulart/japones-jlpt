@@ -245,3 +245,14 @@ Shin Kanzen Master N3 ou Quartet I.
 | 67 | sex 09/10 | Conversa dirigida #4: **quem faz × quem recebe** (は/が × を × に × と), com sujeitos que não são ele + で de palco |
 | 68 | sáb 10/10 | **Diário #6**, em casual |
 | 69 | dom 11/10 | Kanji de posição, parte 2: 中・外・右・左 + planejamento da Semana 7 |
+
+*Ajuste 08/10: em 06 e 07/10 não houve mesa (o Anki seguiu). A sessão de retomada de 08/10 virou o dia 64, só com revisão e os kanji travados do Kaishi (意・識・記・憶・瞬). Até domingo, o que sobra da semana:*
+
+| Dia | Data | Conteúdo |
+|---|---|---|
+| 64 | qui 08/10 | **Retomada:** kanji travados, 3º lote (意識, 記憶, 一瞬, 瞬間) + revisão |
+| 65 | sex 09/10 | **Adjetivo em て: 〜くて／〜で** · reforça かった×だった · *abertura: いる×ある e まだ〜ていません* |
+| 66 | sáb 10/10 | **〜てはいけません** × 〜てもいいです (a てもいい entrou em 08/10 com a estrutura completa) |
+| 67 | dom 11/10 | **Kanji travados, 4º lote** (da seção EM LOOP do `anki_status`: 理解, 本当, 結果, 先に) + planejamento da Semana 7 |
+
+*Vão para a Semana 7: 〜たことがあります, conversa dirigida #4 (quem faz × quem recebe, agora com いる×ある), Diário #6 e 中・外・右・左. Os kanji travados passaram na frente dos de posição porque travam o trajeto todo dia.*

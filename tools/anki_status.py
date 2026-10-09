@@ -256,6 +256,32 @@ def main():
         frente = flds.split("\x1f")[0][:44]
         print(f"   {lapses:>3}x  {frente:46s} {decks.get(did,'')[-22:]}")
 
+    # ---- cartoes em loop: o lapse so conta quando um cartao JA FORMADO e
+    # esquecido. Em 08/10 意識 levou 6 Again em 2 dias e nao aparecia acima,
+    # porque nunca saiu da fase de aprendizado (0 lapses). Contar o Again no
+    # revlog pega o cartao que esta girando sem fixar.
+    print("\n▸ EM LOOP (≥ 3 Again nos ultimos 7 dias) — candidatos a decompor na mesa")
+    loop = con.execute("""
+        SELECT n.flds, COUNT(*) AS agains, c.did FROM revlog r
+        JOIN cards c ON c.id = r.cid JOIN notes n ON n.id = c.nid
+        WHERE r.id >= ? AND r.ease = 1
+        GROUP BY r.cid HAVING agains >= 3 ORDER BY agains DESC LIMIT 15""",
+        (inicio_do_dia_ms(6),)).fetchall()
+    if not loop:
+        print("   (nenhum)")
+    for flds, agains, did in loop:
+        frente = flds.split("\x1f")[0][:44]
+        print(f"   {agains:>3}x  {frente:46s} {decks.get(did,'')[-22:]}")
+
+    # ---- bandeira: o jeito dele de mandar um cartao para a mesa
+    sinalizados = con.execute("""
+        SELECT n.flds, c.did FROM cards c JOIN notes n ON n.id = c.nid
+        WHERE c.flags & 7 != 0 ORDER BY c.mod DESC LIMIT 20""").fetchall()
+    if sinalizados:
+        print(f"\n▸ COM BANDEIRA ({len(sinalizados)}) — ele mandou para a mesa")
+        for flds, did in sinalizados:
+            print(f"        {flds.split(chr(31))[0][:44]:46s} {decks.get(did,'')[-22:]}")
+
     con.close()
     print()
 
