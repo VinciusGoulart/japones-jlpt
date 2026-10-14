@@ -256,3 +256,20 @@ Shin Kanzen Master N3 ou Quartet I.
 | 67 | dom 11/10 | **Kanji travados, 4º lote** (da seção EM LOOP do `anki_status`: 理解, 本当, 結果, 先に) + planejamento da Semana 7 |
 
 *Vão para a Semana 7: 〜たことがあります, conversa dirigida #4 (quem faz × quem recebe, agora com いる×ある), Diário #6 e 中・外・右・左. Os kanji travados passaram na frente dos de posição porque travam o trajeto todo dia.*
+
+## Fase 1 — Semana 7 (dias 66–71, 13/10 a 18/10): retomada, proibição, experiência e papéis das partículas
+
+*Detalhada em 13/10, na retomada: 10, 11 e 12/10 ficaram sem mesa (o Anki seguiu) e o planejamento de domingo não aconteceu. A Semana 6 parou no dia 65.*
+
+| Dia | Data | Conteúdo |
+|---|---|---|
+| 66 | ter 13/10 | **Retomada:** kanji travados, 4º lote (結果, 探す × 深い, 正しい) + revisão (família → conector; forma て de verbo) |
+| 67 | qua 14/10 | **〜てはいけません** × 〜てもいいです · *abertura: conector dentro de frase e に/が pelo papel* |
+| 68 | qui 15/10 | **〜たことがあります** (experiência) + もう／まだ pelo ouvido (respostas rápidas) |
+| 69 | sex 16/10 | Conversa dirigida #4: **quem faz × quem recebe** (は/が × を × に × と), com いる×ある e で de palco |
+| 70 | sáb 17/10 | **Diário #6**, em casual · *pendência do dia: questões-exemplo oficiais do N5* |
+| 71 | dom 18/10 | **Kanji travados, 5º lote** (da seção EM LOOP: 後ろ, 済む, 優しい, 終わる) + planejamento da Semana 8 |
+
+*O 4º lote trocou 理解・本当・先に (previstos em 08/10) por 探す・深い・正しい, que eram os que estavam em loop em 13/10: o lote sai da lista do dia, não da previsão. Fica para a Semana 8: 中・外・右・左.*
+
+*Achado de 13/10 que orienta a semana: os conectores 退屈で e 長くて, corrigidos em 09/10 e já praticados no deck de digitação, voltaram errados na produção livre (退屈って, ながいで). Frase decorada não transferiu. As aberturas da semana cobram o conector **dentro de frase**, com a família dita antes.*
