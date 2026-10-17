@@ -159,6 +159,7 @@ export type TipoExercicio =
   | 'completar'
   | 'digitar'
   | 'conjugar'
+  | 'ouvir'
   | 'producao'
 
 export type Bloco = 'aquecimento' | 'verificacao' | 'producao' | 'revisao'
@@ -175,6 +176,8 @@ export interface RenderCompletar { partes: ParteCompletar[] }
 /** a dica é opcional: sem ela o servidor manda {} */
 export interface RenderDigitar { dica?: string | null }
 export interface RenderConjugar { verbo: string; leitura?: string; forma: string }
+/** ouvir (§12.3): nunca vem o texto falado, que é a resposta. audio = null só se o mp3 não foi gravado. */
+export interface RenderOuvir { modo: 'ditado' | 'escolha'; audio: string | null; opcoes?: string[] }
 export interface RenderProducao { minimo: number; dicas: string[] }
 
 // corpo da resposta, por tipo
@@ -185,6 +188,8 @@ export interface RespostaOrdenar { pecas: string[] }
 export interface RespostaCompletar { lacunas: string[] }
 export interface RespostaTexto { texto: string }
 export interface RespostaProducao { frases: string[] }
+/** ditado manda `texto`, compreensão manda `opcao`; `toques` = quantas vezes tocou (informativo) */
+export type RespostaOuvir = ({ texto: string } | { opcao: string }) & { toques?: number }
 
 // detalhe da correção, por tipo (§10)
 export interface ParLigar { esquerda: string; escolhida: string | null; certa: string; ok: boolean }
@@ -206,6 +211,8 @@ export interface PorTipo {
   completar: { render: RenderCompletar; resposta: RespostaCompletar; detalhe: DetalheCompletar }
   digitar: { render: RenderDigitar; resposta: RespostaTexto; detalhe: DetalheTexto }
   conjugar: { render: RenderConjugar; resposta: RespostaTexto; detalhe: DetalheTexto }
+  /** detalhe: DetalheTexto no ditado; {} na compreensão */
+  ouvir: { render: RenderOuvir; resposta: RespostaOuvir; detalhe: DetalheTexto | DetalheVazio }
   producao: { render: RenderProducao; resposta: RespostaProducao; detalhe: DetalheVazio }
 }
 
@@ -274,3 +281,220 @@ export interface Correcao<T extends TipoExercicio = TipoExercicio> {
   /** a API também diz se esta resposta contou (só a primeira conta); não está no contrato do §10 */
   contou?: boolean
 }
+
+// ------------------------------------------------------------------ Fase 3 (DESIGN §12)
+
+export interface Padrao {
+  id: number
+  categoria: string
+  descricao: string
+  status: 'aberto' | 'resolvido'
+  aberto_em: string
+  resolvido_em: string | null
+  nota: string | null
+}
+
+export interface ErroRegistrado {
+  data: string
+  bloco: 'abertura' | 'verificacao' | 'producao' | 'diagnostico' | 'anki' | 'outro'
+  categoria: string
+  escrito: string | null
+  correto: string | null
+  porque: string | null
+}
+
+/** GET /api/erros?dias=&categoria= (o mesmo do erros() do MCP; no máximo 100, mais novo primeiro) */
+export interface Erros {
+  desde: string
+  por_categoria: Record<string, number>
+  erros: ErroRegistrado[]
+}
+
+/** GET /api/erros/painel?dias=90 (§12.1) */
+export interface ErrosPainel {
+  desde: string
+  /** o erro mais antigo do banco: o registro erro a erro só começou em 16/10; antes disso "nenhum erro" não quer dizer nada */
+  primeiro_erro: string | null
+  total: number
+  /** grupo = prefixo antes do ':' ('particula:wo' → 'particula') */
+  por_categoria: { categoria: string; grupo: string; n: number; ultimo: string }[]
+  /** semana = a segunda-feira (AAAA-MM-DD) */
+  por_semana: { semana: string; grupo: string; n: number }[]
+  por_bloco: Partial<Record<ErroRegistrado['bloco'], number>>
+  /** só a primeira resposta conta; taxa_erro = errados / (certos + errados), null se nada fechado */
+  tipos_exercicio: {
+    tipo: TipoExercicio
+    respondidos: number
+    certos: number
+    errados: number
+    revisar: number
+    taxa_erro: number | null
+  }[]
+  padroes: { abertos: Padrao[]; resolvidos: Padrao[] }
+}
+
+/** GET /api/registro?busca= — o log herdado de pontos_fracos (antes do sistema) */
+export interface RegistroAntigo {
+  data: string | null
+  texto: string
+}
+
+export interface BaralhoAnki {
+  baralho: string
+  total: number
+  novos: number
+  devidos: number
+  aprendendo: number
+  suspensos: number
+}
+
+/** o mesmo do anki() do MCP */
+export interface StatusAnki {
+  fonte: { fonte: string; rotulo: string; idade_dias: number }
+  baralhos: BaralhoAnki[]
+  fila_atrasados: number
+  alerta_fila: string | null
+  /** 7 itens, do mais antigo (dias_atras 6) para hoje (0) */
+  ultimos_7_dias: { dias_atras: number; cartoes: number; minutos: number }[]
+  retencao_30d: number | null
+  alerta_retencao: string | null
+  botoes_30d_pct: { again: number; hard: number; good: number; easy: number }
+  travam: { frente: string; lapses: number; baralho: string }[]
+  em_loop: { frente: string; again_7d: number; baralho: string }[]
+  bandeira: { frente: string; baralho: string }[]
+}
+
+export interface GraficosAnki {
+  /** as 12 últimas semanas desde o início do plano; semana = segunda-feira */
+  retencao_semanal: { semana: string; revisoes: number; acertos: number; pct: number }[]
+  /** jovem = intervalo < 21 dias; maduro = ≥ 21 */
+  maturidade: { novos: number; aprendendo: number; jovens: number; maduros: number; suspensos: number }
+  /** 14 dias a partir de hoje; o de hoje inclui os atrasados */
+  previsao: { data: string; devidos: number }[]
+}
+
+export interface DiaAnki {
+  data: string
+  cartoes: number
+  minutos: number
+  /** 1 = ouviu, 0 = não ouviu, null = não informado */
+  audio: 0 | 1 | null
+}
+
+/** GET /api/anki/painel (§12.2) */
+export interface AnkiPainel {
+  status: StatusAnki | ErroFonte
+  graficos: GraficosAnki | ErroFonte
+  /** todo dia desde 03/08 até hoje, sem buraco */
+  por_dia: DiaAnki[]
+  /** presente quando o Anki não abriu e por_dia veio do banco */
+  fonte_por_dia?: string
+}
+
+export interface Acento {
+  leitura: string
+  /** posição da queda de tom (0 = heiban) */
+  quedas: number[]
+  padroes: string[]
+}
+
+export interface SentidoKotoba {
+  classe: string[]
+  misc: string[]
+  pt: string[]
+  /** true = tradução automática para o português (mostrar como tal) */
+  pt_auto: boolean
+  en: string[]
+}
+
+export interface VerbeteKotoba {
+  ent_seq: number
+  palavra: string
+  grafia_kanji: string | null
+  leitura: string
+  glosas_pt: string[]
+  glosas_pt_auto: string[]
+  glosas_en: string[]
+  /** 5 = N5 … 1 = N1 */
+  jlpt: number | null
+  comum: boolean
+  classe: string[]
+  acento: Acento | null
+  casamento: string
+  sentido_casado: number | null
+  usual_em_kana: boolean
+  sentidos: SentidoKotoba[]
+  /** a palavra (ou a leitura) é um campo inteiro de alguma nota do Anki; null = o Anki não abriu */
+  tem_cartao: boolean | null
+}
+
+/** GET /api/kotoba/buscar?q= (§12.4); fonte fora do ar = ErroFonte */
+export type BuscaKotoba = { resultados: VerbeteKotoba[] } | ErroFonte
+
+/** GET /api/kotoba/kanji/{literal}; 404 se não houver */
+export interface KanjiKotoba {
+  kanji: string
+  on: string[]
+  kun: string[]
+  significados_pt: string[]
+  significados_pt_auto: boolean
+  significados_en: string[]
+  /** escala nova, como no verbete: 5 = N5 … 1 = N1 */
+  jlpt: number | null
+  tracos: number | null
+  serie: number | null
+  frequencia: number | null
+  radical: {
+    numero: number
+    glifo: string
+    nome: string
+    romaji: string
+    significado_pt: string
+    /** a forma do radical dentro do kanji (氵 de 海, 訁 de 話); posicao = 'hen', 'tsukuri'… */
+    variante: { glifo: string; nome: string; posicao: string; significado_pt: string } | null
+  } | null
+  componentes: { glifo: string; nome_pt: string }[]
+  /** a frase de memorização do Kotoba (markdown com **negrito**) */
+  mnemonico: { significado: string; leitura_kana: string; leitura_frase: string } | null
+}
+
+export interface ConsultaKotoba {
+  tipo: 'query' | 'entry' | 'kanji'
+  /** "持つ · segurar" (entry), o texto buscado (query) ou o kanji */
+  rotulo: string
+  consulta: string | null
+  kanji: string | null
+  /** ISO local sem fuso: '2026-10-17T02:18:37' (pode ser a madrugada do dia seguinte) */
+  quando: string
+  ent_seq: number | null
+  /** só em 'entry' */
+  palavra: string | null
+  leitura?: string | null
+  tem_cartao?: boolean | null
+}
+
+export interface CandidataCartao {
+  palavra: string
+  leitura: string | null
+  rotulo: string
+  vezes: number
+  ultima: string
+}
+
+/** GET /api/kotoba/historico?dias=30 (§12.4); dias do mais novo para o mais antigo */
+export type HistoricoKotoba =
+  | { dias: { data: string; consultas: ConsultaKotoba[] }[]; sem_cartao: CandidataCartao[]; aviso?: string }
+  | ErroFonte
+
+export interface ItemListaKotoba {
+  tipo: 'entry' | 'kanji'
+  ref: string | number
+  palavra: string | null
+  leitura: string | null
+  glosa_pt: string | null
+  nota: string | null
+  adicionado: string
+}
+
+/** GET /api/kotoba/listas */
+export type ListasKotoba = { id: number; nome: string; favoritos: boolean; total: number; itens: ItemListaKotoba[] }[] | ErroFonte

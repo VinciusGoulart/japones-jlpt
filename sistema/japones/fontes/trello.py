@@ -7,30 +7,16 @@ Uma chamada só (cards com checklists embutidos): o hoje() não pode esperar
 uma requisição por card.
 """
 import importlib.util
-import socket
 from datetime import date, datetime
 
-from japones import config
+from japones import config, rede  # noqa: F401  (rede: só o efeito de importar)
 
 
 class TrelloIndisponivel(Exception):
     pass
 
 
-# Neste PC a consulta AAAA (IPv6) do DNS não responde e o glibc espera 5 s antes
-# de desistir — na PRIMEIRA requisição de cada processo (medido em 17/10:
-# getaddrinfo com AF_UNSPEC 5,04 s; com AF_INET 0,02 s). Como api.trello.com só
-# tem IPv4 mesmo, a busca do Trello pede só o A. Restrito a este host de propósito.
-_getaddrinfo_original = socket.getaddrinfo
-
-
-def _getaddrinfo_ipv4_trello(host, port, family=0, type=0, proto=0, flags=0):
-    if family == 0 and isinstance(host, str) and host.endswith("trello.com"):
-        family = socket.AF_INET
-    return _getaddrinfo_original(host, port, family, type, proto, flags)
-
-
-socket.getaddrinfo = _getaddrinfo_ipv4_trello
+# DNS só por IPv4 para api.trello.com: sem isso a 1ª requisição espera 5 s (ver japones/rede.py).
 
 
 def _ferramenta():

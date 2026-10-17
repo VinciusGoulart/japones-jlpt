@@ -4,9 +4,10 @@ from pathlib import Path
 
 from japones import config
 
-ESQUEMA_ATUAL = 2
+ESQUEMA_ATUAL = 3
 _DDL = Path(__file__).with_name("schema.sql")
 _DDL2 = Path(__file__).with_name("schema2.sql")
+_DDL3 = Path(__file__).with_name("schema3.sql")
 
 
 def conectar(caminho: Path | None = None) -> sqlite3.Connection:
@@ -31,6 +32,23 @@ def _migrar(con: sqlite3.Connection) -> None:
         con.executescript(_DDL2.read_text())
         con.execute("PRAGMA user_version = 2")
         con.commit()
+        versao = 2
+    if versao < 3:      # 17/10: o tipo 'ouvir' (DESIGN §12) — a tabela exercicio é refeita
+        # foreign_keys só muda fora de transação, e TEM de estar desligada: com ela ligada,
+        # o DROP TABLE exercicio apagaria em cascata todas as respostas.
+        con.commit()
+        con.execute("PRAGMA foreign_keys = OFF")
+        try:
+            con.executescript("BEGIN IMMEDIATE;\n" + _DDL3.read_text())
+            if con.execute("PRAGMA foreign_key_check").fetchall():
+                raise RuntimeError("esquema 3: a cópia da tabela exercicio quebrou uma chave estrangeira")
+            con.execute("PRAGMA user_version = 3")
+            con.commit()
+        except Exception:
+            con.rollback()
+            raise
+        finally:
+            con.execute("PRAGMA foreign_keys = ON")
     # Esquemas futuros entram aqui, um `if versao < N` por vez, nunca editando os anteriores.
 
 

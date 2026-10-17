@@ -1,0 +1,72 @@
+/* Cores dos gráficos da Fase 3 (Erros e Anki).
+
+   Ficam fora do index.css porque só as telas com gráfico as usam (e o CSS vem
+   junto do pedaço lazy delas). Os valores são a paleta de referência da skill
+   de dataviz, validada com o validate_palette.js contra a superfície REAL dos
+   cards daqui (#ffffff no claro, #15181f no escuro), em 17/10/2026:
+
+   - categórica, 5 primeiros slots: passa CVD (pior par vizinho ΔE 9,1 claro /
+     8,4 escuro) e o piso de visão normal (19,6 / 19,3). No claro, aqua, amarelo
+     e rosa ficam abaixo de 3:1 contra o branco: por isso toda legenda de série
+     leva o número ao lado, e todo gráfico tem a vista em tabela.
+   - sequencial (mapa de calor) e ordinal (maturidade): um tom só (azul),
+     monotônico, e o degrau mais perto da superfície passa de 2:1. No escuro a
+     rampa inverte: pouco = escuro (perto do fundo), muito = claro.
+
+   A ORDEM dos slots é o que garante a separação para daltônicos: não reordene
+   nem pule slot. Uma série nova além do 5º vai para "Outros". */
+
+:root {
+  /* categórica: identidade das séries */
+  --viz-s1: #2a78d6;
+  --viz-s2: #eb6834;
+  --viz-s3: #1baf7a;
+  --viz-s4: #eda100;
+  --viz-s5: #e87ba4;
+  /* "Outros" e o que é contexto, não série */
+  --viz-outros: #898781;
+
+  /* sequencial do mapa de calor: 0 é cinza (nada), 1–5 é o azul crescente */
+  --viz-seq-0: #eceef2;
+  --viz-seq-1: #86b6ef;
+  --viz-seq-2: #5598e7;
+  --viz-seq-3: #2a78d6;
+  --viz-seq-4: #1c5cab;
+  --viz-seq-5: #104281;
+  /* A marca de áudio: tinta escura com halo claro, IGUAL em toda célula. Trocar a
+     cor da marca conforme o degrau (escura no claro, branca no escuro) fazia o
+     ponto parecer dois estados diferentes; com o halo, ela lê em qualquer fundo. */
+  --viz-marca-tinta: #15181f;
+  --viz-marca-halo: #ffffff;
+
+  /* ordinal da maturidade: novos → aprendendo → jovens → maduros */
+  --viz-ord-1: #86b6ef;
+  --viz-ord-2: #3987e5;
+  --viz-ord-3: #1c5cab;
+  --viz-ord-4: #0d366b;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --viz-s1: #3987e5;
+    --viz-s2: #d95926;
+    --viz-s3: #199e70;
+    --viz-s4: #c98500;
+    --viz-s5: #d55181;
+    --viz-outros: #898781;
+
+    --viz-seq-0: #282b33;
+    --viz-seq-1: #184f95;
+    --viz-seq-2: #256abf;
+    --viz-seq-3: #3987e5;
+    --viz-seq-4: #6da7ec;
+    --viz-seq-5: #9ec5f4;
+    --viz-marca-tinta: #0d0f15;
+    --viz-marca-halo: #f0f2f6;
+
+    --viz-ord-1: #184f95;
+    --viz-ord-2: #2a78d6;
+    --viz-ord-3: #6da7ec;
+    --viz-ord-4: #b7d3f6;
+  }
+}

@@ -11,7 +11,7 @@ import re
 import sys
 from datetime import date
 
-from japones import config, db
+from japones import config, db, dominio
 from japones.dominio import ano_de
 from japones.fontes import anki, diario, trello
 
@@ -105,6 +105,22 @@ def migrar_audio_trello(con) -> int:
     return n
 
 
+def _data_do_registro(texto: str) -> str | None:
+    """A data vem no começo, mas nem sempre na 1ª posição ("dia 5 (08/08) —", "PADRAO 13/09:").
+    Placar também tem barra: "ANIMACIDADE 3/5 NA ESTREIA (31/08)" virava 03/05 (achado na tela
+    Erros, 17/10). Vale a primeira que cai dentro do plano; placar (3/5, 4/14) não cai."""
+    candidatas = re.findall(r"(?<![\d/])(\d{1,2})/(\d{1,2})(?![\d/])", texto[:80])
+    hoje = dominio.dia_de_estudo()
+    for dia, mes in candidatas:
+        try:
+            d = ano_de(int(dia), int(mes), config.INICIO_PLANO)
+        except ValueError:
+            continue
+        if config.INICIO_PLANO <= d <= hoje:
+            return d.isoformat()
+    return None
+
+
 def migrar_registro(con) -> int:
     estado = json.loads(config.ESTADO.read_text())
     con.execute("DELETE FROM registro WHERE origem IN ('pontos_fracos', 'vigiar')")
@@ -112,15 +128,8 @@ def migrar_registro(con) -> int:
     for origem in ("pontos_fracos", "vigiar"):
         for texto in estado.get(origem, []):
             texto = texto if isinstance(texto, str) else json.dumps(texto, ensure_ascii=False)
-            # a data vem no começo, mas nem sempre na 1ª posição ("dia 5 (08/08) —", "PADRAO 13/09:")
-            m = re.search(r"(?<!\d)(\d{1,2})/(\d{1,2})(?!\d)", texto[:60])
-            data = None
-            if m:
-                try:
-                    data = ano_de(int(m.group(1)), int(m.group(2)), config.INICIO_PLANO).isoformat()
-                except ValueError:
-                    pass
-            con.execute("INSERT INTO registro (data, texto, origem) VALUES (?, ?, ?)", (data, texto, origem))
+            con.execute("INSERT INTO registro (data, texto, origem) VALUES (?, ?, ?)",
+                        (_data_do_registro(texto), texto, origem))
             n += 1
     return n
 

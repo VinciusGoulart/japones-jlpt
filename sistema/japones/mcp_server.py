@@ -174,7 +174,9 @@ def erros(categoria: str | None = None, dias: int = 30) -> dict:
     e a contagem por categoria."""
     desde = (dominio.dia_de_estudo() - timedelta(days=dias)).isoformat()
     con = _con()
-    filtro, params = ("AND categoria LIKE ?", [desde, f"{categoria}%"]) if categoria else ("", [desde])
+    # prefixo literal: um '_' ou '%' no nome não pode virar curinga do LIKE
+    prefixo = (categoria or "").replace("\\", "\\\\").replace("%", "\\%").replace("_", "\\_")
+    filtro, params = ("AND categoria LIKE ? ESCAPE '\\'", [desde, f"{prefixo}%"]) if categoria else ("", [desde])
     lista = db.linhas(con.execute(f"SELECT data, bloco, categoria, escrito, correto, porque FROM erro "
                                   f"WHERE data >= ? {filtro} ORDER BY data DESC, id DESC LIMIT 100", params))
     contagem = dict(con.execute("SELECT categoria, COUNT(*) FROM erro WHERE data >= ? GROUP BY categoria "
@@ -244,12 +246,21 @@ def kanji(literal: str) -> dict:
 
 @mcp.tool()
 def consultas_kotoba(data: str | None = None) -> dict:
-    """O que ele procurou no Kotoba num dia de estudo (padrão: hoje). Palavras consultadas durante a
-    produção são as que faltaram — candidatas a cartão."""
-    from japones.fontes import kotoba
+    """O que ele procurou no Kotoba num dia de estudo (padrão: hoje), e `sem_cartao`: as palavras que ele
+    abriu e que não aparecem em nenhuma nota do Anki. Palavra consultada durante a produção é a que
+    faltou — candidata a cartão no Passo 4 (é pista: o cartão pode existir noutra forma, たべます)."""
+    from japones import painel
     d = date.fromisoformat(data) if data else dominio.dia_de_estudo()
-    ini, fim = dominio.intervalo_do_dia(d)
-    return _seguro(lambda: {"dia": d.isoformat(), "consultas": kotoba.historico(desde=ini, ate=fim)})
+    r = painel.kotoba_historico(1, ate=d)
+    if "erro" in r:
+        return r
+    consultas = r["dias"][0]["consultas"] if r["dias"] else []
+    return {"dia": d.isoformat(),
+            "consultas": [f"{c['quando'][11:16]} {c['rotulo']}" + (" ✓cartão" if c.get("tem_cartao") else "")
+                          for c in consultas],
+            "sem_cartao": [f"{x['palavra']} ({x['leitura']})" if x["leitura"] else x["palavra"]
+                           for x in r["sem_cartao"]],
+            **({"aviso": r["aviso"]} if "aviso" in r else {})}
 
 
 # ------------------------------------------------------------------ escrita
@@ -379,9 +390,10 @@ PAINEL = "http://127.0.0.1:8787"
 
 
 @mcp.tool()
-def planejar_tipos(n: int = 8, semente: int | None = None) -> dict:
-    """Sorteia a sequência de tipos da lição: variada, sem deixar tipo de fora, com peso para o que ele
-    erra mais e para o que não aparece há duas lições. 'producao' entra sempre, no fim."""
+def planejar_tipos(n: int = 9, semente: int | None = None) -> dict:
+    """Sorteia a sequência de tipos da lição: variada, sem deixar tipo de fora (com n ≥ 9 entra cada tipo uma
+    vez), com peso para o que ele erra mais e para o que não aparece há duas lições. 'producao' entra
+    sempre, no fim."""
     from japones import exercicios
     con = _con()
     r = exercicios.planejar_tipos(con, n, semente)
@@ -393,8 +405,10 @@ def planejar_tipos(n: int = 8, semente: int | None = None) -> dict:
 def criar_licao(titulo: str, exercicios: list[dict], data: str | None = None) -> dict:
     """Cria a lição do dia no painel. Cada exercício: {tipo, bloco, enunciado, dados, explicacao, categoria}
     no formato do DESIGN §9.2 (o `dados` leva o gabarito; o navegador nunca o recebe). Para texto japonês
-    aceito em mais de uma grafia, liste todas nas `aceitas` (kanji e kana). Tudo ou nada: um exercício
-    inválido recusa a lição com a mensagem do problema."""
+    aceito em mais de uma grafia, liste todas nas `aceitas` (kanji e kana). `ouvir` grava o mp3 aqui (precisa
+    de rede; ~2 s por frase): ditado {texto, aceitas} ou compreensão {texto, opcoes, correta}, com `fala` em
+    kana se algum kanji tiver leitura ambígua. Tudo ou nada: um exercício inválido recusa a lição com a
+    mensagem do problema."""
     from japones import exercicios as motor
     try:
         itens = [motor.ExercicioIn(**e) for e in exercicios]

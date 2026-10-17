@@ -1,4 +1,4 @@
-// Lição fictícia com os 8 tipos, para desenvolver e testar respostas sem tocar
+// Lição fictícia com os 9 tipos, para desenvolver e testar respostas sem tocar
 // no banco real. Conteúdo genérico de livro-texto N5: nada de dado pessoal aqui
 // (o repositório é público).
 import { normalizar } from '@/lib/texto'
@@ -100,8 +100,18 @@ const exercicios: ExMock[] = [
     explicacao: 'ある para coisas e plantas; いる para pessoas e animais.',
   },
   {
+    // sem áudio de propósito: o mock não tem mp3, e assim o caminho "não foi gravado" fica testável
     ex: {
-      id: 109, ordem: 9, bloco: 'producao', tipo: 'producao', categoria: null,
+      id: 110, ordem: 9, bloco: 'revisao', tipo: 'ouvir', categoria: 'forma-ta',
+      enunciado: 'Ouça e escreva a frase em japonês.',
+      render: { modo: 'ditado', audio: null },
+    },
+    dados: { texto: '日本に行ったことがあります', aceitas: ['日本に行ったことがあります', 'にほんにいったことがあります'] },
+    explicacao: 'Experiência: verbo na forma た + ことがあります.',
+  },
+  {
+    ex: {
+      id: 109, ordem: 10, bloco: 'producao', tipo: 'producao', categoria: null,
       enunciado: 'Escreva três frases sobre lugares onde você já foi ou nunca foi.',
       render: { minimo: 3, dicas: ['〜に行ったことがあります', '〜に行ったことがありません', 'もう / まだ'] },
     },
@@ -196,6 +206,14 @@ function corrigir(tipo: TipoExercicio, d: Dados, r: Resp): [Veredito, string, Re
       const det = { diff: diff(t, alvo), comparado_com: alvo }
       if (aceitas.some((a) => normalizar(a) === normalizar(t))) return ['certo', aceitas[0], det]
       return [tipo === 'digitar' ? 'revisar' : 'errado', aceitas[0], det]
+    }
+    case 'ouvir': {
+      if (d.opcoes) return [ok(normalizar(String(r.opcao ?? '')) === normalizar(String(d.correta))), `${d.texto} → ${d.correta}`, {}]
+      const t = String(r.texto ?? '')
+      const aceitas = (d.aceitas as string[] | undefined) ?? [String(d.texto)]
+      const alvo = maisParecida(t, aceitas)
+      const det = { diff: diff(t, alvo), comparado_com: alvo }
+      return [aceitas.some((a) => normalizar(a) === normalizar(t)) ? 'certo' : 'revisar', aceitas[0], det]
     }
     case 'producao':
       return ['revisar', '', {}]

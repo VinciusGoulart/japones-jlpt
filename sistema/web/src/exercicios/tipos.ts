@@ -8,6 +8,7 @@ export const ROTULO_TIPO: Record<TipoExercicio, string> = {
   completar: 'Complete',
   digitar: 'Digite',
   conjugar: 'Conjugue',
+  ouvir: 'Ouça',
   producao: 'Produção',
 }
 
@@ -44,6 +45,10 @@ export function respostaEmTexto(ex: Exercicio, r: Resultado): string {
       return (de<'ligar'>().pares ?? []).map(([a, b]) => `${a} — ${b}`).join(' · ')
     case 'achar_erro':
       return ex.render.segmentos[de<'achar_erro'>().segmento] ?? ''
+    case 'ouvir': {
+      const r = de<'ouvir'>()
+      return 'texto' in r ? r.texto : r.opcao
+    }
     case 'producao':
       return (de<'producao'>().frases ?? []).join(' / ')
   }

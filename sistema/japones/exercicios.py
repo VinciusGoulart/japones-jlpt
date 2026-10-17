@@ -15,16 +15,17 @@ from typing import Literal
 
 from pydantic import BaseModel, Field
 
-from japones import dominio
+from japones import audio, dominio
 
-TIPOS = ("escolha", "achar_erro", "ligar", "ordenar", "completar", "digitar", "conjugar", "producao")
+TIPOS = ("escolha", "achar_erro", "ligar", "ordenar", "completar", "digitar", "conjugar", "ouvir", "producao")
 BLOCOS = ("aquecimento", "verificacao", "producao", "revisao")
 # bloco do exercício -> bloco da tabela `erro`
 _BLOCO_ERRO = {"aquecimento": "abertura", "verificacao": "verificacao", "producao": "producao", "revisao": "outro"}
 
 
 class ExercicioIn(BaseModel):
-    tipo: Literal["escolha", "achar_erro", "ligar", "ordenar", "completar", "digitar", "conjugar", "producao"]
+    tipo: Literal["escolha", "achar_erro", "ligar", "ordenar", "completar", "digitar", "conjugar", "ouvir",
+                  "producao"]
     bloco: Literal["aquecimento", "verificacao", "producao", "revisao"] = "verificacao"
     enunciado: str = Field(description="a instrução, em português")
     dados: dict = Field(description="por tipo, DESIGN §9.2 — com o gabarito")
@@ -117,6 +118,19 @@ def validar(ex: ExercicioIn) -> None:
         if not d.get("verbo") or not d.get("forma"):
             raise ValueError("conjugar: precisa de 'verbo' e 'forma'")
         _lista_str(d.get("aceitas"), "aceitas")
+    elif t == "ouvir":
+        if not isinstance(d.get("texto"), str) or not d["texto"].strip():
+            raise ValueError("ouvir: falta 'texto' (a frase falada, que é a resposta)")
+        if d.get("fala") is not None and (not isinstance(d["fala"], str) or not d["fala"].strip()):
+            raise ValueError("ouvir: 'fala' é o texto que a voz lê")
+        if d.get("voz", "F") not in audio.VOZES:
+            raise ValueError(f"ouvir: 'voz' é uma de {sorted(audio.VOZES)}")
+        if d.get("opcoes") is not None:
+            ops = _lista_str(d["opcoes"], "opcoes", 2)
+            if len(set(ops)) != len(ops) or d.get("correta") not in ops:
+                raise ValueError("ouvir (compreensão): opções sem repetir e 'correta' entre elas")
+        elif d.get("aceitas") is not None:
+            _lista_str(d["aceitas"], "aceitas")
     elif t == "producao":
         if not isinstance(d.get("minimo", 1), int) or d.get("minimo", 1) < 1:
             raise ValueError("producao: 'minimo' é um inteiro ≥ 1")
@@ -167,6 +181,12 @@ def render(tipo: str, dados: dict, semente: int) -> dict:
         return {"dica": dados.get("dica")} if dados.get("dica") else {}
     if tipo == "conjugar":
         return {k: dados[k] for k in ("verbo", "leitura", "forma") if dados.get(k)}
+    if tipo == "ouvir":      # nunca o texto: é a resposta
+        r = {"modo": "escolha" if dados.get("opcoes") else "ditado",
+             "audio": f"/api/audio/{dados['audio']}.mp3" if dados.get("audio") else None}
+        if dados.get("opcoes"):
+            r["opcoes"] = embaralhar(dados["opcoes"])
+        return r
     if tipo == "producao":
         return {"minimo": dados.get("minimo", 1), "dicas": dados.get("dicas") or []}
     raise ValueError(f"tipo desconhecido: {tipo}")
@@ -206,15 +226,20 @@ def corrigir(tipo: str, dados: dict, resp: dict) -> tuple[str, str, dict]:
         gab = re.sub(r"\{(\d+)\}", lambda m: dados["lacunas"][int(m.group(1))]["aceitas"][0], dados["texto"])
         return ("certo" if all(oks) else "errado"), gab, {"lacunas": oks}
 
-    if tipo in ("digitar", "conjugar"):
+    if tipo == "ouvir" and dados.get("opcoes"):
+        ok = normalizar(resp.get("opcao", "")) == normalizar(dados["correta"])
+        return ("certo" if ok else "errado"), f"{dados['texto']} → {dados['correta']}", {}
+
+    if tipo in ("digitar", "conjugar", "ouvir"):
         texto = resp.get("texto", "")
-        aceitas = dados["aceitas"]
+        aceitas = dados.get("aceitas") or [dados["texto"]]
         if normalizar(texto) in {normalizar(a) for a in aceitas}:
             return "certo", aceitas[0], {"diff": diff(texto, _mais_parecida(texto, aceitas)), "comparado_com": _mais_parecida(texto, aceitas)}
         alvo = _mais_parecida(texto, aceitas)
         # digitar é frase livre: uma resposta fora da lista pode estar certa, quem decide é o tutor.
+        # O ditado também: a frase é fixa, mas o IME deixa mil combinações de kanji e kana.
         # conjugar é conjunto fechado: fora da lista é erro.
-        return ("revisar" if tipo == "digitar" else "errado"), aceitas[0], {"diff": diff(texto, alvo), "comparado_com": alvo}
+        return ("errado" if tipo == "conjugar" else "revisar"), aceitas[0], {"diff": diff(texto, alvo), "comparado_com": alvo}
 
     if tipo == "producao":
         return "revisar", "", {}
@@ -228,6 +253,8 @@ def _escrito(tipo: str, resp: dict) -> str:
         return resp.get("opcao", "")
     if tipo in ("digitar", "conjugar"):
         return resp.get("texto", "")
+    if tipo == "ouvir":
+        return resp.get("opcao") or resp.get("texto", "")
     if tipo == "ordenar":
         return "".join(resp.get("pecas", []))
     if tipo == "completar":
@@ -250,13 +277,24 @@ def criar_licao(con: sqlite3.Connection, titulo: str, exercicios: list[Exercicio
             validar(ex)
         except ValueError as e:
             raise ValueError(f"exercício {i + 1} ({ex.tipo}): {e}") from None
+    todos_dados = []
+    for i, ex in enumerate(exercicios):
+        d = dict(ex.dados)
+        if ex.tipo == "ouvir":
+            try:
+                d["audio"] = audio.garantir(d.get("fala") or d["texto"], d.get("voz", "F"))
+            except Exception as e:      # sem rede: o tutor troca o tipo, a lição não nasce pela metade
+                raise ValueError(f"exercício {i + 1} (ouvir): não consegui gravar o áudio ({type(e).__name__}: {e}). "
+                                 "Sem rede? Troque este exercício por outro tipo.") from None
+        todos_dados.append(d)
     data = data or dominio.dia_de_estudo().isoformat()
     cur = con.execute("INSERT INTO licao (data, titulo) VALUES (?, ?)", (data, titulo))
     lid = cur.lastrowid
     con.executemany("""INSERT INTO exercicio (licao_id, ordem, bloco, tipo, categoria, enunciado, dados, explicacao)
                        VALUES (?, ?, ?, ?, ?, ?, ?, ?)""",
                     [(lid, i + 1, ex.bloco, ex.tipo, ex.categoria, ex.enunciado,
-                      json.dumps(ex.dados, ensure_ascii=False), ex.explicacao) for i, ex in enumerate(exercicios)])
+                      json.dumps(d, ensure_ascii=False), ex.explicacao)
+                     for i, (ex, d) in enumerate(zip(exercicios, todos_dados))])
     con.commit()
     return lid
 
@@ -363,7 +401,7 @@ def resumo_licoes(con, ultimas: int = 20) -> list[dict]:
 
 # ------------------------------------------------------------------ sorteio dos tipos
 
-def planejar_tipos(con, n: int = 8, semente: int | None = None) -> dict:
+def planejar_tipos(con, n: int = len(TIPOS), semente: int | None = None) -> dict:
     """'Sempre variando, mas utilizando todos' (DESIGN §9.4)."""
     rnd = random.Random(semente)
     ultimas = [r["id"] for r in con.execute("SELECT id FROM licao ORDER BY id DESC LIMIT 2")]

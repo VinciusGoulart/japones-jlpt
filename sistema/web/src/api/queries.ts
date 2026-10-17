@@ -10,6 +10,14 @@ export const chaves = {
   licoes: ['licoes'] as const,
   licaoAtual: ['licao', 'atual'] as const,
   licao: (id: number) => ['licao', id] as const,
+  erros: (dias: number, categoria: string) => ['erros', dias, categoria] as const,
+  errosPainel: (dias: number) => ['erros', 'painel', dias] as const,
+  registro: (busca: string) => ['registro', busca] as const,
+  ankiPainel: ['anki', 'painel'] as const,
+  kotobaBusca: (q: string) => ['kotoba', 'busca', q] as const,
+  kotobaKanji: (literal: string) => ['kotoba', 'kanji', literal] as const,
+  kotobaHistorico: (dias: number) => ['kotoba', 'historico', dias] as const,
+  kotobaListas: ['kotoba', 'listas'] as const,
 }
 
 // hoje() lê o Trello e copia a coleção do Anki (~3 s): relê ao voltar para a janela, não em intervalo
@@ -46,3 +54,29 @@ export const useLicao = (id: number) =>
     refetchInterval: esperandoTutor,
     refetchOnWindowFocus: true,
   })
+
+// ------------------------------------------------------------------ Fase 3 (DESIGN §12)
+
+export const useErros = (dias: number, categoria = '') =>
+  useQuery({ queryKey: chaves.erros(dias, categoria), queryFn: () => api.erros(dias, categoria || undefined), placeholderData: keepPreviousData })
+
+export const useErrosPainel = (dias: number) =>
+  useQuery({ queryKey: chaves.errosPainel(dias), queryFn: () => api.errosPainel(dias), placeholderData: keepPreviousData })
+
+export const useRegistro = (busca: string) =>
+  useQuery({ queryKey: chaves.registro(busca), queryFn: () => api.registro(busca), enabled: busca.trim().length >= 1, placeholderData: keepPreviousData })
+
+// copia a coleção do Anki (~0,1 s): relê ao voltar para a janela, não em intervalo
+export const useAnkiPainel = () => useQuery({ queryKey: chaves.ankiPainel, queryFn: api.ankiPainel, staleTime: 60_000 })
+
+export const useKotobaBusca = (q: string) =>
+  useQuery({ queryKey: chaves.kotobaBusca(q), queryFn: () => api.kotobaBuscar(q), enabled: q.trim().length > 0, placeholderData: keepPreviousData })
+
+// o dicionário não muda enquanto o painel está aberto
+export const useKotobaKanji = (literal: string | null) =>
+  useQuery({ queryKey: chaves.kotobaKanji(literal ?? ''), queryFn: () => api.kotobaKanji(literal!), enabled: !!literal, staleTime: Infinity })
+
+export const useKotobaHistorico = (dias: number) =>
+  useQuery({ queryKey: chaves.kotobaHistorico(dias), queryFn: () => api.kotobaHistorico(dias), staleTime: 30_000 })
+
+export const useKotobaListas = () => useQuery({ queryKey: chaves.kotobaListas, queryFn: api.kotobaListas, staleTime: 60_000 })

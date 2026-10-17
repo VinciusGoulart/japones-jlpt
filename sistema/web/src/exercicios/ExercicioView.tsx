@@ -13,6 +13,7 @@ import { Ordenar } from './widgets/Ordenar'
 import { Completar } from './widgets/Completar'
 import { Conjugar, Digitar } from './widgets/Digitar'
 import { Producao } from './widgets/Producao'
+import { Ouvir } from './widgets/Ouvir'
 
 type QualquerResposta = RespostaDe<TipoExercicio>
 
@@ -132,6 +133,8 @@ function Widget({ ex, resultado, onChange }: { ex: Exercicio; resultado: Resulta
       return <Digitar render={ex.render} resultado={resultado as Resultado<'digitar'> | null} onChange={onChange} />
     case 'conjugar':
       return <Conjugar render={ex.render} resultado={resultado as Resultado<'conjugar'> | null} onChange={onChange} />
+    case 'ouvir':
+      return <Ouvir render={ex.render} resultado={resultado as Resultado<'ouvir'> | null} onChange={onChange} />
     case 'producao':
       return <Producao render={ex.render} resultado={resultado as Resultado<'producao'> | null} onChange={onChange} />
   }

@@ -174,3 +174,15 @@ def test_backup_copia_o_banco_para_a_pasta_de_dados():
     assert "estudo.db" in r["copiados"]
     assert (config.BACKUP / "estudo.db").exists()
     assert str(config.BACKUP).startswith(os.environ["JAPONES_DADOS"])
+
+
+@pytest.mark.parametrize("texto,esperado", [
+    ("ANIMACIDADE 3/5 NA ESTREIA (31/08): trocou いる por ある", "2026-08-31"),   # placar não é data
+    ("dia 5 (08/08) — partícula", "2026-08-08"),
+    ("PADRAO 13/09: を no lugar de に", "2026-09-13"),
+    ("APOSENTADO EM 02/09 — すき — ocorrências (30/08)", "2026-09-02"),     # a primeira data, não a do parêntese
+    ("acertou 4/5 sem data nenhuma", None),
+])
+def test_data_do_registro_antigo(texto, esperado):
+    from japones.migracao import _data_do_registro
+    assert _data_do_registro(texto) == esperado

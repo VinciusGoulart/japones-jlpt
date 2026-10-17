@@ -7,6 +7,7 @@ import { Markdown } from '@/components/Markdown'
 import type { DetalheLigar, Exercicio, Licao, Resultado, Veredito } from '@/api/types'
 import { cn } from '@/lib/utils'
 import { ROTULO_TIPO, respostaEmTexto } from './tipos'
+import { separarGabaritoOuvir } from './widgets/gabaritoOuvir'
 
 export function IconeVeredito({ v, className }: { v: Veredito | null; className?: string }) {
   if (v === 'certo') return <Check className={cn('text-ok', className)} aria-label="certo" />
@@ -58,6 +59,31 @@ function LinhaResposta({ ex, r }: { ex: Exercicio; r: Resultado }) {
           <li key={i}><Ja className="text-base">{f}</Ja></li>
         ))}
       </ol>
+    )
+  }
+  if (ex.tipo === 'ouvir' && ex.render.modo === 'escolha') {
+    // a resposta e a opção certa são frases (em geral em português): sem lang="ja", e o
+    // que a voz disse vai ao lado, porque sem ele a linha não diz o que foi ouvido
+    const { dito, certa } = separarGabaritoOuvir(r.gabarito, ex.render.opcoes)
+    return (
+      <p className="flex flex-wrap items-baseline gap-x-2 text-sm">
+        <span className={cn(errado && 'text-erro line-through decoration-1')}>
+          <TextoMisto texto={respostaEmTexto(ex, r) || '—'} classeJa="text-base" />
+        </span>
+        {errado && certa && (
+          <>
+            {seta}
+            <span className="text-ok">
+              <TextoMisto texto={certa} classeJa="text-base" />
+            </span>
+          </>
+        )}
+        {dito && (
+          <span className="text-muted-foreground">
+            · foi dito <Ja className="text-base text-foreground">{dito}</Ja>
+          </span>
+        )}
+      </p>
     )
   }
   if (errado && ex.tipo === 'achar_erro') {
@@ -112,7 +138,9 @@ export function Resumo({
       )}
       {esperando > 0 && (
         <p className="text-sm text-muted-foreground">
-          A produção foi para o tutor; a correção aparece aqui sozinha (a página confere a cada 20 s).
+          {/* não é só a produção: um ditado fora das aceitas também vai para o tutor */}
+          {esperando > 1 ? `${esperando} exercícios foram` : '1 exercício foi'} para o tutor; a correção aparece aqui sozinha (a página confere
+          a cada 20 s).
         </p>
       )}
 

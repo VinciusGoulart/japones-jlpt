@@ -120,7 +120,7 @@ def test_tutor_fecha_o_revisar_e_a_licao_conclui(con):
 
 
 def test_sorteio_usa_todos_e_termina_em_producao(con):
-    p = m.planejar_tipos(con, n=8, semente=1)
+    p = m.planejar_tipos(con, semente=1)             # o padrão: cada tipo uma vez
     assert sorted(p["tipos"]) == sorted(m.TIPOS) and p["tipos"][-1] == "producao"
     p = m.planejar_tipos(con, n=5, semente=2)
     assert len(p["tipos"]) == 5 and p["tipos"][-1] == "producao"
@@ -134,3 +134,97 @@ def test_sorteio_favorece_o_tipo_que_ele_erra(con):
         m.responder(con, ex["id"], resp)
     pesos = m.planejar_tipos(con, n=8, semente=3)["pesos"]
     assert pesos["conjugar"] > pesos["escolha"]
+
+
+def test_esquema_3_refaz_exercicio_sem_perder_respostas(tmp_path):
+    """O DROP TABLE da migração com foreign_keys ligada apagaria as respostas em cascata."""
+    import sqlite3
+    caminho = tmp_path / "v2.db"
+    raw = sqlite3.connect(caminho)
+    raw.executescript(db._DDL.read_text() + db._DDL2.read_text())
+    raw.execute("PRAGMA user_version = 2")
+    raw.execute("INSERT INTO licao (id, data, titulo) VALUES (1, '2026-10-16', 'antiga')")
+    raw.execute("INSERT INTO exercicio (id, licao_id, ordem, bloco, tipo, enunciado, dados) "
+                "VALUES (7, 1, 1, 'verificacao', 'escolha', 'x', '{\"opcoes\": [\"a\", \"b\"], \"correta\": \"a\"}')")
+    raw.execute("INSERT INTO resposta (exercicio_id, resposta, veredito) VALUES (7, '{\"opcao\": \"a\"}', 'certo')")
+    raw.commit()
+    raw.close()
+
+    c = db.conectar(caminho)
+    assert c.execute("PRAGMA user_version").fetchone()[0] == db.ESQUEMA_ATUAL
+    assert c.execute("SELECT COUNT(*) FROM resposta WHERE exercicio_id = 7").fetchone()[0] == 1
+    assert c.execute("PRAGMA foreign_keys").fetchone()[0] == 1
+    c.execute("INSERT INTO exercicio (licao_id, ordem, bloco, tipo, enunciado, dados) "
+              "VALUES (1, 2, 'verificacao', 'ouvir', 'y', '{}')")      # o CHECK novo aceita
+    c.execute("DELETE FROM licao WHERE id = 1")                         # e a cascata segue valendo
+    assert c.execute("SELECT COUNT(*) FROM resposta").fetchone()[0] == 0
+    c.close()
+
+
+@pytest.fixture
+def sem_rede(monkeypatch):
+    """O edge-tts nunca é chamado nos testes: a síntese grava bytes falsos e conta as chamadas."""
+    import shutil
+    from japones import audio
+    shutil.rmtree(audio.pasta(), ignore_errors=True)       # cada teste começa sem mp3 em cache
+    chamadas = []
+
+    def falso(texto, voz, destino):
+        chamadas.append((texto, voz))
+        destino.write_bytes(b"ID3 falso")
+    monkeypatch.setattr("japones.audio._sintetizar", falso)
+    return chamadas
+
+
+OUVIR_DITADO = E(tipo="ouvir", enunciado="Ouça e escreva", categoria="forma-ta",
+                 dados={"texto": "日本に行ったことがあります", "aceitas": ["日本に行ったことがあります", "にほんにいったことがあります"]})
+OUVIR_ESCOLHA = E(tipo="ouvir", enunciado="O que ele disse?", dados={
+    "texto": "明日、学校に行きます", "fala": "あした、がっこうにいきます", "voz": "M",
+    "opcoes": ["Amanhã vou à escola", "Ontem fui à escola", "Hoje vou ao trabalho"], "correta": "Amanhã vou à escola"})
+
+
+def test_ouvir_grava_o_audio_e_nao_entrega_o_texto(con, sem_rede):
+    lid = m.criar_licao(con, "ouvir", [OUVIR_DITADO, OUVIR_ESCOLHA, OUVIR_DITADO], "2026-10-17")
+    assert len(sem_rede) == 2                          # a mesma fala reaproveita o mp3
+    assert sem_rede[1] == ("あした、がっこうにいきます", "ja-JP-KeitaNeural")    # a voz lê a `fala`, não o `texto`
+    l = m.licao_renderizada(con, lid)
+    texto = json.dumps(l, ensure_ascii=False)
+    assert "日本に行った" not in texto and "明日" not in texto and "あした" not in texto
+    dit, esc = l["exercicios"][0]["render"], l["exercicios"][1]["render"]
+    assert dit["modo"] == "ditado" and esc["modo"] == "escolha" and len(esc["opcoes"]) == 3
+    from japones import audio
+    nome = dit["audio"].removeprefix("/api/audio/").removesuffix(".mp3")
+    assert audio.caminho(nome).read_bytes() == b"ID3 falso"
+
+
+def test_ouvir_sem_rede_recusa_a_licao_inteira(con, monkeypatch):
+    def caiu(texto, voz, destino):
+        raise OSError("sem rede")
+    monkeypatch.setattr("japones.audio._sintetizar", caiu)
+    outro = E(tipo="ouvir", enunciado="x", dados={"texto": "これは新しいフレーズです"})
+    with pytest.raises(ValueError, match="exercício 2 \\(ouvir\\).*Troque"):
+        m.criar_licao(con, "teste", [UM_DE_CADA[0], outro])
+    assert con.execute("SELECT COUNT(*) FROM licao").fetchone()[0] == 0
+
+
+@pytest.mark.parametrize("dados,resp,esperado", [
+    (OUVIR_DITADO.dados, {"texto": "にほんにいったことがあります", "toques": 2}, "certo"),
+    (OUVIR_DITADO.dados, {"texto": "日本にいったことがあります"}, "revisar"),     # mistura do IME: o tutor decide
+    ({"texto": "猫がいます"}, {"texto": "猫がいます"}, "certo"),                  # sem aceitas: vale o texto
+    (OUVIR_ESCOLHA.dados, {"opcao": "Amanhã vou à escola"}, "certo"),
+    (OUVIR_ESCOLHA.dados, {"opcao": "Ontem fui à escola"}, "errado"),
+])
+def test_correcao_do_ouvir(dados, resp, esperado):
+    assert m.corrigir("ouvir", dados, resp)[0] == esperado
+
+
+def test_ouvir_valida_voz_e_opcoes():
+    for dados in ({"texto": ""}, {"texto": "a", "voz": "X"}, {"texto": "a", "opcoes": ["x", "y"], "correta": "z"}):
+        with pytest.raises(ValueError):
+            m.validar(E(tipo="ouvir", enunciado="x", dados=dados))
+
+
+def test_rota_de_audio_so_aceita_nome_nosso():
+    from japones import audio
+    assert audio.caminho("../../../etc/passwd") is None and audio.caminho("abc") is None
+    assert audio.caminho("0123456789abcdef0123").name == "0123456789abcdef0123.mp3"

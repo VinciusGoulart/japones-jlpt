@@ -5,11 +5,12 @@ anki_status.py (achar_fonte copia o arquivo e o -wal antes de abrir), para que
 existam um jeito só de achar a coleção e um jeito só de errar.
 """
 import importlib.util
+import re
 import shutil
 import sqlite3
 import time
 from contextlib import contextmanager
-from datetime import date
+from datetime import date, timedelta
 from pathlib import Path
 
 from japones import config
@@ -122,3 +123,69 @@ def historico_por_dia(desde: date = config.INICIO_PLANO) -> list[dict]:
                    COUNT(*), SUM(time)
             FROM revlog GROUP BY dia HAVING dia >= ? ORDER BY dia""", (desde.isoformat(),)).fetchall()
     return [{"data": d, "cartoes": n, "minutos": round((ms or 0) / 60000, 1)} for d, n, ms in rows]
+
+
+def graficos(dias_previsao: int = 14, semanas: int = 12) -> dict:
+    """Os gráficos da tela Anki (DESIGN §12.2): retenção por semana, maturidade e previsão."""
+    from japones import dominio
+    with colecao() as (con, tool, _fonte):
+        (crt,) = con.execute("SELECT crt FROM col").fetchone()
+        hoje = tool.dia_anki(crt)
+        por_dia = con.execute(f"""
+            SELECT date(id / 1000, 'unixepoch', 'localtime', '-{config.ROLLOVER_H} hours') AS dia,
+                   COUNT(*), SUM(ease > 1)
+            FROM revlog WHERE type = 1 GROUP BY dia HAVING dia >= ?""", (config.INICIO_PLANO.isoformat(),)).fetchall()
+        (novos, aprendendo, jovens, maduros, suspensos) = con.execute("""
+            SELECT SUM(queue = 0), SUM(queue IN (1, 3)), SUM(queue = 2 AND ivl < 21),
+                   SUM(queue = 2 AND ivl >= 21), SUM(queue < 0) FROM cards""").fetchone()
+        devidos = dict(con.execute("SELECT due, COUNT(*) FROM cards WHERE queue IN (2, 3) AND due < ? GROUP BY due",
+                                   (hoje + dias_previsao,)).fetchall())
+        (aprendendo_hoje,) = con.execute("SELECT COUNT(*) FROM cards WHERE queue = 1").fetchone()
+
+    semanal: dict[str, list[int]] = {}
+    for dia, n, ok in por_dia:
+        d = date.fromisoformat(dia)
+        seg = (d - timedelta(days=d.weekday())).isoformat()
+        acc = semanal.setdefault(seg, [0, 0])
+        acc[0] += n
+        acc[1] += ok or 0
+    retencao = [{"semana": s, "revisoes": n, "acertos": ok, "pct": round(ok / n * 100, 1)}
+                for s, (n, ok) in sorted(semanal.items())[-semanas:]]
+
+    dia0 = dominio.dia_de_estudo()
+    previsao = []
+    for i in range(dias_previsao):
+        n = devidos.get(hoje + i, 0)
+        if i == 0:      # o dia de hoje carrega os atrasados e o que está em aprendizado agora
+            n = sum(v for k, v in devidos.items() if k <= hoje) + aprendendo_hoje
+        previsao.append({"data": (dia0 + timedelta(days=i)).isoformat(), "devidos": n})
+    return {"retencao_semanal": retencao,
+            "maturidade": {"novos": novos or 0, "aprendendo": aprendendo or 0, "jovens": jovens or 0,
+                           "maduros": maduros or 0, "suspensos": suspensos or 0},
+            "previsao": previsao}
+
+
+_TAG = re.compile(r"<[^>]+>|\[sound:[^\]]*\]|&nbsp;")
+
+
+_KANA = re.compile(r"^[\u3040-\u30ffー]+$")
+
+
+def indice_de_cartoes() -> dict[str, set[str]]:
+    """Para saber se uma palavra do Kotoba já virou cartão (DESIGN §12.4).
+
+    `campos`: todo campo de toda nota, sem HTML. Campo INTEIRO, não trecho — 食べ
+    dentro de uma frase de exemplo não é um cartão de 食べる.
+    `frentes_kana`: a frente (1º campo) das notas escritas só em kana (うみ, はし).
+    A leitura de uma palavra só casa por aqui: no Kaishi a leitura おす é campo da
+    nota de 押す, e casar leitura com qualquer campo marcava お酢 e 雄 como "tem
+    cartão" (achado no teste da tela Kotoba, 17/10).
+    """
+    with colecao() as (con, _tool, _fonte):
+        campos, frentes_kana = set(), set()
+        for (flds,) in con.execute("SELECT flds FROM notes"):
+            limpos = [_TAG.sub("", f).strip() for f in flds.split("\x1f")]
+            campos.update(f for f in limpos if f)
+            if limpos and _KANA.match(limpos[0]):
+                frentes_kana.add(limpos[0])
+    return {"campos": campos, "frentes_kana": frentes_kana}

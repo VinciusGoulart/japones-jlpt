@@ -1,17 +1,25 @@
 import { useState } from 'react'
 import { Lightbulb } from 'lucide-react'
 import { Ja, TextoMisto } from '@/components/Ja'
-import type { Resultado, RespostaTexto } from '@/api/types'
+import type { DetalheTexto, RespostaTexto, Veredito } from '@/api/types'
 import { cn } from '@/lib/utils'
 import type { PropsWidget } from '../tipos'
 import { Diff } from './Diff'
 
-function CampoTexto({
+/** O que o campo precisa da correção. Digitar e conjugar passam o Resultado inteiro; o ditado do ouvir monta este recorte. */
+export interface CorrecaoTexto {
+  veredito: Veredito
+  resposta: RespostaTexto
+  detalhe: Partial<DetalheTexto>
+}
+
+/** Campo de japonês (mozc) com a correção embaixo. Exportado para o ditado do ouvir digitar com a mesma regra. */
+export function CampoTexto({
   resultado,
   onChange,
   placeholder,
 }: {
-  resultado: Resultado<'digitar'> | Resultado<'conjugar'> | null
+  resultado: CorrecaoTexto | null
   onChange: (r: RespostaTexto | null) => void
   placeholder: string
 }) {

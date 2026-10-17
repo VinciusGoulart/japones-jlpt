@@ -2,6 +2,14 @@
 // fixtures de src/mocks — para desenvolver sem o backend e testar respostas sem
 // sujar o placar real (só a primeira resposta conta, e ela grava erro no banco).
 import type {
+  AnkiPainel,
+  BuscaKotoba,
+  Erros,
+  ErrosPainel,
+  HistoricoKotoba,
+  KanjiKotoba,
+  ListasKotoba,
+  RegistroAntigo,
   AulaCompleta,
   AulaResumo,
   Calendario,
@@ -75,4 +83,22 @@ export const api = {
   licao: (id: number) => pedir<Licao>(`/api/licoes/${id}`),
   responder: (exercicioId: number, corpo: CorpoResposta) =>
     pedir<Correcao>(`/api/exercicios/${exercicioId}/resposta`, { method: 'POST', body: JSON.stringify(corpo) }),
+
+  // Fase 3 (DESIGN §12)
+  erros: (dias: number, categoria?: string) => pedir<Erros>(`/api/erros${qs({ dias, categoria })}`),
+  errosPainel: (dias: number) => pedir<ErrosPainel>(`/api/erros/painel${qs({ dias })}`),
+  registro: (busca: string, limite = 20) => pedir<RegistroAntigo[]>(`/api/registro${qs({ busca, limite })}`),
+  ankiPainel: () => pedir<AnkiPainel>('/api/anki/painel'),
+  kotobaBuscar: (q: string, limite = 20) => pedir<BuscaKotoba>(`/api/kotoba/buscar${qs({ q, limite })}`),
+  /** null quando o kanji não está no dicionário (a API responde 404) */
+  kotobaKanji: async (literal: string): Promise<KanjiKotoba | null> => {
+    try {
+      return await pedir<KanjiKotoba>(`/api/kotoba/kanji/${encodeURIComponent(literal)}`)
+    } catch (e) {
+      if (e instanceof ErroApi && e.status === 404) return null
+      throw e
+    }
+  },
+  kotobaHistorico: (dias: number) => pedir<HistoricoKotoba>(`/api/kotoba/historico${qs({ dias })}`),
+  kotobaListas: () => pedir<ListasKotoba>('/api/kotoba/listas'),
 }

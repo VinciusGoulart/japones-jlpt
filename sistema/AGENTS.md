@@ -7,7 +7,7 @@ O `CLAUDE.md` desta pasta só importa este arquivo, para as regras valerem nas d
 
 ## O que é
 
-Núcleo Python que junta Anki, Trello, Kotoba (dicionário próprio do estudante, em `../../dictionary`), `progresso/diario.md` e `plano/curriculo.md` num banco SQLite, e expõe tudo ao tutor (Claude Code) por um servidor MCP. O painel web (React) é a Fase 2.
+Núcleo Python que junta Anki, Trello, Kotoba (dicionário próprio do estudante, em `../../dictionary`), `progresso/diario.md` e `plano/curriculo.md` num banco SQLite, e expõe tudo ao tutor (Claude Code) por um servidor MCP e ao painel web (React, `web/`) por uma API local. A voz do exercício `ouvir` vem do edge-tts (precisa de rede só na criação da lição).
 
 ## Comandos
 
@@ -22,8 +22,12 @@ curl -sSL https://bootstrap.pypa.io/get-pip.py -o /tmp/get-pip.py && .venv/bin/p
 .venv/bin/python -m japones.mcp_server         # o servidor MCP (stdio) — o Claude Code sobe sozinho pelo ../.mcp.json
 .venv/bin/python -m japones.api                # a API + o painel em http://127.0.0.1:8787 (na máquina dele roda como serviço)
 
+# API de teste numa CÓPIA do banco (para testar respostas sem sujar o placar real: só a 1ª resposta conta)
+JAPONES_DADOS=/tmp/x JAPONES_DB=/tmp/x/estudo.db JAPONES_DIARIO=/tmp/x/diario.md .venv/bin/python -c \
+  "import uvicorn; from japones import api; uvicorn.run(api.app, host='127.0.0.1', port=8788)"
+
 # painel (React)
-cd web && npm install && npm run dev           # desenvolvimento, com proxy de /api para a 8787
+cd web && npm install && npm run dev           # desenvolvimento, com proxy de /api para a 8787 (API=http://127.0.0.1:8788 troca o alvo)
 cd web && npm run build                        # gera web/dist, que a API serve
 systemctl --user restart japones-painel        # depois de build novo ou de mudar o Python
 journalctl --user -u japones-painel -n 50      # log do serviço
@@ -37,7 +41,7 @@ journalctl --user -u japones-painel -n 50      # log do serviço
 4. **Nenhuma fonte derruba uma ferramenta MCP.** Fonte fora do ar vira `{"erro": "..."}` no campo dela; o resto da resposta segue. A aula não pode depender de rede.
 5. **Respostas MCP enxutas.** Cada token volta a cada mensagem da aula; o limite de uso já estourou por excesso de contexto.
 6. **Diário é append-only.** `registrar_aula` acrescenta; nada reescreve entradas antigas.
-7. **Testes nunca tocam o banco real.** O `tests/conftest.py` aponta `JAPONES_DADOS`, `JAPONES_DB` e `JAPONES_DIARIO` para um diretório temporário antes de qualquer import.
+7. **Testes nunca tocam o banco real nem a rede.** A síntese de voz (`audio._sintetizar`) é trocada por uma falsa nos testes. O `tests/conftest.py` aponta `JAPONES_DADOS`, `JAPONES_DB` e `JAPONES_DIARIO` para um diretório temporário antes de qualquer import.
 
 ## Estilo
 

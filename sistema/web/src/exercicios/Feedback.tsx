@@ -3,6 +3,7 @@ import { Ja, TextoMisto } from '@/components/Ja'
 import { Markdown } from '@/components/Markdown'
 import type { Exercicio, Resultado } from '@/api/types'
 import { cn } from '@/lib/utils'
+import { separarGabaritoOuvir } from './widgets/gabaritoOuvir'
 
 const VEREDITO = {
   certo: { icone: Check, texto: 'Certo', classe: 'border-ok/40 bg-ok-bg text-ok' },
@@ -16,6 +17,10 @@ export function Feedback({ ex, resultado, treino }: { ex: Exercicio; resultado: 
   const Icone = v.icone
   // no ordenar o widget já mostra "sua frase × gabarito"
   const mostrarGabarito = !!resultado.gabarito && ex.tipo !== 'ordenar'
+  // No ouvir o gabarito é a transcrição do que a voz disse. Na compreensão ele vem
+  // "texto → opção certa", e a opção certa já está marcada na lista: aqui fica só o texto.
+  const ouvir = ex.tipo === 'ouvir'
+  const gabarito = ouvir ? separarGabaritoOuvir(resultado.gabarito, ex.render.opcoes).dito : resultado.gabarito
   return (
     <div className="space-y-3" aria-live="polite">
       <div className={cn('flex items-center gap-2 rounded-xl border px-4 py-2.5 font-medium', v.classe)}>
@@ -27,8 +32,8 @@ export function Feedback({ ex, resultado, treino }: { ex: Exercicio; resultado: 
 
       {mostrarGabarito && (
         <p className="flex flex-wrap items-baseline gap-x-2">
-          <span className="text-sm text-muted-foreground">Gabarito</span>
-          <Ja className="text-xl font-medium">{resultado.gabarito}</Ja>
+          <span className="text-sm text-muted-foreground">{ouvir ? 'Foi dito' : 'Gabarito'}</span>
+          <Ja className="text-xl font-medium">{gabarito}</Ja>
         </p>
       )}
 

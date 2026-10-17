@@ -7,6 +7,7 @@ dependencies = [
   "mcp>=2.3,<3",          # 2.x: a classe é MCPServer (na 1.x era FastMCP)
   "fastapi>=0.143",       # API do painel (Fase 2)
   "uvicorn[standard]>=0.54",
+  "edge-tts>=7.2,<8",     # voz neural do exercício `ouvir` (Fase 3), a mesma do diagnóstico mensal
 ]
 
 [project.optional-dependencies]

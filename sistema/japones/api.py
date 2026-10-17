@@ -12,7 +12,7 @@ from fastapi import Body, FastAPI, HTTPException
 from fastapi.responses import FileResponse, HTMLResponse
 from fastapi.staticfiles import StaticFiles
 
-from japones import db, exercicios, mcp_server
+from japones import audio, db, exercicios, mcp_server, painel
 from japones.fontes import curriculo
 
 DIST = Path(__file__).resolve().parents[1] / "web" / "dist"
@@ -46,6 +46,62 @@ def aula(data: str):
 @app.get("/api/erros")
 def erros(dias: int = 30, categoria: str | None = None):
     return mcp_server.erros(categoria=categoria, dias=dias)
+
+
+@app.get("/api/erros/painel")
+def erros_painel(dias: int = 90):
+    con = _con()
+    try:
+        return painel.erros_painel(con, dias)
+    finally:
+        con.close()
+
+
+@app.get("/api/registro")
+def registro(busca: str, limite: int = 20):
+    return mcp_server.registro_antigo(busca=busca, limite=limite)
+
+
+@app.get("/api/anki/painel")
+def anki_painel():
+    con = _con()
+    try:
+        return painel.anki_painel(con)
+    finally:
+        con.close()
+
+
+@app.get("/api/kotoba/buscar")
+def kotoba_buscar(q: str, limite: int = 20):
+    return painel.kotoba_buscar(q, limite)
+
+
+@app.get("/api/kotoba/kanji/{literal}")
+def kotoba_kanji(literal: str):
+    r = mcp_server.kanji(literal)
+    if "erro" in r and len(r) == 1:
+        raise HTTPException(404, r["erro"])
+    return r
+
+
+@app.get("/api/kotoba/historico")
+def kotoba_historico(dias: int = 30):
+    return painel.kotoba_historico(dias)
+
+
+@app.get("/api/kotoba/listas")
+def kotoba_listas():
+    from japones.fontes import kotoba
+    return mcp_server._seguro(kotoba.listas)
+
+
+@app.get("/api/audio/{arquivo}")
+def audio_mp3(arquivo: str):
+    p = audio.caminho(arquivo.removesuffix(".mp3")) if arquivo.endswith(".mp3") else None
+    if not p or not p.is_file():
+        raise HTTPException(404, "áudio não encontrado")
+    # o nome é o hash da fala: o mesmo nome é sempre o mesmo som, pode guardar em cache para sempre
+    return FileResponse(p, media_type="audio/mpeg", headers={"Cache-Control": "max-age=31536000, immutable"})
 
 
 @app.get("/api/calendario")
