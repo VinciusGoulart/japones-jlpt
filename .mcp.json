@@ -1,0 +1,9 @@
+{
+  "mcpServers": {
+    "japones": {
+      "type": "stdio",
+      "command": "sistema/mcp.sh",
+      "args": []
+    }
+  }
+}

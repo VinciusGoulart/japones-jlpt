@@ -49,6 +49,7 @@ progresso/
 .claude/skills/
   estudo/         — /estudo: a sessão diária de 1h
   progresso/      — /progresso: relatório e correção de rota
+sistema/          — núcleo Python + servidor MCP `japones` (contrato em sistema/DESIGN.md)
 ```
 
 ### Git e privacidade (desde 06/09/2026)
@@ -85,6 +86,8 @@ progresso/
 - **Rotina do tutor, todo mês:** (1) escrever `diagnostico/provas/AAAA-MM.json` com o que foi aprendido no mês + revisão acumulada (~28 questões; SÓ vocabulário e estruturas já vistos; falas com `tts` em kana quando houver número ou leitura ambígua); (2) **gravar o áudio**: `python3 tools/gerar_audio_diagnostico.py AAAA-MM`, declarar no JSON o campo `audio` que o script imprime e publicar a página com os mp3 em `files` (`audio/AAAA-MM/<id>.mp3`); (3) gravar com o ArtifactData (`provas/<id>` + `config/atual`); (4) criar pendência no Trello para o **primeiro sábado do mês** (a sessão do dia É o diagnóstico); (5) depois que ele fizer, ler `resultados/<id>`, registrar em `estado.json → diagnosticos` e no diário, e usar as seções abaixo do corte (32%) para ajustar o mês seguinte.
 - **Por que o áudio é gravado (03/10/2026):** a página falava com a voz do navegador, e no Firefox do Linux (o navegador padrão dele) essa voz é o espeak-ng, que não pronuncia japonês de forma inteligível. Ele testou antes do Diagnóstico #1 e relatou: "meio bugado, não dá para entender direito". Agora a página toca mp3 publicado junto dela, igual em qualquer navegador, e tem um botão **Testar o som** que não gasta repetição. Prova sem o campo `audio` cai na voz do navegador e avisa na tela. O tutor **não ouve** o que gera: o script confere duração, não pronúncia. Kanji de leitura ambígua (明日, 一日, 方) leva `audio_txt` na fala. Os mp3 ficam fora do git; a dependência (`edge-tts`) fica em `~/.local/share/japones/pylibs`. Mudar o conteúdo de uma prova já aberta pede subir o `rev` no JSON, que zera o rascunho guardado no navegador dele.
 - A voz real vem das questões-exemplo oficiais do JLPT (jlpt.jp/e/samples/n5/), que ele faz fora da nota e registra na página. Trechos de anime não entram: têm direitos autorais e não dá para verificar o conteúdo de cada minuto.
+
+**6. Sistema de estudo (desde 17/10/2026, pedido dele).** `sistema/` junta Anki, Trello, Kotoba (o dicionário que ele mesmo fez, em `../dictionary`), diário e currículo num SQLite privado (`~/.local/share/japones/estudo.db`) e expõe tudo ao tutor pelo servidor MCP `japones` (`.mcp.json` na raiz). A `/estudo` abre com `hoje()` e registra pelas ferramentas `registrar_*`; o caminho antigo (scripts + arquivos) continua valendo como reserva. Fase 1 (núcleo + MCP) pronta; o painel web em React é a Fase 2. Regras de desenvolvimento em `sistema/AGENTS.md`.
 
 ## Regras de Conduta do Tutor
 

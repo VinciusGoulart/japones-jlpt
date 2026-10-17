@@ -157,10 +157,17 @@ Se ele avisar que tem pouco tempo: faça só os Passos 1 e 2 (30 min), registre 
 
 Esta seção registra o que mudou desde que a skill foi escrita. **Quando conflitar com o texto acima, vale o que está aqui.** Ela existe para que uma conversa nova (`/clear` + `/estudo`) conduza a aula igual à anterior: todo o estado vive em arquivos.
 
+**Sistema MCP `japones` (desde 17/10/2026; contrato em `sistema/DESIGN.md`)**
+- **Passo 0 = `hoje()`**, uma chamada só. Ela substitui `date`, `trello.py status`, `anki_status.py`, a leitura do `estado.json` e a do `curriculo.md`, e traz o dia de estudo (regra das 4h), o dia do plano, o streak, o que a última aula deixou para hoje, o lembrete de abertura, os padrões abertos e os avisos (retomada, primeira sessão do mês, domingo). **Não leia o `estado.json` nem o `diario.md` inteiros:** para o passado, use `aulas()`, `aula(data)`, `erros()`, `registro_antigo(busca)`.
+- **Se as ferramentas `japones` não aparecerem** (servidor não aprovado ou fora do ar), siga o caminho antigo descrito abaixo, sem travar a aula, e avise em uma linha.
+- **Antes de ensinar uma palavra ou leitura de que não tenha certeza:** `dicionario(termo)` / `kanji(literal)` (banco do Kotoba). No fim da produção, `consultas_kotoba()` mostra o que ele precisou procurar, e essas palavras são candidatas a cartão.
+- **Passo 4, registro:** `registrar_aula` (grava no banco **e** acrescenta a entrada no `diario.md`; não escreva o diário à mão), `registrar_trajeto` (o áudio; os números do Anki ele busca sozinho), `registrar_erros` (cada erro corrigido, com categoria do DESIGN §4.2), `abrir_padrao`/`atualizar_padrao`/`resolver_padrao`, `definir_nota("lembrete_abertura", ...)` e, por último, **`backup()`**, que substitui a cópia manual.
+- **O `estado.json` deixa de receber logs.** Horário de início, `pontos_fracos`, notas de trajeto e `lembrete_abertura` vão para o banco. No `estado.json` só se atualizam os contadores que o `/progresso` lê (`progresso.*`, `mesa`/`trajeto.minutos_acumulados`, `dominio`) e o que muda devagar (`metodo_acordado`, `projeto_japao`).
+
 **Passo 0**
 - **Regra das 04:00:** sessão iniciada antes das 4h conta como o dia anterior (mesmo relógio do Anki).
-- **Horário de início:** gravar em `estado.json → mesa.horarios_inicio`. Combinado de 22/09: a mesa vem antes do jogo, meta de começar até 23h. Mostrar a tendência no resumo de domingo, sem sermão.
-- Ler `lembrete_abertura` no estado, se existir, e cobrar antes do conteúdo.
+- **Horário de início:** vai no `inicio` do `registrar_aula`. Combinado de 22/09: a mesa vem antes do jogo, meta de começar até 23h. Mostrar a tendência no resumo de domingo, sem sermão.
+- Cobrar o `lembrete_abertura` (vem no `hoje()`) antes do conteúdo.
 - **Primeira sessão do mês:** criar o card "Ação do mês" do Projeto Japão e cuidar do diagnóstico mensal (CLAUDE.md, itens 4 e 5).
 - O `anki_status.py` lê a coleção do Anki do PC. Se a leitura estiver velha, pedir para ele abrir o Anki.
 
@@ -172,7 +179,7 @@ Esta seção registra o que mudou desde que a skill foi escrita. **Quando confli
 **Passo 3**
 - **Produção dirigida:** além das frases livres, perguntas que forçam a partícula ou estrutura que a rotina dele não usa (で, が, contadores).
 - Dicionário liberado para palavras na produção; proibido na verificação. Respostas em kana/kanji, sem romaji.
-- Padrões em vigília e protocolos abertos estão no topo de `pontos_fracos` no estado.
+- Padrões em vigília vêm em `hoje()` → `padroes_abertos`; a contagem por categoria, em `erros()`.
 
 **Toda correção (pedido dele em 16/10: "nunca suponha que eu já sei uma regra")**
 - A correção que depende de uma regra **reexplica a regra ali**, em uma linha, mesmo que ela já tenha sido dada. Nunca escrever "como você já sabe" nem citar a data da aula como se isso bastasse.
@@ -182,9 +189,9 @@ Esta seção registra o que mudou desde que a skill foi escrita. **Quando confli
 **Passo 4**
 1. Vocabulário novo → append em `progresso/vocabulario.tsv` e rodar `python3 tools/gerar_vocab_apkg.py`. Ele importa no Anki pelo AnkiConnect e sincroniza. Se o Anki do PC estiver fechado, não é problema: o deck é cumulativo e entra na próxima.
 2. **Erro de execução que se repete** (dakuten, い final, katakana, partícula) → alvo novo em `progresso/escrita.tsv` e rodar `python3 tools/gerar_escrita_apkg.py` (deck de digitação com diff).
-3. `estado.json` e `diario.md`, como sempre.
+3. `registrar_aula`, `registrar_trajeto`, `registrar_erros` e os contadores do `estado.json` (ver "Sistema MCP" acima).
 4. `python3 tools/trello.py sync`.
-5. **Backup:** copiar `progresso/diario.md`, `progresso/estado.json` (e `plano/japao.md`, se mudou) para `~/.local/share/japones/backup-progresso/`.
+5. **Backup:** `backup()` do MCP (copia `estudo.db`, `diario.md`, `estado.json` e `plano/japao.md`). Sem MCP: copiar os arquivos à mão para `~/.local/share/japones/backup-progresso/`.
 6. Commit e push se mudaram ferramentas, plano, currículo ou os `.tsv`.
 7. Fechar com o **音読**: duas frases do dia para ele ler em voz alta, duas vezes.
 

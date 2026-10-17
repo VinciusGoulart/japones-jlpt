@@ -3,7 +3,8 @@
     "allow": [
       "Skill(estudo)",
       "Skill(progresso)",
-      "Bash(date:*)"
+      "Bash(date:*)",
+      "mcp__japones"
     ]
   }
 }

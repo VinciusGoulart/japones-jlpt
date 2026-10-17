@@ -15,3 +15,9 @@ diagnostico/audio/
 # (Esta linha é cinto e suspensório — o arquivo nem deveria chegar perto daqui.)
 trello.env
 *.env
+
+# Sistema (núcleo Python): ambiente e caches. O banco mora em ~/.local/share/japones/.
+sistema/.venv/
+__pycache__/
+.pytest_cache/
+*.egg-info/
