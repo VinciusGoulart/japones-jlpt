@@ -174,6 +174,11 @@ Esta seção registra o que mudou desde que a skill foi escrita. **Quando confli
 - Dicionário liberado para palavras na produção; proibido na verificação. Respostas em kana/kanji, sem romaji.
 - Padrões em vigília e protocolos abertos estão no topo de `pontos_fracos` no estado.
 
+**Toda correção (pedido dele em 16/10: "nunca suponha que eu já sei uma regra")**
+- A correção que depende de uma regra **reexplica a regra ali**, em uma linha, mesmo que ela já tenha sido dada. Nunca escrever "como você já sabe" nem citar a data da aula como se isso bastasse.
+- Palavra usada numa pergunta dirigida vem junto com o significado. Ele esquece palavras e verbos, e a pergunta não é para medir vocabulário.
+- Forma て/た: na correção, mostrar a linha da tabela que se aplica (`う・つ・る → って`, `む・ぶ・ぬ → んで`, `く → いて`, `す → して`, `行く → 行って`).
+
 **Passo 4**
 1. Vocabulário novo → append em `progresso/vocabulario.tsv` e rodar `python3 tools/gerar_vocab_apkg.py`. Ele importa no Anki pelo AnkiConnect e sincroniza. Se o Anki do PC estiver fechado, não é problema: o deck é cumulativo e entra na próxima.
 2. **Erro de execução que se repete** (dakuten, い final, katakana, partícula) → alvo novo em `progresso/escrita.tsv` e rodar `python3 tools/gerar_escrita_apkg.py` (deck de digitação com diff).

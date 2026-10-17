@@ -265,11 +265,12 @@ Shin Kanzen Master N3 ou Quartet I.
 |---|---|---|
 | 66 | ter 13/10 | **Retomada:** kanji travados, 4º lote (結果, 探す × 深い, 正しい) + revisão (família → conector; forma て de verbo) |
 | 67 | qua 14/10 | **〜てはいけません** × 〜てもいいです · *abertura: conector dentro de frase e に/が pelo papel* |
-| 68 | qui 15/10 | **〜たことがあります** (experiência) + もう／まだ pelo ouvido (respostas rápidas) |
-| 69 | sex 16/10 | Conversa dirigida #4: **quem faz × quem recebe** (は/が × を × に × と), com いる×ある e で de palco |
-| 70 | sáb 17/10 | **Diário #6**, em casual · *pendência do dia: questões-exemplo oficiais do N5* |
-| 71 | dom 18/10 | **Kanji travados, 5º lote** (da seção EM LOOP: 後ろ, 済む, 優しい, 終わる) + planejamento da Semana 8 |
+| 68 | sex 16/10 | **〜たことがあります** (experiência) + もう／まだ — *feito; 15/10 ficou sem mesa* |
+| 69 | sáb 17/10 | **に × で × を pelo VERBO** (conversa dirigida #4 refeita): estar/ir → に, fazer → で, objeto → を · *pendência do dia: questões-exemplo oficiais do N5* |
+| 70 | dom 18/10 | **Kanji travados, 5º lote** (da seção EM LOOP; em 16/10 os piores eram 情報, 失う, 済む e 特に, e 正しい seguia em loop) + planejamento da Semana 8 |
 
 *O 4º lote trocou 理解・本当・先に (previstos em 08/10) por 探す・深い・正しい, que eram os que estavam em loop em 13/10: o lote sai da lista do dia, não da previsão. Fica para a Semana 8: 中・外・右・左.*
+
+*Ajuste 16/10: ele mesmo descreveu o modelo que está por trás dos erros de partícula: "に é lugar genérico, で é lugar específico ou ferramenta". Por isso a conversa dirigida #4 virou uma aula de に×で×を decidida pelo verbo, e o Diário #6 passou para a Semana 8. Também vão para a Semana 8: **drill da tabela て／た por terminação** (pedido dele: "ainda tenho muita dificuldade com う、つ、む…") e 中・外・右・左.*
 
 *Achado de 13/10 que orienta a semana: os conectores 退屈で e 長くて, corrigidos em 09/10 e já praticados no deck de digitação, voltaram errados na produção livre (退屈って, ながいで). Frase decorada não transferiu. As aberturas da semana cobram o conector **dentro de frase**, com a família dita antes.*
