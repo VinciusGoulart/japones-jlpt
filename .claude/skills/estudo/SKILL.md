@@ -162,6 +162,12 @@ Esta seção registra o que mudou desde que a skill foi escrita. **Quando confli
 - **Se as ferramentas `japones` não aparecerem** (servidor não aprovado ou fora do ar), siga o caminho antigo descrito abaixo, sem travar a aula, e avise em uma linha.
 - **Antes de ensinar uma palavra ou leitura de que não tenha certeza:** `dicionario(termo)` / `kanji(literal)` (banco do Kotoba). No fim da produção, `consultas_kotoba()` mostra o que ele precisou procurar, e essas palavras são candidatas a cartão.
 - **Passo 4, registro:** `registrar_aula` (grava no banco **e** acrescenta a entrada no `diario.md`; não escreva o diário à mão), `registrar_trajeto` (o áudio; os números do Anki ele busca sozinho), `registrar_erros` (cada erro corrigido, com categoria do DESIGN §4.2), `abrir_padrao`/`atualizar_padrao`/`resolver_padrao`, `definir_nota("lembrete_abertura", ...)` e, por último, **`backup()`**, que substitui a cópia manual.
+- **Exercícios no painel (desde 17/10, pedido dele; DESIGN §9).** Depois de ensinar o conteúdo novo no chat:
+  1. `planejar_tipos(n)` sorteia a sequência de tipos (8 a 10 exercícios; ela já traz `producao` no fim). **Siga a sequência:** ele pediu "sempre variando os tipos, mas utilizando todos".
+  2. Escreva o conteúdo de cada exercício pela necessidade do dia: o ponto novo, os `padroes_abertos`, os erros recentes (`erros()`). Só vocabulário e estruturas já vistos; em caso de dúvida, `dicionario()`. Toda `explicacao` reexplica a regra em uma linha. Nas `aceitas`, liste as grafias em kanji **e** em kana.
+  3. `criar_licao(titulo, exercicios)` e mande o link (`http://127.0.0.1:8787/aula/<id>`). Ele faz no painel e é corrigido na hora.
+  4. Quando ele avisar que terminou: `resultado_licao()`. Corrija cada `revisar` com `corrigir_exercicio` (✅/❌ e por quê/↪️; a correção aparece para ele no painel) e comente no chat o padrão do dia. Os erros automáticos já caem na tabela `erro`; os do chat continuam indo por `registrar_erros`.
+  - A lição substitui o quiz de verificação e o bloco de produção do Passo 3. As frases livres (`producao`) chegam pelo painel.
 - **O `estado.json` deixa de receber logs.** Horário de início, `pontos_fracos`, notas de trajeto e `lembrete_abertura` vão para o banco. No `estado.json` só se atualizam os contadores que o `/progresso` lê (`progresso.*`, `mesa`/`trajeto.minutos_acumulados`, `dominio`) e o que muda devagar (`metodo_acordado`, `projeto_japao`).
 
 **Passo 0**

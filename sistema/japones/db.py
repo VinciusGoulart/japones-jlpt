@@ -4,8 +4,9 @@ from pathlib import Path
 
 from japones import config
 
-ESQUEMA_ATUAL = 1
+ESQUEMA_ATUAL = 2
 _DDL = Path(__file__).with_name("schema.sql")
+_DDL2 = Path(__file__).with_name("schema2.sql")
 
 
 def conectar(caminho: Path | None = None) -> sqlite3.Connection:
@@ -25,7 +26,12 @@ def _migrar(con: sqlite3.Connection) -> None:
         con.executescript(_DDL.read_text())
         con.execute("PRAGMA user_version = 1")
         con.commit()
-    # Esquemas futuros entram aqui, um `if versao < N` por vez, nunca editando o 1.
+        versao = 1
+    if versao < 2:      # 17/10: lições e exercícios do painel (DESIGN §9)
+        con.executescript(_DDL2.read_text())
+        con.execute("PRAGMA user_version = 2")
+        con.commit()
+    # Esquemas futuros entram aqui, um `if versao < N` por vez, nunca editando os anteriores.
 
 
 def linhas(cursor) -> list[dict]:

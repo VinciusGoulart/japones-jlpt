@@ -26,6 +26,8 @@ mcp = MCPServer(
     instructions=(
         "Sistema de estudo de japonês do Vinicius. No Passo 0 da /estudo, chame hoje() — ele substitui "
         "date, trello.py status, anki_status.py, a leitura do estado.json e do curriculo.md. "
+        "Depois de ensinar, monte os exercícios: planejar_tipos() → criar_licao() → ele faz no painel → "
+        "resultado_licao() → corrigir_exercicio() nos 'revisar'. "
         "No Passo 4, registre com registrar_aula, registrar_trajeto e registrar_erros, e feche com backup(). "
         "Antes de ensinar uma palavra ou leitura de que não tenha certeza, confira com dicionario()."
     ),
@@ -369,6 +371,81 @@ def definir_nota(chave: str, valor: str) -> dict:
     con.commit()
     con.close()
     return {"ok": True}
+
+
+# ------------------------------------------------------------------ exercícios (DESIGN §9)
+
+PAINEL = "http://127.0.0.1:8787"
+
+
+@mcp.tool()
+def planejar_tipos(n: int = 8, semente: int | None = None) -> dict:
+    """Sorteia a sequência de tipos da lição: variada, sem deixar tipo de fora, com peso para o que ele
+    erra mais e para o que não aparece há duas lições. 'producao' entra sempre, no fim."""
+    from japones import exercicios
+    con = _con()
+    r = exercicios.planejar_tipos(con, n, semente)
+    con.close()
+    return r
+
+
+@mcp.tool()
+def criar_licao(titulo: str, exercicios: list[dict], data: str | None = None) -> dict:
+    """Cria a lição do dia no painel. Cada exercício: {tipo, bloco, enunciado, dados, explicacao, categoria}
+    no formato do DESIGN §9.2 (o `dados` leva o gabarito; o navegador nunca o recebe). Para texto japonês
+    aceito em mais de uma grafia, liste todas nas `aceitas` (kanji e kana). Tudo ou nada: um exercício
+    inválido recusa a lição com a mensagem do problema."""
+    from japones import exercicios as motor
+    try:
+        itens = [motor.ExercicioIn(**e) for e in exercicios]
+        con = _con()
+        lid = motor.criar_licao(con, titulo, itens, data)
+        con.close()
+    except (ValueError, TypeError) as e:
+        return {"erro": str(e)}
+    return {"ok": True, "id": lid, "exercicios": len(itens), "abrir": f"{PAINEL}/aula/{lid}"}
+
+
+@mcp.tool()
+def resultado_licao(id: int | None = None) -> dict:
+    """O resultado da lição (padrão: a mais recente): por exercício, tipo, enunciado, a resposta dele,
+    veredito e gabarito; e a lista dos 'revisar' que esperam correção sua (corrigir_exercicio)."""
+    from japones import exercicios
+    con = _con()
+    lid = id or exercicios.licao_atual_id(con)
+    l = exercicios.licao_renderizada(con, lid) if lid else None
+    con.close()
+    if not l:
+        return {"erro": "nenhuma lição"}
+    itens, contagem, pendentes = [], {"certo": 0, "errado": 0, "revisar": 0, "sem_resposta": 0}, []
+    for ex in l["exercicios"]:
+        r = ex["resultado"]
+        contagem[r["veredito"] if r else "sem_resposta"] += 1
+        item = {"id": ex["id"], "tipo": ex["tipo"], "enunciado": ex["enunciado"][:120]}
+        if r:
+            item.update(veredito=r["veredito"], resposta=r["resposta"], gabarito=r["gabarito"])
+            if r["correcao"]:
+                item["correcao"] = "(já corrigido)"
+            elif r["veredito"] == "revisar":
+                pendentes.append(ex["id"])
+        itens.append(item)
+    return {"id": l["id"], "titulo": l["titulo"], "status": l["status"], "contagem": contagem,
+            "revisar_pendentes": pendentes, "exercicios": itens}
+
+
+@mcp.tool()
+def corrigir_exercicio(exercicio_id: int, veredito: str, correcao: str) -> dict:
+    """Fecha um 'revisar' (digitar fora do gabarito, produção): veredito 'certo' ou 'errado' e a correção
+    em markdown (✅ certo / ❌ errado e por quê / ↪️ corrigido), que aparece para ele no painel."""
+    from japones import exercicios
+    con = _con()
+    try:
+        ok = exercicios.corrigir_revisao(con, exercicio_id, veredito, correcao)
+    except ValueError as e:
+        return {"erro": str(e)}
+    finally:
+        con.close()
+    return {"ok": ok}
 
 
 @mcp.tool()

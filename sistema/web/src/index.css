@@ -1,0 +1,221 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
+@import "@fontsource-variable/geist";
+
+/* O tema segue o sistema operacional (sem botão): o painel é usado à noite e o
+   escuro precisa estar certo sem depender de JS nem piscar no carregamento. */
+@custom-variant dark (@media (prefers-color-scheme: dark));
+
+@theme inline {
+    /* Noto Sans CJK JP explícito: sem ele o fontconfig pode escolher a variante
+       chinesa dos mesmos kanji (unificação Han) quando falta lang="ja". */
+    --font-sans: 'Geist Variable', "Noto Sans CJK JP", "Noto Sans JP", system-ui, sans-serif;
+    --font-heading: var(--font-sans);
+    --font-ja: "Noto Sans CJK JP", "Noto Sans JP", system-ui, sans-serif;
+    --color-ring: var(--ring);
+    --color-input: var(--input);
+    --color-border: var(--border);
+    --color-destructive: var(--destructive);
+    --color-accent-foreground: var(--accent-foreground);
+    --color-accent: var(--accent);
+    --color-muted-foreground: var(--muted-foreground);
+    --color-muted: var(--muted);
+    --color-secondary-foreground: var(--secondary-foreground);
+    --color-secondary: var(--secondary);
+    --color-primary-foreground: var(--primary-foreground);
+    --color-primary: var(--primary);
+    --color-popover-foreground: var(--popover-foreground);
+    --color-popover: var(--popover);
+    --color-card-foreground: var(--card-foreground);
+    --color-card: var(--card);
+    --color-foreground: var(--foreground);
+    --color-background: var(--background);
+    /* estados da correção e das fontes do calendário */
+    --color-ok: var(--ok);
+    --color-ok-bg: var(--ok-bg);
+    --color-erro: var(--erro);
+    --color-erro-bg: var(--erro-bg);
+    --color-aviso: var(--aviso);
+    --color-aviso-bg: var(--aviso-bg);
+    --color-licao: var(--licao);
+    --color-licao-bg: var(--licao-bg);
+    --color-trello: var(--trello);
+    --color-trello-bg: var(--trello-bg);
+    --radius-sm: calc(var(--radius) * 0.6);
+    --radius-md: calc(var(--radius) * 0.8);
+    --radius-lg: var(--radius);
+    --radius-xl: calc(var(--radius) * 1.4);
+    --radius-2xl: calc(var(--radius) * 1.8);
+    --radius-3xl: calc(var(--radius) * 2.2);
+    --radius-4xl: calc(var(--radius) * 2.6);
+}
+
+:root {
+    color-scheme: light;
+    --background: oklch(0.985 0.003 250);
+    --foreground: oklch(0.2 0.015 260);
+    --card: oklch(1 0 0);
+    --card-foreground: oklch(0.2 0.015 260);
+    --popover: oklch(1 0 0);
+    --popover-foreground: oklch(0.2 0.015 260);
+    /* 藍 (ai-iro): índigo calmo como cor de ação */
+    --primary: oklch(0.45 0.13 265);
+    --primary-foreground: oklch(0.985 0 0);
+    --secondary: oklch(0.955 0.008 260);
+    --secondary-foreground: oklch(0.25 0.02 260);
+    --muted: oklch(0.955 0.006 260);
+    --muted-foreground: oklch(0.5 0.015 260);
+    --accent: oklch(0.95 0.015 265);
+    --accent-foreground: oklch(0.25 0.03 265);
+    --destructive: oklch(0.577 0.215 27);
+    --border: oklch(0.91 0.008 260);
+    --input: oklch(0.88 0.01 260);
+    --ring: oklch(0.6 0.1 265);
+    --radius: 0.625rem;
+
+    --ok: oklch(0.52 0.13 150);
+    --ok-bg: oklch(0.95 0.045 150);
+    --erro: oklch(0.55 0.19 27);
+    --erro-bg: oklch(0.95 0.035 25);
+    --aviso: oklch(0.55 0.12 70);
+    --aviso-bg: oklch(0.96 0.05 85);
+    --licao: oklch(0.5 0.16 300);
+    --licao-bg: oklch(0.95 0.035 300);
+    --trello: oklch(0.5 0.14 245);
+    --trello-bg: oklch(0.95 0.03 245);
+}
+
+@media (prefers-color-scheme: dark) {
+    :root {
+        color-scheme: dark;
+        --background: oklch(0.17 0.012 265);
+        --foreground: oklch(0.93 0.008 260);
+        --card: oklch(0.21 0.014 265);
+        --card-foreground: oklch(0.93 0.008 260);
+        --popover: oklch(0.23 0.015 265);
+        --popover-foreground: oklch(0.93 0.008 260);
+        --primary: oklch(0.72 0.11 268);
+        --primary-foreground: oklch(0.17 0.02 265);
+        --secondary: oklch(0.27 0.015 265);
+        --secondary-foreground: oklch(0.93 0.008 260);
+        --muted: oklch(0.25 0.012 265);
+        --muted-foreground: oklch(0.68 0.015 260);
+        --accent: oklch(0.29 0.03 268);
+        --accent-foreground: oklch(0.95 0.01 260);
+        --destructive: oklch(0.68 0.17 25);
+        --border: oklch(1 0 0 / 9%);
+        --input: oklch(1 0 0 / 14%);
+        --ring: oklch(0.6 0.1 268);
+
+        --ok: oklch(0.76 0.13 150);
+        --ok-bg: oklch(0.3 0.05 150);
+        --erro: oklch(0.72 0.15 25);
+        --erro-bg: oklch(0.3 0.06 25);
+        --aviso: oklch(0.8 0.12 80);
+        --aviso-bg: oklch(0.31 0.05 75);
+        --licao: oklch(0.76 0.12 300);
+        --licao-bg: oklch(0.3 0.06 300);
+        --trello: oklch(0.75 0.11 245);
+        --trello-bg: oklch(0.3 0.05 245);
+    }
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  html {
+    @apply font-sans;
+  }
+  body {
+    @apply bg-background text-foreground antialiased;
+  }
+  button:not(:disabled), [role="button"]:not(:disabled) {
+    cursor: pointer;
+  }
+  :lang(ja) {
+    font-family: var(--font-ja);
+  }
+}
+
+/* ---------------------------------------------------------------- markdown */
+
+.md {
+  line-height: 1.7;
+  overflow-wrap: anywhere;
+}
+.md > * + * { margin-top: 0.75em; }
+.md h1, .md h2, .md h3, .md h4 { font-weight: 600; line-height: 1.35; margin-top: 1.4em; }
+.md h1 { font-size: 1.5rem; }
+.md h2 { font-size: 1.3rem; }
+.md h3 { font-size: 1.12rem; }
+.md h4 { font-size: 1rem; }
+.md > :first-child { margin-top: 0; }
+.md strong { font-weight: 650; }
+.md em { font-style: italic; }
+.md a { color: var(--primary); text-decoration: underline; text-underline-offset: 3px; }
+.md ul { list-style: disc; padding-left: 1.4em; }
+.md ol { list-style: decimal; padding-left: 1.4em; }
+.md li + li { margin-top: 0.25em; }
+.md li > ul, .md li > ol { margin-top: 0.25em; }
+.md blockquote { border-left: 3px solid var(--border); padding-left: 1em; color: var(--muted-foreground); }
+.md code { font-size: 0.9em; background: var(--muted); padding: 0.1em 0.35em; border-radius: 0.3em; }
+.md pre { background: var(--muted); padding: 0.75em 1em; border-radius: 0.5em; overflow-x: auto; }
+.md pre code { background: none; padding: 0; }
+.md hr { border-color: var(--border); margin: 1.5em 0; }
+.md table { border-collapse: collapse; width: 100%; font-size: 0.95em; display: block; overflow-x: auto; }
+.md th, .md td { border: 1px solid var(--border); padding: 0.4em 0.65em; text-align: left; vertical-align: top; }
+.md th { background: var(--muted); font-weight: 600; }
+.md-inline > p { display: inline; }
+
+/* ---------------------------------------------------------------- FullCalendar */
+
+.calendario {
+  --fc-border-color: var(--border);
+  --fc-page-bg-color: var(--card);
+  --fc-neutral-bg-color: var(--muted);
+  --fc-neutral-text-color: var(--muted-foreground);
+  --fc-today-bg-color: transparent;
+  --fc-event-border-color: transparent;
+  --fc-small-font-size: 0.75rem;
+}
+.calendario .fc { font-size: 0.875rem; }
+.calendario .fc .fc-toolbar-title { font-size: 1.15rem; font-weight: 600; }
+.calendario .fc .fc-toolbar-title::first-letter { text-transform: uppercase; }
+.calendario .fc .fc-button {
+  background: var(--secondary);
+  color: var(--secondary-foreground);
+  border: 1px solid var(--border);
+  box-shadow: none;
+  text-transform: capitalize;
+  font-size: 0.85rem;
+  padding: 0.3em 0.75em;
+}
+.calendario .fc .fc-button:hover { background: var(--accent); }
+.calendario .fc .fc-button-primary:disabled { opacity: 0.5; background: var(--secondary); color: var(--secondary-foreground); }
+.calendario .fc .fc-button:focus { box-shadow: 0 0 0 2px var(--ring); }
+.calendario .fc .fc-col-header-cell-cushion { color: var(--muted-foreground); font-weight: 500; text-transform: capitalize; padding: 6px 4px; }
+.calendario .fc .fc-daygrid-day-number { color: var(--foreground); font-size: 0.8rem; padding: 4px 6px; }
+.calendario .fc .fc-day-other .fc-daygrid-day-top { opacity: 0.45; }
+.calendario .fc .fc-daygrid-day { cursor: pointer; }
+.calendario .fc .fc-daygrid-day:hover { box-shadow: inset 0 0 0 2px var(--ring); }
+.calendario .fc .fc-day-today .fc-daygrid-day-number {
+  background: var(--primary); color: var(--primary-foreground); border-radius: 999px; min-width: 1.6em; text-align: center; margin: 2px;
+}
+.calendario .fc .dia-completa { background: color-mix(in oklch, var(--ok) 16%, transparent); }
+.calendario .fc .dia-parcial { background: color-mix(in oklch, var(--aviso) 20%, transparent); }
+.calendario .fc .dia-sem_mesa { background: color-mix(in oklch, var(--erro) 13%, transparent); }
+.calendario .fc .dia-selecionado { box-shadow: inset 0 0 0 2px var(--primary); }
+.calendario .fc .fc-daygrid-event { border: none; border-radius: 4px; padding: 0 3px; margin-top: 1px; font-size: 0.72rem; }
+/* o FullCalendar pinta o texto do evento de branco (--fc-event-text-color): cada tipo define a sua cor */
+.calendario .fc .fc-event .fc-event-main { color: inherit; }
+.calendario .fc .ev-plano { background: transparent; color: var(--muted-foreground); padding-left: 2px; }
+.calendario .fc .ev-plano .fc-event-title { font-weight: 400; }
+.calendario .fc .ev-trello { background: var(--trello-bg); color: var(--trello); }
+.calendario .fc .ev-trello.ev-concluido { opacity: 0.55; text-decoration: line-through; }
+.calendario .fc .ev-licao { background: var(--licao-bg); color: var(--licao); }
+.calendario .fc a.fc-event:hover { filter: brightness(1.08); }
+.calendario .fc .fc-daygrid-more-link { color: var(--muted-foreground); font-size: 0.72rem; }
+.calendario .fc .fc-popover { background: var(--popover); border-color: var(--border); }
+.calendario .fc .fc-popover-header { background: var(--muted); color: var(--foreground); }

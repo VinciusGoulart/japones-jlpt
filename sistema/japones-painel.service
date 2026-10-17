@@ -1,0 +1,15 @@
+# Painel do estudo de japonês — http://127.0.0.1:8787
+# Instalar:  cp sistema/japones-painel.service ~/.config/systemd/user/
+#            systemctl --user daemon-reload && systemctl --user enable --now japones-painel
+# Depois de um novo build do React ou de mudar o Python:  systemctl --user restart japones-painel
+[Unit]
+Description=Painel do estudo de japonês (127.0.0.1:8787)
+
+[Service]
+WorkingDirectory=%h/Documentos/facul/ai-job-search/sistema
+ExecStart=%h/Documentos/facul/ai-job-search/sistema/.venv/bin/python -m japones.api
+Restart=on-failure
+RestartSec=3
+
+[Install]
+WantedBy=default.target

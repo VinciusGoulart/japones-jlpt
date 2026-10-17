@@ -20,6 +20,13 @@ curl -sSL https://bootstrap.pypa.io/get-pip.py -o /tmp/get-pip.py && .venv/bin/p
 .venv/bin/python -m pytest -q                  # testes (usam banco e diário temporários)
 .venv/bin/python -m japones.migracao           # importa/reimporta o histórico (idempotente)
 .venv/bin/python -m japones.mcp_server         # o servidor MCP (stdio) — o Claude Code sobe sozinho pelo ../.mcp.json
+.venv/bin/python -m japones.api                # a API + o painel em http://127.0.0.1:8787 (na máquina dele roda como serviço)
+
+# painel (React)
+cd web && npm install && npm run dev           # desenvolvimento, com proxy de /api para a 8787
+cd web && npm run build                        # gera web/dist, que a API serve
+systemctl --user restart japones-painel        # depois de build novo ou de mudar o Python
+journalctl --user -u japones-painel -n 50      # log do serviço
 ```
 
 ## Regras que não se quebram
