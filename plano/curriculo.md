@@ -274,3 +274,21 @@ Shin Kanzen Master N3 ou Quartet I.
 *Ajuste 16/10: ele mesmo descreveu o modelo que está por trás dos erros de partícula: "に é lugar genérico, で é lugar específico ou ferramenta". Por isso a conversa dirigida #4 virou uma aula de に×で×を decidida pelo verbo, e o Diário #6 passou para a Semana 8. Também vão para a Semana 8: **drill da tabela て／た por terminação** (pedido dele: "ainda tenho muita dificuldade com う、つ、む…") e 中・外・右・左.*
 
 *Achado de 13/10 que orienta a semana: os conectores 退屈で e 長くて, corrigidos em 09/10 e já praticados no deck de digitação, voltaram errados na produção livre (退屈って, ながいで). Frase decorada não transferiu. As aberturas da semana cobram o conector **dentro de frase**, com a família dita antes.*
+
+*Fechamento 18/10: o dia 70 aconteceu (início 01:42 de segunda 19, regra das 4h). Lote 5 de kanji: 10 de 12 no painel; as questões oficiais do N5 não foram feitas pela terceira vez (10/10 → 17/10 → 18/10) e passam a abrir a aula de segunda. A Semana 7 teve mesa em 5 de 7 dias.*
+
+## Fase 1 — Semana 8 (dias 71–77, 19 a 25/10): gramática nova todo dia útil
+
+*Detalhada em 18/10. Ele notou, com razão, que as aulas de 17 e 18/10 não trouxeram nada novo: a de 17/10 refez as partículas, e o "conteúdo novo" de 18/10 eram palavras que já estão no Kaishi. O lote de kanji travados conserta o que já entrou; não é matéria nova. A partir desta semana, **os kanji travados saem do lugar do conteúdo novo e vão para o aquecimento** (1 ou 2 por aula, tirados do `em_loop` do dia e decompostos), e todo dia útil tem um ponto de gramática que ele ainda não viu. **A tabela て／た** (pedido dele em 16/10; em 18/10 saiu あそっだ) também entra pelo aquecimento, com 1 ou 2 verbos por aula que ele ainda não conjugou: espalhado pela semana, o treino rende mais que uma aula inteira só de tabela.*
+
+| Dia | Data | Conteúdo |
+|---|---|---|
+| 71 | seg 19/10 | **Questões oficiais do N5 abrem a aula** (jlpt.jp/e/samples/n5; adiadas desde 10/10) + **〜に行きます**: ir fazer algo, com o radical do ます + に (食べに行きます). Conserta o radical (働たい → 働きたい) |
+| 72 | ter 20/10 | **〜ましょう／〜ましょうか**: "vamos…" e "quer que eu…?", em contraste com o ませんか (convite, 02/09) |
+| 73 | qua 21/10 | **Interrogativa + か／も**: 何か (alguma coisa) × 何も〜ない (nada); だれか × だれも; どこか × どこにも. Cai muito no N5 |
+| 74 | qui 22/10 | **ほしい × たい**: querer uma COISA (〜がほしい) × querer FAZER (〜たい) |
+| 75 | sex 23/10 | **Diário #6**, em casual (adiado desde 10/10) · *card do Kaishi: reavaliar os novos por dia pela retenção* |
+| 76 | sáb 24/10 | **だけ** (só, apenas) + conversa dirigida #5 com o que entrou na semana |
+| 77 | dom 25/10 | Kanji de posição, parte 2: **中・外・右・左** (adiados desde 11/10) + planejamento da Semana 9, que fecha outubro e prepara o **Diagnóstico #2 (sáb 07/11)** |
+
+*Aquecimentos da semana: os 7 kanji em loop que sobram (結構, 関係, 程度, 呼ぶ, 終わる, しばらく, 実は), um ou dois por dia; 撮る (esquecido em 16 e 18/10); こと × とこ (trocado em 17 e 18/10); quem faz a ação → は, não に (私にベッドの上で, 18/10).*
