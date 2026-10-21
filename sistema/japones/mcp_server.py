@@ -390,10 +390,10 @@ PAINEL = "http://127.0.0.1:8787"
 
 
 @mcp.tool()
-def planejar_tipos(n: int = 9, semente: int | None = None) -> dict:
+def planejar_tipos(n: int = 20, semente: int | None = None) -> dict:
     """Sorteia a sequência de tipos da lição: variada, sem deixar tipo de fora (com n ≥ 9 entra cada tipo uma
     vez), com peso para o que ele erra mais e para o que não aparece há duas lições. 'producao' entra
-    sempre, no fim."""
+    sempre, no fim. Padrão 20 (pedido dele em 21/10/2026), com a maior parte no conteúdo novo."""
     from japones import exercicios
     con = _con()
     r = exercicios.planejar_tipos(con, n, semente)

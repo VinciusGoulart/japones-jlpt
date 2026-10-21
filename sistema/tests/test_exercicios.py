@@ -127,6 +127,14 @@ def test_sorteio_usa_todos_e_termina_em_producao(con):
     assert max(p["tipos"].count(t) for t in m.TIPOS) <= 2
 
 
+def test_sorteio_de_20_fecha_a_conta(con):
+    # 20 exercícios por lição desde 21/10/2026: o teto de 2 por tipo parava em 17.
+    p = m.planejar_tipos(con, n=20, semente=4)
+    assert len(p["tipos"]) == 20 and p["tipos"][-1] == "producao"
+    assert set(p["tipos"]) == set(m.TIPOS) and p["tipos"].count("producao") == 1
+    assert max(p["tipos"].count(t) for t in m.TIPOS) <= 3
+
+
 def test_sorteio_favorece_o_tipo_que_ele_erra(con):
     lid = m.criar_licao(con, "erra conjugar", [UM_DE_CADA[6]] * 3 + [UM_DE_CADA[0]] * 3)
     for ex in m.licao_renderizada(con, lid)["exercicios"]:

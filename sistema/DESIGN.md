@@ -206,7 +206,7 @@ A lição fica `concluida` quando todo exercício tem resposta.
 
 ### 9.4 Sorteio dos tipos (`planejar_tipos`)
 
-"Sempre variando, mas utilizando todos." Peso de cada tipo = 1 + **2** se não apareceu nas últimas 2 lições + **2 × taxa de erro** do tipo nos últimos 30 dias. Com `n` ≥ número de tipos (o padrão, 9), cada tipo entra uma vez e o peso decide as vagas que sobram; com menos, o peso decide quem entra. Nunca mais de 2 exercícios do mesmo tipo por lição; `producao` entra sempre, no fim (regra 4 do CLAUDE.md: produção ativa todo dia). O tutor recebe a sequência e escreve o conteúdo de cada exercício a partir da necessidade do dia (padrões abertos, erros recentes, conteúdo novo).
+"Sempre variando, mas utilizando todos." Peso de cada tipo = 1 + **2** se não apareceu nas últimas 2 lições + **2 × taxa de erro** do tipo nos últimos 30 dias. Com `n` ≥ número de tipos (o padrão da biblioteca, 9; o da ferramenta MCP, **20** desde 21/10/2026, pedido dele: "mais questões sobre o conteúdo novo de cada dia, um total de 20 questões por dia está ok"), cada tipo entra uma vez e o peso decide as vagas que sobram; com menos, o peso decide quem entra. No máximo 2 exercícios do mesmo tipo por lição enquanto couber; acima de 17 o teto sobe só o necessário (3 com 20); `producao` entra sempre, no fim (regra 4 do CLAUDE.md: produção ativa todo dia). O tutor recebe a sequência e escreve o conteúdo de cada exercício a partir da necessidade do dia (padrões abertos, erros recentes, conteúdo novo).
 
 ### 9.5 Ferramentas MCP novas
 

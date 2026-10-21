@@ -418,11 +418,15 @@ def planejar_tipos(con, n: int = len(TIPOS), semente: int | None = None) -> dict
 
     pesos = {t: round(1 + (2 if t not in recentes else 0) + 2 * taxa.get(t, 0.0), 2) for t in TIPOS}
     outros = [t for t in TIPOS if t != "producao"]
+    # Teto de 2 por tipo enquanto couber. Desde 21/10/2026 a lição tem 20 exercícios (pedido dele:
+    # "mais questões sobre o conteúdo novo de cada dia"), e com 8 tipos o teto de 2 parava em 17:
+    # acima disso ele sobe só o necessário para fechar a conta (3 com 20).
+    teto = max(2, -(-(n - 1) // len(outros)))
     escolha: list[str] = []
     if n - 1 >= len(outros):            # cabe todo mundo: cada tipo uma vez, o resto sorteado
         escolha = list(outros)
     while len(escolha) < n - 1:
-        livres = [t for t in outros if escolha.count(t) < 2]
+        livres = [t for t in outros if escolha.count(t) < teto]
         if not livres:
             break
         escolha.append(rnd.choices(livres, weights=[pesos[t] for t in livres])[0])
