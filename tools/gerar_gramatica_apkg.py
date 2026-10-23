@@ -16,6 +16,13 @@ mostra o sentido em portugues, ele DIGITA a frase em japones, e o Anki mostra o
 diff caractere por caractere ({{type:Resposta}}). Modelo e deck com ids
 proprios e congelados, para nao colidir com os outros decks.
 
+AVALIE A REGRA, NAO A FRASE (23/10/2026, recomendacao do relatorio de pesquisa
+aprovada por ele): o diff caractere por caractere marca como diferenca uma
+frase valida escrita de outro jeito (outra ordem, outro verbo, kanji no lugar
+de kana). O que o cartao treina e a regra (tempo, particula, forma do verbo),
+entao o verso diz isso com todas as letras. O modelo mudou antes da primeira
+importacao no Anki dele; daqui para frente ids e campos ficam como estao.
+
 TSV: sentido em portugues | resposta em kana | nota (verso) | tags.
 O conteudo e do tutor; TSV sem linhas nao gera nem importa nada.
 
@@ -55,8 +62,13 @@ CSS = (
     ".card { font-family: arial; font-size: 30px; text-align: center; "
     "color: black; background-color: white; }\n"
     "input#typeans { font-size: 30px; }\n"
-    ".dica { font-size: 18px; color: #888; margin-top: 12px; }"
+    ".dica { font-size: 18px; color: #888; margin-top: 12px; }\n"
+    ".regra { font-size: 16px; color: #555; margin-top: 14px; }"
 )
+
+# Linha fixa do verso: a nota do cartao e da REGRA, nao da frase exata (ver o topo do arquivo).
+AVALIE = ("Avalie a REGRA (tempo · partícula · forma do verbo), não a frase exata: "
+          "frase válida de outro jeito = Good.")
 
 
 def guid_gramatica(sentido):
@@ -73,7 +85,8 @@ def montar_modelo_typein(model_id, deck_id):
                  # {{type:Resposta}} e o que abre a caixa de texto e gera o diff
                  "qfmt": "{{Sentido}}<br><br>{{type:Resposta}}",
                  "afmt": "{{FrontSide}}<hr id=answer>{{Resposta}}"
-                         "<div class=dica>{{Nota}}</div>",
+                         "<div class=dica>{{Nota}}</div>"
+                         "<div class=regra>" + AVALIE + "</div>",
                  "did": None, "bqfmt": "", "bafmt": ""},
             ],
             "flds": [
