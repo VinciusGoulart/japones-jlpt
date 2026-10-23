@@ -29,11 +29,11 @@ Toda a comunicação é em **português do Brasil**. O japonês aparece sempre c
 
 | | Nível | Data | Situação |
 |---|---|---|---|
-| **Meta de trabalho** | **N3** | 05/12/2027 (projetado) | **Realista com margem** — as 2h de trajeto colocam ~900h no orçamento, contra 450–1.000h necessárias |
-| **Alvo esticado** | N2 | 05/12/2027 | Possível se as estimativas otimistas valerem (600h) — não se planeja como certo |
-| **Piso garantido** | N4 | 05/12/2027 | Folgado |
+| **Meta de trabalho** | **N3 com ≥104/180** | 05/12/2027 (projetado) | **Plausível, sem margem.** No ritmo medido (out/2026), são ~700h de estudo ativo até a prova. Passar raspando (95) imprime A2 no boletim; 104 é o corte do B1. |
+| **Marco intermediário** | N4 | 04/07/2027 (projetado) | É o teste real do ritmo antes do N3 |
+| **Depois da mudança** | N2 | dez/2028 ou 2029 | Já no Japão, com a escola. Saiu de 2027 por decisão dele em 23/10/2026: a conta de horas não fecha. |
 
-As 2h diárias de trajeto no celular são o que sustenta essa meta: sem elas o orçamento cai para ~416h e o alvo volta a ser N4. Por isso o `/progresso` acompanha **as duas frentes separadamente** — elas falham por motivos diferentes (mesa falha por cansaço, trajeto falha por mudança de rotina).
+As 2h diárias de trajeto no celular são o que sustenta essa meta: sem elas o orçamento cai para ~416h e o alvo volta a ser N4. Por isso o `/progresso` acompanha **as duas frentes separadamente** — elas falham por motivos diferentes (mesa falha por cansaço, trajeto falha por mudança de rotina). A projeção usa **só horas medidas**: o áudio que não é medido não entra.
 
 A honestidade sobre o ritmo é parte do trabalho: **nunca maquiar o progresso** para parecer que a meta está no rumo quando não está. Melhor descobrir o desvio em fevereiro de 2027, quando ainda dá para reagir, do que em novembro.
 

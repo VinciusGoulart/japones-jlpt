@@ -24,6 +24,8 @@ Calcule, a partir do estado e do diário:
 
 Use `date` para a data real. Não estime de cabeça.
 
+**Só horas medidas entram na projeção** (decisão de 23/10/2026): mesa pelo diário e Anki pelo tempo de revisão. O áudio só entra se ele informou os minutos. Áudio estimado não conta.
+
 ## Passo 2 — Projetar o nível
 
 Compare as horas projetadas com as faixas de `plano/roadmap.md`:
@@ -33,8 +35,10 @@ Compare as horas projetadas com as faixas de `plano/roadmap.md`:
 | < 300h | N5 |
 | 300–450h | N4 |
 | 450–700h | N4 sólido, N3 arriscado |
-| 700–1.000h | N3 provável |
-| > 1.000h | N3 confortável |
+| 700–1.000h | N3 provável, mas os 104 pontos não estão garantidos |
+| > 1.000h | N3 confortável, ≥104 provável |
+
+A meta é **N3 com ≥104/180**: 104 é o corte do B1 no boletim, e passar raspando (95) imprime A2. O N2 não entra na projeção de 2027. Ele é de dez/2028 ou 2029, já no Japão.
 
 Some a isso o sinal qualitativo do diário: se `pontos_fracos` cresce sem nunca esvaziar, o problema não é volume de horas, é retenção — e mais horas do mesmo método não resolvem.
 
@@ -46,7 +50,7 @@ Formato curto, sem enfeite:
 ## Progresso — [data]
 
 **Ritmo:** X min/dia efetivos · adesão Y% · streak Z (recorde: W)
-**Acumulado:** Nh de ~420h planejadas até dez/2027
+**Acumulado:** Nh de ~700h ativas projetadas até dez/2027 (revisão de 23/10/2026)
 **Projeção:** Kh até o exame → nível provável [N]
 
 ### O que está funcionando
@@ -56,7 +60,7 @@ Formato curto, sem enfeite:
 - [1-3 pontos concretos; se não houver, dizer que não há]
 
 ### Veredito
-[Uma frase direta: está no ritmo do N3, ou não está.]
+[Uma frase direta: está no ritmo do N3 com ≥104, só do N3 raspando, ou de nenhum dos dois.]
 ```
 
 ## Passo 4 — Corrigir a rota
@@ -74,7 +78,7 @@ Atualize `pontos_de_decisao` no estado com a escolha e a data.
 Verifique se algum `ponto_de_decisao` vence nos próximos 30 dias e avise. Especialmente:
 
 - **30/08/2026** — fim da inscrição para o exame de dez/2026
-- **fev/2027** — a decisão estruturante do plano (subir para 1h30 ou remarcar)
+- **fev/2027** — o N3 com ≥104 segue no rumo? Se não estiver, é a hora de subir para 1h30 ou remarcar
 - **mar/2027** e **ago/2027** — janelas de inscrição
 
 Para qualquer data de 2027, lembre que ainda **não** há confirmação oficial: consulte jlpt.org.br antes de tratar como certa.

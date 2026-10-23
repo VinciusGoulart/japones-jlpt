@@ -1,4 +1,4 @@
-# Roadmap — Zero ao JLPT N3 (com N2 no radar)
+# Roadmap — Zero ao JLPT N3 (N2 depois da mudança)
 
 **Início:** 03/08/2026 (segunda-feira) · **Alvo:** exame de dezembro de 2027
 
@@ -25,11 +25,16 @@ Estimativas de horas acumuladas do zero, para quem **não** vem de um idioma com
 | N5 | ~150h | ~350h | ✅ Com muita folga |
 | N4 | ~300h | ~550h | ✅ Com folga |
 | **N3** | ~450h | ~1.000h | ✅ **Sim — meta realista** |
-| N2 | ~600h | ~1.700h | ⚠️ Só se as estimativas otimistas valerem |
+| N2 | ~600h | ~1.700h | ❌ Não em 2027: fica para dez/2028 ou 2029, no Japão |
 
-**Conclusão:** as 2 horas de trajeto tiram o N3 da categoria "meta de esforço" e o colocam em "meta realista com margem". O N2, que era inalcançável a 1h/dia, passa a ser um **alvo esticado** — atingível se o ritmo se mantiver e se as estimativas conservadoras estiverem pessimistas demais, mas não é o que se planeja como certo.
+**Conclusão (agosto/2026):** as 2 horas de trajeto tiram o N3 da categoria "meta de esforço" e o colocam em "meta realista com margem".
 
-**A meta de trabalho continua sendo o N3.** O N2 é reavaliado em fevereiro de 2027 com dados reais, não agora com otimismo.
+**Revisão de 23/10/2026, com horas medidas.** Os ~900h acima eram projeção. O ritmo medido em outubro (52 min/dia de mesa e 34 min/dia de Anki, com o áudio sem medição) projeta **~700h de estudo ativo** até dez/2027. Com isso, o N3 continua **plausível, mas sem margem**, e o N2 em 2027 sai do plano. Fontes e conta: o relatório de pesquisa de 23/10, que é privado e fica fora do repositório.
+
+**Meta reescrita (decisão dele, 23/10/2026):**
+- **N3 em dez/2027 com ≥104/180.** Passar raspando (95) imprime A2 no boletim; 104 é o corte do B1 ([JLPT, referência CEFR](https://www.jlpt.jp/e/about/cefr_reference.html)), e B1 é o nível que vale fora da prova.
+- **N2 em dez/2028 ou em 2029, já no Japão**, com a escola de idioma somando horas que o Brasil não tem.
+- **A projeção é refeita todo mês só com horas medidas.** Áudio que não é medido não entra na conta.
 
 ### Por que essa divisão funciona tão bem
 
@@ -54,7 +59,8 @@ O JLPT acontece **duas vezes por ano no Brasil** (primeiro domingo de julho e de
 |---|---|---|---|
 | **dom, 06/12/2026** | 2026-2 | **03–30/08/2026** (aberta agora) | Opcional — N5 como calibração. ~125 dias até lá, mas com o trajeto somam ~290h: deixa de ser aposta e vira bem provável. |
 | dom, 04/07/2027 *(projetado)* | 2027-1 | ~março/2027 | **Marco real** — N4, possivelmente N3 se o ritmo se confirmar |
-| dom, 05/12/2027 *(projetado)* | 2027-2 | ~agosto/2027 | **META** — N3 (ou N2, se fevereiro/2027 autorizar) |
+| dom, 05/12/2027 *(projetado)* | 2027-2 | ~agosto/2027 | **META** — N3, mirando ≥104/180 |
+| dez/2028 ou 2029 | — | no Japão | **N2**, durante a escola (embarque-alvo: abril/2028) |
 
 > ⚠️ **As datas de 2027 ainda não foram publicadas oficialmente.** São projeções pela regra do "primeiro domingo". O CBLJ confirma cada sessão ~4 meses antes. Reverificar em jlpt.org.br em março e agosto de 2027.
 
@@ -123,9 +129,10 @@ Horas por fase agora contam as duas frentes.
 | Quando | Decisão | Base |
 |---|---|---|
 | **30/08/2026** | Prestar N5 em dez/2026? | Com o trajeto somando ~290h até lá, virou aposta favorável. Custa R$245 + viagem a SP. Vale como calibração real de prova. |
-| **fev/2027** | **Manter N3 ou promover a meta para N2?** | 6 meses de ritmo real nas duas frentes. Se o acumulado passar de ~380h e o simulado N5 for ≥80%, o N2 entra em discussão séria. |
+| ~~fev/2027~~ | ~~Manter N3 ou promover a meta para N2?~~ | **Decidido em 23/10/2026:** o N2 não entra em 2027. A projeção com horas medidas dá ~260h em 01/02/2027, longe do gatilho de 380h. |
+| **fev/2027** | **O N3 com ≥104 segue no rumo?** | Horas medidas nas duas frentes + simulado N5 de dez/2026. Se a projeção estiver 15% ou mais abaixo, o `/progresso` apresenta as saídas. |
 | **mar/2027** | Inscrever em N4 ou N3 para jul/2027? | Resultado do simulado de janeiro. |
-| **ago/2027** | Inscrever em N3 ou N2 para dez/2027? | Resultado do exame de julho + horas acumuladas. |
+| **ago/2027** | Inscrever no N3 para dez/2027 | Inscrição na janela de agosto. O resultado do N4 de julho e as horas acumuladas dizem se a meta é passar ou passar com ≥104. |
 
 ---
 
