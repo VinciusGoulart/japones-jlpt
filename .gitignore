@@ -21,3 +21,7 @@ sistema/.venv/
 __pycache__/
 .pytest_cache/
 *.egg-info/
+
+# Pesquisas (23/10/2026): o relatorio traz horarios de sono, horas e dados do estado.json privado
+research_notes/
+reports/
