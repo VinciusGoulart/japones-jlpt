@@ -10,6 +10,7 @@ export const chaves = {
   licoes: ['licoes'] as const,
   licaoAtual: ['licao', 'atual'] as const,
   licao: (id: number) => ['licao', id] as const,
+  regras: ['regras'] as const,
   erros: (dias: number, categoria: string) => ['erros', dias, categoria] as const,
   errosPainel: (dias: number) => ['erros', 'painel', dias] as const,
   registro: (busca: string) => ['registro', busca] as const,
@@ -54,6 +55,9 @@ export const useLicao = (id: number) =>
     refetchInterval: esperandoTutor,
     refetchOnWindowFocus: true,
   })
+
+// a agenda muda quando ele responde um exercício com regra: o Runner invalida esta chave
+export const useRegras = () => useQuery({ queryKey: chaves.regras, queryFn: api.regras, staleTime: 30_000 })
 
 // ------------------------------------------------------------------ Fase 3 (DESIGN §12)
 

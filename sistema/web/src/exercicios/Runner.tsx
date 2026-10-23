@@ -1,5 +1,6 @@
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
+import { BookOpen } from 'lucide-react'
 import { Badge } from '@/components/ui/badge'
 import { Progress } from '@/components/ui/progress'
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip'
@@ -9,16 +10,20 @@ import type { Correcao, Exercicio, Licao, Resultado, RespostaDe, TipoExercicio }
 import { dataLonga } from '@/lib/datas'
 import { cn } from '@/lib/utils'
 import { ExercicioView } from './ExercicioView'
+import { ExplicacaoView } from './Explicacao'
 import { IconeVeredito, Resumo } from './Resumo'
-import { ROTULO_BLOCO, ROTULO_TIPO } from './tipos'
+import { ROTULO_BLOCO, ROTULO_TIPO, ehExercicio, numerarExercicios } from './tipos'
 
 type Posicao = number | 'fim'
 interface Local { resultado: Resultado; contou: boolean }
 interface Envio { ex: Exercicio; resposta: RespostaDe<TipoExercicio>; tempoMs: number }
 
 const primeiraPendente = (l: Licao): Posicao => {
-  const i = l.exercicios.findIndex((e) => !e.resultado)
-  return i === -1 ? 'fim' : i
+  let i = l.exercicios.findIndex((e) => ehExercicio(e) && !e.resultado)
+  if (i === -1) return 'fim'
+  // a explicação logo antes do exercício pendente aparece primeiro: é a regra que ele vai usar
+  while (i > 0 && !ehExercicio(l.exercicios[i - 1])) i--
+  return i
 }
 
 /** O executor da lição: um exercício por vez, correção na hora, resumo no fim. */
@@ -42,6 +47,7 @@ export function Runner({ licao }: { licao: Licao }) {
       })
       void qc.invalidateQueries({ queryKey: ['licao'] })
       void qc.invalidateQueries({ queryKey: ['licoes'] })
+      void qc.invalidateQueries({ queryKey: ['regras'] })     // um exercício com regra move a agenda dela
     },
   })
 
@@ -56,8 +62,11 @@ export function Runner({ licao }: { licao: Licao }) {
     [locais, praticando],
   )
 
-  const total = licao.exercicios.length
-  const feitos = licao.exercicios.filter((e) => e.resultado || locais[e.id]).length
+  // a barra e o "N de M" contam só exercícios: a explicação não tem resposta (§9.2)
+  const numero = useMemo(() => numerarExercicios(licao), [licao])
+  const itens = licao.exercicios.length
+  const total = numero.size
+  const feitos = licao.exercicios.filter((e) => ehExercicio(e) && (e.resultado || locais[e.id])).length
   const ex = pos === 'fim' ? null : licao.exercicios[pos]
 
   useEffect(() => {
@@ -68,7 +77,7 @@ export function Runner({ licao }: { licao: Licao }) {
     envio.reset()
     setPos(i)
   }
-  const proximo = () => irPara(pos === 'fim' || pos + 1 >= total ? 'fim' : pos + 1)
+  const proximo = () => irPara(pos === 'fim' || pos + 1 >= itens ? 'fim' : pos + 1)
 
   return (
     <div className="mx-auto max-w-3xl space-y-5">
@@ -82,12 +91,12 @@ export function Runner({ licao }: { licao: Licao }) {
         <div className="flex items-center gap-3">
           <Progress value={total ? (feitos / total) * 100 : 0} className="h-2 flex-1" />
           <span className="shrink-0 text-sm text-muted-foreground tabular-nums">
-            {ex ? `${(pos as number) + 1} de ${total}` : `${feitos} de ${total} feitos`}
+            {ex ? (ehExercicio(ex) ? `${numero.get(ex.id)} de ${total}` : 'explicação') : `${feitos} de ${total} feitos`}
           </span>
         </div>
         <nav aria-label="Exercícios" className="flex flex-wrap gap-1.5">
           {licao.exercicios.map((e, i) => {
-            const r = resultadoDe(e)
+            const r = ehExercicio(e) ? resultadoDe(e) : null
             return (
               <Tooltip key={e.id}>
                 <TooltipTrigger asChild>
@@ -100,11 +109,17 @@ export function Runner({ licao }: { licao: Licao }) {
                       pos === i && 'border-primary ring-2 ring-primary/30',
                     )}
                   >
-                    {r || e.resultado ? <IconeVeredito v={(r ?? e.resultado)!.veredito} className="size-4" /> : i + 1}
+                    {!ehExercicio(e) ? (
+                      <BookOpen className="size-4 text-muted-foreground" aria-label="explicação" />
+                    ) : r || e.resultado ? (
+                      <IconeVeredito v={(r ?? e.resultado)!.veredito} className="size-4" />
+                    ) : (
+                      numero.get(e.id)
+                    )}
                   </button>
                 </TooltipTrigger>
                 <TooltipContent>
-                  {i + 1}. {ROTULO_TIPO[e.tipo]}
+                  {ehExercicio(e) ? `${numero.get(e.id)}. ${ROTULO_TIPO[e.tipo]}` : `${ROTULO_TIPO[e.tipo]}: ${e.enunciado || e.render.titulo || ROTULO_BLOCO[e.bloco]}`}
                 </TooltipContent>
               </Tooltip>
             )
@@ -125,22 +140,26 @@ export function Runner({ licao }: { licao: Licao }) {
             <Badge variant="secondary">{ROTULO_BLOCO[ex.bloco]}</Badge>
             {ROTULO_TIPO[ex.tipo] !== ROTULO_BLOCO[ex.bloco] && <Badge variant="outline">{ROTULO_TIPO[ex.tipo]}</Badge>}
           </div>
-          <ExercicioView
-            // nova tentativa (treino) = widget novo, do zero
-            key={`${ex.id}-${praticando[ex.id] ?? 0}`}
-            ex={ex}
-            resultado={resultadoDe(ex)}
-            treino={!!locais[ex.id] && !locais[ex.id].contou && !(ex.id in praticando)}
-            enviando={envio.isPending && envio.variables?.ex.id === ex.id}
-            erroEnvio={envio.isError && envio.variables?.ex.id === ex.id ? envio.error.message : null}
-            ultimo={(pos as number) + 1 >= total}
-            onVerificar={(resposta, tempoMs) => envio.mutate({ ex, resposta, tempoMs })}
-            onProximo={proximo}
-            onPraticar={() => {
-              envio.reset()
-              setPraticando((p) => ({ ...p, [ex.id]: (p[ex.id] ?? 0) + 1 }))
-            }}
-          />
+          {ex.tipo === 'explicacao' ? (
+            <ExplicacaoView key={ex.id} ex={ex} ultimo={(pos as number) + 1 >= itens} onEntendi={proximo} />
+          ) : (
+            <ExercicioView
+              // nova tentativa (treino) = widget novo, do zero
+              key={`${ex.id}-${praticando[ex.id] ?? 0}`}
+              ex={ex}
+              resultado={resultadoDe(ex)}
+              treino={!!locais[ex.id] && !locais[ex.id].contou && !(ex.id in praticando)}
+              enviando={envio.isPending && envio.variables?.ex.id === ex.id}
+              erroEnvio={envio.isError && envio.variables?.ex.id === ex.id ? envio.error.message : null}
+              ultimo={(pos as number) + 1 >= itens}
+              onVerificar={(resposta, tempoMs) => envio.mutate({ ex, resposta, tempoMs })}
+              onProximo={proximo}
+              onPraticar={() => {
+                envio.reset()
+                setPraticando((p) => ({ ...p, [ex.id]: (p[ex.id] ?? 0) + 1 }))
+              }}
+            />
+          )}
         </div>
       ) : (
         <Resumo licao={licao} resultadoDe={(id) => resultadoDe(licao.exercicios.find((e) => e.id === id)!)} irPara={irPara} />

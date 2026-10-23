@@ -18,6 +18,7 @@ import type {
   Hoje,
   Licao,
   LicaoResumo,
+  Regra,
 } from './types'
 
 export class ErroApi extends Error {
@@ -83,6 +84,8 @@ export const api = {
   licao: (id: number) => pedir<Licao>(`/api/licoes/${id}`),
   responder: (exercicioId: number, corpo: CorpoResposta) =>
     pedir<Correcao>(`/api/exercicios/${exercicioId}/resposta`, { method: 'POST', body: JSON.stringify(corpo) }),
+  /** o caderno de regras (§13.6) */
+  regras: () => pedir<Regra[]>('/api/regras'),
 
   // Fase 3 (DESIGN §12)
   erros: (dias: number, categoria?: string) => pedir<Erros>(`/api/erros${qs({ dias, categoria })}`),

@@ -1,12 +1,12 @@
 import { Link } from 'react-router'
-import { Check, Circle, Hourglass, RotateCcw, Sun, X } from 'lucide-react'
+import { BookOpen, Check, Circle, Hourglass, RotateCcw, Sun, X } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import { Ja, TextoMisto } from '@/components/Ja'
 import { Markdown } from '@/components/Markdown'
 import type { DetalheLigar, Exercicio, Licao, Resultado, Veredito } from '@/api/types'
 import { cn } from '@/lib/utils'
-import { ROTULO_TIPO, respostaEmTexto } from './tipos'
+import { ROTULO_BLOCO, ROTULO_TIPO, ehExercicio, numerarExercicios, respostaEmTexto } from './tipos'
 import { separarGabaritoOuvir } from './widgets/gabaritoOuvir'
 
 export function IconeVeredito({ v, className }: { v: Veredito | null; className?: string }) {
@@ -119,9 +119,11 @@ export function Resumo({
   resultadoDe: (id: number) => Resultado | null
   irPara: (indice: number) => void
 }) {
-  const rs = licao.exercicios.map((e) => resultadoDe(e.id))
+  // a explicação não tem resposta: fica fora do placar e dos pendentes (§9.2)
+  const rs = licao.exercicios.map((e) => (ehExercicio(e) ? resultadoDe(e.id) : null))
   const conta = (v: Veredito) => rs.filter((r) => r?.veredito === v).length
-  const pendentes = rs.filter((r) => !r).length
+  const pendentes = licao.exercicios.filter((e, i) => ehExercicio(e) && !rs[i]).length
+  const numero = numerarExercicios(licao)
   const esperando = conta('revisar')
 
   return (
@@ -147,6 +149,20 @@ export function Resumo({
       <Card className="py-0">
         <CardContent className="divide-y px-0">
           {licao.exercicios.map((ex, i) => {
+            if (ex.tipo === 'explicacao')
+              return (
+                <div key={ex.id} className="px-5 py-3">
+                  <button type="button" onClick={() => irPara(i)} className="flex w-full items-start gap-3 text-left hover:opacity-80">
+                    <BookOpen className="mt-1 size-5 shrink-0 text-muted-foreground" aria-hidden />
+                    <div className="min-w-0 flex-1 space-y-0.5">
+                      <p className="text-xs text-muted-foreground">{ROTULO_TIPO[ex.tipo]} · rever</p>
+                      <p className="truncate text-sm">
+                        <TextoMisto texto={ex.enunciado || ex.render.titulo || ROTULO_BLOCO[ex.bloco]} />
+                      </p>
+                    </div>
+                  </button>
+                </div>
+              )
             const r = rs[i]
             return (
               <div key={ex.id} className="space-y-2 px-5 py-3.5">
@@ -154,7 +170,7 @@ export function Resumo({
                   <IconeVeredito v={r?.veredito ?? null} className="mt-1 size-5 shrink-0" />
                   <div className="min-w-0 flex-1 space-y-0.5">
                     <p className="text-xs text-muted-foreground">
-                      {ex.ordem}. {ROTULO_TIPO[ex.tipo]}
+                      {numero.get(ex.id)}. {ROTULO_TIPO[ex.tipo]}
                     </p>
                     <p className="truncate text-sm">
                       <TextoMisto texto={ex.enunciado} />

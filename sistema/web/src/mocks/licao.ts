@@ -21,7 +21,29 @@ interface ExMock {
   explicacao: string
 }
 
+// o texto da explicação reaproveita as regras que os exercícios abaixo já explicam
+const MD_EXPLICACAO = [
+  '**に × で** — o verbo decide a partícula do lugar:',
+  '',
+  '| Partícula | Uso |',
+  '|---|---|',
+  '| に | onde algo está ou para onde se vai |',
+  '| で | onde a AÇÃO acontece |',
+  '',
+  '- ある para coisas e plantas; いる para pessoas e animais.',
+].join('\n')
+
 const exercicios: ExMock[] = [
+  {
+    // não é exercício: o painel mostra o texto e o botão Entendi (§9.2)
+    ex: {
+      id: 100, ordem: 0, bloco: 'novo', tipo: 'explicacao', categoria: null,
+      enunciado: 'Conteúdo novo: に × で',
+      render: { md: MD_EXPLICACAO, titulo: null, regra: null },
+    },
+    dados: { md: MD_EXPLICACAO },
+    explicacao: '',
+  },
   {
     ex: {
       id: 101, ordem: 1, bloco: 'aquecimento', tipo: 'escolha', categoria: 'particula:ni-de',
@@ -127,7 +149,7 @@ export function licaoMock(): Licao {
     id: 1,
     data: '2026-10-17',
     titulo: 'Lição de exemplo — partículas e experiência',
-    status: exercicios.every((e) => respostas.has(e.ex.id)) ? 'concluida' : 'aberta',
+    status: exercicios.every((e) => e.ex.tipo === 'explicacao' || respostas.has(e.ex.id)) ? 'concluida' : 'aberta',
     exercicios: exercicios.map((e) => ({ ...e.ex, resultado: respostas.get(e.ex.id) ?? null }) as Exercicio),
   }
 }
@@ -217,6 +239,8 @@ function corrigir(tipo: TipoExercicio, d: Dados, r: Resp): [Veredito, string, Re
     }
     case 'producao':
       return ['revisar', '', {}]
+    case 'explicacao':      // a API real devolve 400
+      throw new Error('explicação não tem resposta')
   }
 }
 

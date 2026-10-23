@@ -1,5 +1,5 @@
 // Roteador dos fixtures (VITE_MOCK=1). Dados fictícios: o repositório é público.
-import type { AulaCompleta, AulaResumo, Calendario, DiaCalendario, Hoje, LicaoResumo } from '@/api/types'
+import type { AulaCompleta, AulaResumo, Calendario, DiaCalendario, Hoje, LicaoResumo, Regra } from '@/api/types'
 import { ErroApi } from '@/api/client'
 import { diaDeEstudoLocal, paraData, paraIso, somarDias } from '@/lib/datas'
 import { licaoMock, responderExercicioMock } from './licao'
@@ -85,6 +85,20 @@ function calendario(de: string, ate: string): Calendario {
   }
 }
 
+// o caderno de regras (§13.6): uma por grupo, com o texto das regras que a lição fictícia já usa
+const regra = (r: Partial<Regra> & Pick<Regra, 'slug' | 'titulo' | 'status' | 'dias'>): Regra => ({
+  categoria: null, ensinada_em: dia(-20), explicacao_md: null, intervalo: 2, proxima: r.dias === null ? null : dia(r.dias),
+  acertos: 1, erros: 0, ultima_revisao: dia(-2), ultima_falha: null, ...r,
+})
+const regras: Regra[] = [
+  regra({ slug: 'ni-de', titulo: 'に × で pelo verbo', categoria: 'particula:ni-de', status: 'vencida', dias: -1,
+          explicacao_md: '| Partícula | Uso |\n|---|---|\n| に | onde algo está ou para onde se vai |\n| で | onde a AÇÃO acontece |' }),
+  regra({ slug: 'iru-aru', titulo: 'いる × ある', categoria: 'iru-aru', status: 'fragil', dias: 1, intervalo: 1, acertos: 1, erros: 3,
+          ultima_falha: dia(0), explicacao_md: '- ある para coisas e plantas\n- いる para pessoas e animais' }),
+  regra({ slug: 'forma-ta', titulo: 'Forma た', categoria: 'forma-ta', status: 'em_dia', dias: 12, intervalo: 12, acertos: 4,
+          explicacao_md: '行く é a exceção do grupo く: vira **行って / 行った**.' }),
+]
+
 const esperar = (ms: number) => new Promise((r) => setTimeout(r, ms))
 
 // os corpos enviados ficam visíveis no console (window.__corposMock), para conferir tempo_ms e formato
@@ -111,10 +125,12 @@ export async function responderMock<T>(caminho: string, init?: RequestInit): Pro
     if (!lista.length) throw new ErroApi(404, 'nenhuma aula nesse dia')
     r = lista
   } else if (p === '/api/calendario') r = calendario(q.get('de')!, q.get('ate')!)
+  else if (p === '/api/regras') r = regras
   else if (p === '/api/licoes') {
     const l = licaoMock()
-    const conta = (v: string) => l.exercicios.filter((e) => e.resultado?.veredito === v).length
-    r = [{ id: l.id, data: l.data, titulo: l.titulo, status: l.status, total: l.exercicios.length, certos: conta('certo'), errados: conta('errado'), revisar: conta('revisar'), pendentes: l.exercicios.filter((e) => !e.resultado).length }] satisfies LicaoResumo[]
+    const exs = l.exercicios.filter((e) => e.tipo !== 'explicacao')
+    const conta = (v: string) => exs.filter((e) => e.resultado?.veredito === v).length
+    r = [{ id: l.id, data: l.data, titulo: l.titulo, status: l.status, total: exs.length, certos: conta('certo'), errados: conta('errado'), revisar: conta('revisar'), pendentes: exs.filter((e) => !e.resultado).length }] satisfies LicaoResumo[]
   } else if (p === '/api/licoes/atual' || p === '/api/licoes/1') r = licaoMock()
   else if (p.startsWith('/api/licoes/')) throw new ErroApi(404, 'lição não encontrada')
   else if (/^\/api\/exercicios\/\d+\/resposta$/.test(p) && init?.method === 'POST') {

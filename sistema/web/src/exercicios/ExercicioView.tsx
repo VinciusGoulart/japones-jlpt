@@ -137,5 +137,7 @@ function Widget({ ex, resultado, onChange }: { ex: Exercicio; resultado: Resulta
       return <Ouvir render={ex.render} resultado={resultado as Resultado<'ouvir'> | null} onChange={onChange} />
     case 'producao':
       return <Producao render={ex.render} resultado={resultado as Resultado<'producao'> | null} onChange={onChange} />
+    case 'explicacao':      // o Runner mostra a explicação com o ExplicacaoView: aqui nunca chega
+      return null
   }
 }

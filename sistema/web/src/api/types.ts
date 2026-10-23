@@ -78,6 +78,8 @@ export interface Hoje {
   proximos: string[]
   lembrete_abertura: { texto: string; de: string } | null
   padroes_abertos: PadraoAberto[]
+  /** o caderno de regras (§13): quantas vencem hoje ou já venceram, e até 5 slugs */
+  regras_vencidas?: { total: number; proximas: string[] }
   avisos: string[]
   trello: ResumoTrello | ErroFonte
   anki: ResumoAnki | ErroFonte
@@ -161,8 +163,10 @@ export type TipoExercicio =
   | 'conjugar'
   | 'ouvir'
   | 'producao'
+  /** não é exercício (23/10): o texto do conteúdo novo, sem resposta — o botão Entendi só avança */
+  | 'explicacao'
 
-export type Bloco = 'aquecimento' | 'verificacao' | 'producao' | 'revisao'
+export type Bloco = 'aquecimento' | 'novo' | 'verificacao' | 'producao' | 'revisao'
 
 export type Veredito = 'certo' | 'errado' | 'revisar'
 
@@ -179,6 +183,8 @@ export interface RenderConjugar { verbo: string; leitura?: string; forma: string
 /** ouvir (§12.3): nunca vem o texto falado, que é a resposta. audio = null só se o mp3 não foi gravado. */
 export interface RenderOuvir { modo: 'ditado' | 'escolha'; audio: string | null; opcoes?: string[] }
 export interface RenderProducao { minimo: number; dicas: string[] }
+/** explicacao: o markdown já resolvido; titulo e regra vêm quando o texto é de uma regra do caderno */
+export interface RenderExplicacao { md: string; titulo: string | null; regra: string | null }
 
 // corpo da resposta, por tipo
 export interface RespostaEscolha { opcao: string }
@@ -214,6 +220,8 @@ export interface PorTipo {
   /** detalhe: DetalheTexto no ditado; {} na compreensão */
   ouvir: { render: RenderOuvir; resposta: RespostaOuvir; detalhe: DetalheTexto | DetalheVazio }
   producao: { render: RenderProducao; resposta: RespostaProducao; detalhe: DetalheVazio }
+  /** sem resposta: a API devolve 400 se receber uma */
+  explicacao: { render: RenderExplicacao; resposta: DetalheVazio; detalhe: DetalheVazio }
 }
 
 export type RespostaDe<T extends TipoExercicio> = PorTipo[T]['resposta']
@@ -280,6 +288,30 @@ export interface Correcao<T extends TipoExercicio = TipoExercicio> {
   detalhe: Partial<DetalheDe<T>>
   /** a API também diz se esta resposta contou (só a primeira conta); não está no contrato do §10 */
   contou?: boolean
+}
+
+// ------------------------------------------------------------------ caderno de regras (§13)
+
+/** vencida: proxima <= dia de estudo · fragil: mais erros que acertos · em_dia: o resto */
+export type StatusRegra = 'vencida' | 'fragil' | 'em_dia'
+
+/** GET /api/regras (§13.6), por proxima (sem agenda no fim) */
+export interface Regra {
+  slug: string
+  titulo: string
+  categoria: string | null
+  ensinada_em: string | null
+  explicacao_md: string | null
+  /** dias até a próxima revisão depois da última (2, 5, 12, 30, 60) */
+  intervalo: number
+  proxima: string | null
+  /** proxima − dia de estudo: ≤ 0 = vencida; null = sem agenda */
+  dias: number | null
+  acertos: number
+  erros: number
+  ultima_revisao: string | null
+  ultima_falha: string | null
+  status: StatusRegra
 }
 
 // ------------------------------------------------------------------ Fase 3 (DESIGN §12)

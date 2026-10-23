@@ -14,6 +14,8 @@ const PaginaAulaDia = lazy(() => import('@/pages/AulaDia').then((m) => ({ defaul
 const PaginaErros = lazy(() => import('@/pages/Erros').then((m) => ({ default: m.PaginaErros })))
 const PaginaAnki = lazy(() => import('@/pages/Anki').then((m) => ({ default: m.PaginaAnki })))
 const PaginaKotoba = lazy(() => import('@/pages/Kotoba').then((m) => ({ default: m.PaginaKotoba })))
+// 23/10: o caderno de regras de gramática (DESIGN §13)
+const PaginaRegras = lazy(() => import('@/pages/Regras').then((m) => ({ default: m.PaginaRegras })))
 
 const carregando = <Skeleton className="h-96 rounded-xl" />
 
@@ -26,6 +28,7 @@ export default function App() {
             <Route index element={<PaginaHoje />} />
             <Route path="aula" element={<PaginaAula />} />
             <Route path="aula/:id" element={<PaginaAula />} />
+            <Route path="regras" element={<PaginaRegras />} />
             <Route path="calendario" element={<PaginaCalendario />} />
             <Route path="aulas" element={<PaginaAulas />} />
             <Route path="aulas/:data" element={<PaginaAulaDia />} />

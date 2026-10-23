@@ -1,5 +1,5 @@
 import { NavLink, Outlet } from 'react-router'
-import { BookOpenText, CalendarDays, Layers, NotebookPen, Search, Sun, TriangleAlert } from 'lucide-react'
+import { BookMarked, BookOpenText, CalendarDays, Layers, NotebookPen, Search, Sun, TriangleAlert } from 'lucide-react'
 import { MOCK } from '@/api/client'
 import { cn } from '@/lib/utils'
 import { Ja } from './Ja'
@@ -7,6 +7,7 @@ import { Ja } from './Ja'
 const itens = [
   { para: '/', rotulo: 'Hoje', icone: Sun, fim: true },
   { para: '/aula', rotulo: 'Aula', icone: NotebookPen, fim: false },
+  { para: '/regras', rotulo: 'Regras', icone: BookMarked, fim: false },
   { para: '/calendario', rotulo: 'Calendário', icone: CalendarDays, fim: false },
   { para: '/aulas', rotulo: 'Aulas', icone: BookOpenText, fim: false },
   { para: '/erros', rotulo: 'Erros', icone: TriangleAlert, fim: false },

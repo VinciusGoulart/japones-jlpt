@@ -10,10 +10,12 @@ export const ROTULO_TIPO: Record<TipoExercicio, string> = {
   conjugar: 'Conjugue',
   ouvir: 'Ouça',
   producao: 'Produção',
+  explicacao: 'Explicação',
 }
 
 export const ROTULO_BLOCO: Record<Bloco, string> = {
   aquecimento: 'Aquecimento',
+  novo: 'Conteúdo novo',
   verificacao: 'Verificação',
   producao: 'Produção',
   revisao: 'Revisão',
@@ -51,5 +53,15 @@ export function respostaEmTexto(ex: Exercicio, r: Resultado): string {
     }
     case 'producao':
       return (de<'producao'>().frases ?? []).join(' / ')
+    case 'explicacao':
+      return ''
   }
+}
+
+/** A explicação não é exercício: fica fora do placar, da barra de progresso e do "concluída" (§9.2). */
+export const ehExercicio = (ex: Exercicio) => ex.tipo !== 'explicacao'
+
+/** id → número do exercício na lição (1, 2, 3…), pulando as explicações: o mesmo número na barra e no resumo. */
+export function numerarExercicios(l: { exercicios: Exercicio[] }): Map<number, number> {
+  return new Map(l.exercicios.filter(ehExercicio).map((e, i) => [e.id, i + 1]))
 }
