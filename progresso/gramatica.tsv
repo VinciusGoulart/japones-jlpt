@@ -1,0 +1,4 @@
+#separator:tab
+#colunas: sentido (frente) | resposta a digitar | nota (aparece no verso) | tags
+# Deck de GRAMATICA (Japonês::Gramática): uma linha por regra ensinada, escrita
+# pelo tutor. O cartao pede para digitar a frase e o Anki mostra o diff.
