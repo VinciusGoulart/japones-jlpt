@@ -1,12 +1,12 @@
 import { Link } from 'react-router'
-import { BookOpen, Check, Circle, Hourglass, RotateCcw, Sun, X } from 'lucide-react'
+import { BookOpen, Check, Circle, Hourglass, Lightbulb, RotateCcw, Sun, X } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import { Ja, TextoMisto } from '@/components/Ja'
 import { Markdown } from '@/components/Markdown'
 import type { DetalheLigar, Exercicio, Licao, Resultado, Veredito } from '@/api/types'
 import { cn } from '@/lib/utils'
-import { ROTULO_BLOCO, ROTULO_TIPO, ehExercicio, numerarExercicios, respostaEmTexto } from './tipos'
+import { ROTULO_BLOCO, ROTULO_TIPO, aguardandoDica, ehExercicio, numerarExercicios, respostaEmTexto } from './tipos'
 import { separarGabaritoOuvir } from './widgets/gabaritoOuvir'
 
 export function IconeVeredito({ v, className }: { v: Veredito | null; className?: string }) {
@@ -125,6 +125,9 @@ export function Resumo({
   const pendentes = licao.exercicios.filter((e, i) => ehExercicio(e) && !rs[i]).length
   const numero = numerarExercicios(licao)
   const esperando = conta('revisar')
+  // §9.6: dos errados, os que ele corrigiu com a dica (deslize) — no placar continuam errados
+  const deslizes = rs.filter((r) => r?.autocorrigiu === true).length
+  const dicas = rs.filter((r) => aguardandoDica(r)).length
 
   return (
     <div className="space-y-6">
@@ -133,6 +136,17 @@ export function Resumo({
         <Placar n={conta('errado')} rotulo="errados" classe="bg-erro-bg text-erro" />
         <Placar n={esperando} rotulo="com o tutor" classe="bg-aviso-bg text-aviso" />
       </div>
+      {deslizes > 0 && (
+        <p className="text-sm text-muted-foreground">
+          {deslizes === 1 ? '1 dos errados' : `${deslizes} dos errados`} você corrigiu com a dica: é deslize (sabe a regra,
+          escorregou), e a regra recua um degrau em vez de voltar ao começo.
+        </p>
+      )}
+      {dicas > 0 && (
+        <p className="text-sm text-aviso">
+          {dicas === 1 ? '1 dica espera' : `${dicas} dicas esperam`} a 2ª tentativa — clique no exercício (ícone da lâmpada).
+        </p>
+      )}
       {pendentes > 0 && (
         <p className="text-sm text-muted-foreground">
           {pendentes} exercício{pendentes > 1 ? 's' : ''} sem resposta — clique para fazer.
@@ -167,7 +181,11 @@ export function Resumo({
             return (
               <div key={ex.id} className="space-y-2 px-5 py-3.5">
                 <button type="button" onClick={() => irPara(i)} className="flex w-full items-start gap-3 text-left hover:opacity-80">
-                  <IconeVeredito v={r?.veredito ?? null} className="mt-1 size-5 shrink-0" />
+                  {aguardandoDica(r) ? (
+                    <Lightbulb className="mt-1 size-5 shrink-0 text-aviso" aria-label="dica esperando a 2ª tentativa" />
+                  ) : (
+                    <IconeVeredito v={r?.veredito ?? null} className="mt-1 size-5 shrink-0" />
+                  )}
                   <div className="min-w-0 flex-1 space-y-0.5">
                     <p className="text-xs text-muted-foreground">
                       {numero.get(ex.id)}. {ROTULO_TIPO[ex.tipo]}
@@ -176,6 +194,16 @@ export function Resumo({
                       <TextoMisto texto={ex.enunciado} />
                     </p>
                     {r && <LinhaResposta ex={ex} r={r} />}
+                    {r?.autocorrigiu === true && (
+                      <p className="flex items-center gap-1 text-xs text-ok">
+                        <Lightbulb className="size-3.5" aria-hidden /> corrigiu com a dica (deslize)
+                      </p>
+                    )}
+                    {aguardandoDica(r) && (
+                      <p className="flex items-center gap-1 text-xs text-aviso">
+                        <Lightbulb className="size-3.5" aria-hidden /> dica esperando a 2ª tentativa
+                      </p>
+                    )}
                   </div>
                 </button>
                 {r?.correcao && (

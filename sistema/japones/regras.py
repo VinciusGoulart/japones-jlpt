@@ -31,23 +31,69 @@ def agendar(con: sqlite3.Connection, regra_id: int, veredito: str, dia: date) ->
     """Move a agenda de uma regra pelo veredito de um exercício. Não faz commit: quem chama decide.
 
     Um erro no dia segura a regra para amanhã, e vários acertos no mesmo dia contam uma vez só:
-    acertar 5 exercícios da mesma regra numa lição não é prova de que ela fixou."""
-    r = con.execute("SELECT intervalo, ultima_revisao, ultima_falha FROM regra WHERE id = ?", (regra_id,)).fetchone()
+    acertar 5 exercícios da mesma regra numa lição não é prova de que ela fixou.
+
+    O erro entra como LACUNA na hora, mesmo quando o exercício tem dica e a 2ª tentativa ainda
+    vai acontecer (§9.6): ela pode nunca vir (aba fechada), e adiar a conta faria o erro sumir da
+    agenda. Se a 2ª sair certa, deslize() reclassifica com o que fica guardado aqui (23/10/2026)."""
+    r = con.execute("SELECT intervalo, ultima_revisao, ultima_falha, intervalo_dia, lacunas_dia FROM regra WHERE id = ?",
+                    (regra_id,)).fetchone()
     if not r or veredito not in ("certo", "errado"):
         return
     d = dia.isoformat()
+    # O primeiro evento do dia guarda o intervalo de antes do dia: é dele que o deslize recua,
+    # mesmo que um acerto do mesmo dia já o tenha feito crescer.
+    if r["ultima_revisao"] != d:
+        intervalo_dia, lacunas = r["intervalo"], 0
+    else:
+        intervalo_dia, lacunas = r["intervalo_dia"], r["lacunas_dia"]
     if veredito == "errado":
-        con.execute("""UPDATE regra SET intervalo = 1, proxima = ?, erros = erros + 1,
-                       ultima_falha = ?, ultima_revisao = ? WHERE id = ?""",
-                    ((dia + timedelta(days=1)).isoformat(), d, d, regra_id))
+        con.execute("""UPDATE regra SET intervalo = 1, proxima = ?, erros = erros + 1, ultima_falha = ?,
+                       ultima_revisao = ?, intervalo_dia = ?, lacunas_dia = ? WHERE id = ?""",
+                    ((dia + timedelta(days=1)).isoformat(), d, d, intervalo_dia, lacunas + 1, regra_id))
         return
     if d in (r["ultima_falha"], r["ultima_revisao"]):
         intervalo = r["intervalo"]
     else:
         intervalo = _crescer(r["intervalo"])
     proxima = dia + timedelta(days=max(1, int(intervalo)))
-    con.execute("""UPDATE regra SET acertos = acertos + 1, intervalo = ?, proxima = ?, ultima_revisao = ?
-                   WHERE id = ?""", (intervalo, proxima.isoformat(), d, regra_id))
+    con.execute("""UPDATE regra SET acertos = acertos + 1, intervalo = ?, proxima = ?, ultima_revisao = ?,
+                   intervalo_dia = ?, lacunas_dia = ? WHERE id = ?""",
+                (intervalo, proxima.isoformat(), d, intervalo_dia, lacunas, regra_id))
+
+
+def recuar(intervalo: float) -> int:
+    """Um degrau para trás na sequência 2, 5, 12, 30, 60: 12 → 5, 30 → 12, 5 → 2, 2 → 1."""
+    return max(1, round(intervalo / 2.5))
+
+
+def deslize(con: sqlite3.Connection, regra_id: int, dia_falha: date) -> None:
+    """A 2ª tentativa depois da dica saiu certa: o erro da 1ª resposta vira DESLIZE (§13.2). Sem commit.
+
+    Por que (23/10/2026, recomendação do relatório de pesquisa aprovada por ele): quem se corrige
+    com uma dica sabe a regra e falhou sob carga. Uma regra madura que escorregou uma vez recua um
+    degrau, em vez de voltar ao zero como a lacuna (o erro que ele não sabe corrigir).
+
+    O pior resultado do dia vence: se houve outra lacuna da mesma regra no dia, ela segura a regra
+    em 1. Se a agenda já andou num dia posterior, só os contadores mudam."""
+    r = con.execute("SELECT intervalo, ultima_revisao, ultima_falha, intervalo_dia, lacunas_dia FROM regra WHERE id = ?",
+                    (regra_id,)).fetchone()
+    if not r:
+        return
+    d = dia_falha.isoformat()
+    # `erros` passa a contar só lacunas: o deslize sai de lá e vai para o contador dele
+    con.execute("UPDATE regra SET erros = MAX(erros - 1, 0), deslizes = deslizes + 1 WHERE id = ?", (regra_id,))
+    if r["ultima_falha"] != d or r["ultima_revisao"] != d:
+        return
+    lacunas = max(0, r["lacunas_dia"] - 1)
+    if lacunas:
+        con.execute("UPDATE regra SET lacunas_dia = ? WHERE id = ?", (lacunas, regra_id))
+        return
+    # intervalo_dia nulo = regra sem evento desde o esquema 5: o atual (1, depois da lacuna) é o lado seguro
+    base = r["intervalo_dia"] if r["intervalo_dia"] is not None else r["intervalo"]
+    intervalo = recuar(base)
+    con.execute("UPDATE regra SET lacunas_dia = 0, intervalo = ?, proxima = ? WHERE id = ?",
+                (intervalo, (dia_falha + timedelta(days=intervalo)).isoformat(), regra_id))
 
 
 # ------------------------------------------------------------------ gravação
@@ -153,6 +199,7 @@ def resumo_vencidas(con, dia: date) -> dict:
 
 
 def status(r: dict, dia: date) -> str:
+    # `erros` conta só lacunas desde o esquema 5: um deslize não deixa a regra frágil
     if r["proxima"] and r["proxima"] <= dia.isoformat():
         return "vencida"
     return "fragil" if r["erros"] > r["acertos"] else "em_dia"
@@ -163,7 +210,7 @@ def caderno(con, dia: date) -> list[dict]:
     saida = []
     for r in db.linhas(con.execute(
             """SELECT slug, titulo, categoria, ensinada_em, explicacao_md, intervalo, proxima, acertos, erros,
-                      ultima_revisao, ultima_falha FROM regra
+                      deslizes, ultima_revisao, ultima_falha FROM regra
                ORDER BY proxima IS NULL, proxima, ensinada_em, id""")):
         r["dias"] = (date.fromisoformat(r["proxima"]) - dia).days if r["proxima"] else None
         r["status"] = status(r, dia)

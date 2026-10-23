@@ -147,7 +147,7 @@ def test_explicacao_fica_fora_do_placar_e_do_concluida(con):
 
     r = mcp_server.resultado_licao(lid)
     assert [x["tipo"] for x in r["exercicios"]] == ["escolha"]
-    assert r["contagem"] == {"certo": 0, "errado": 1, "revisar": 0, "sem_resposta": 0}
+    assert r["contagem"] == {"certo": 0, "errado": 1, "revisar": 0, "sem_resposta": 0, "deslizes": 0, "lacunas": 1}
 
 
 def test_explicacao_por_regra_mostra_a_versao_atual_do_caderno(con):
@@ -321,7 +321,7 @@ def test_esquema_4_refaz_exercicio_sem_perder_respostas(tmp_path):
     raw.close()
 
     c = db.conectar(caminho)
-    assert c.execute("PRAGMA user_version").fetchone()[0] == db.ESQUEMA_ATUAL == 4
+    assert c.execute("PRAGMA user_version").fetchone()[0] == db.ESQUEMA_ATUAL >= 4    # e segue até o atual
     assert c.execute("SELECT COUNT(*) FROM resposta WHERE exercicio_id = 7").fetchone()[0] == 1
     assert c.execute("SELECT regra_id FROM exercicio WHERE id = 7").fetchone()[0] is None
     assert c.execute("PRAGMA foreign_keys").fetchone()[0] == 1

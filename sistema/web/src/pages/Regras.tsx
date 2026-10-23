@@ -63,6 +63,7 @@ function ItemRegra({ r }: { r: Regra }) {
             <span className={cn(r.status === 'vencida' && 'font-medium text-aviso')}>{quando(r)}</span>
             <span>
               · <span className="text-ok">{r.acertos} ✓</span> <span className={cn(r.erros > 0 && 'text-erro')}>{r.erros} ✗</span>
+              {r.deslizes > 0 && <span className="text-aviso" title="deslizes: errou e corrigiu com a dica"> {r.deslizes} ↺</span>}
             </span>
           </div>
         </div>
@@ -75,9 +76,10 @@ function ItemRegra({ r }: { r: Regra }) {
           ) : (
             <p className="text-sm text-muted-foreground">Esta regra ainda não tem explicação escrita.</p>
           )}
-          <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
+          <div className="grid grid-cols-2 gap-2 sm:grid-cols-5">
             <Numero rotulo="Acertos" valor={inteiro(r.acertos)} classe="text-ok" />
             <Numero rotulo="Erros" valor={inteiro(r.erros)} classe={r.erros ? 'text-erro' : undefined} />
+            <Numero rotulo="Deslizes" valor={inteiro(r.deslizes)} classe={r.deslizes ? 'text-aviso' : undefined} />
             <Numero rotulo="Próxima revisão" valor={r.proxima ? ddmm(r.proxima) : '—'} />
             <Numero rotulo="Intervalo" valor={r.intervalo ? plural(r.intervalo, 'dia', 'dias') : 'ainda não revisada'} />
           </div>

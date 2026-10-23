@@ -1,11 +1,12 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
-import { ArrowRight, Loader2, RotateCcw } from 'lucide-react'
+import { ArrowRight, Eye, Lightbulb, Loader2, RotateCcw } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import { TextoMisto } from '@/components/Ja'
 import type { Exercicio, Resultado, RespostaDe, TipoExercicio } from '@/api/types'
 import { emComposicao } from '@/lib/ime'
 import { Feedback } from './Feedback'
+import { aguardandoDica, paraWidget, respostaEmTexto } from './tipos'
 import { Escolha } from './widgets/Escolha'
 import { AcharErro } from './widgets/AcharErro'
 import { Ligar } from './widgets/Ligar'
@@ -23,23 +24,34 @@ interface Props {
   resultado: Resultado | null
   treino: boolean
   enviando: boolean
+  /** "Ver a resposta" a caminho do servidor (dica pendente, §9.6) */
+  desistindo: boolean
   erroEnvio: string | null
   ultimo: boolean
   onVerificar: (resposta: QualquerResposta, tempoMs: number) => void
+  onDesistir: () => void
   onProximo: () => void
   onPraticar: () => void
 }
 
-/** Um exercício: enunciado, widget do tipo, Verificar → correção → Próximo. */
-export function ExercicioView({ ex, resultado, treino, enviando, erroEnvio, ultimo, onVerificar, onProximo, onPraticar }: Props) {
+/**
+ * Um exercício: enunciado, widget do tipo, Verificar → correção → Próximo.
+ *
+ * Com dica (§9.6, 23/10/2026): se a 1ª resposta sai errada e o tutor deixou uma dica, a correção
+ * espera. A tela mostra a dica e o widget de novo em branco para a 2ª tentativa, com "Ver a
+ * resposta" para desistir. Dica que faz o aluno se corrigir ensina mais que a resposta pronta.
+ * O Runner remonta esta tela ao entrar e ao sair da dica, então a resposta e o tempo começam do zero.
+ */
+export function ExercicioView({ ex, resultado, treino, enviando, desistindo, erroEnvio, ultimo, onVerificar, onDesistir, onProximo, onPraticar }: Props) {
   const [resposta, setResposta] = useState<QualquerResposta | null>(null)
   // tempo_ms: do exercício aparecer até o Verificar
   const inicio = useRef(0)
   useEffect(() => {
     inicio.current = performance.now()
   }, [])
-  const respondido = resultado !== null
-  const podeVerificar = !respondido && resposta !== null && !enviando
+  const dica = aguardandoDica(resultado)
+  const respondido = resultado !== null && !dica
+  const podeVerificar = !respondido && resposta !== null && !enviando && !desistindo
   const proximoRef = useRef<HTMLButtonElement>(null)
 
   const verificar = useCallback(() => {
@@ -78,7 +90,9 @@ export function ExercicioView({ ex, resultado, treino, enviando, erroEnvio, ulti
           <TextoMisto texto={ex.enunciado} classeJa="text-[1.2em]" />
         </h2>
 
-        <Widget ex={ex} resultado={resultado} onChange={onChange} />
+        {dica && resultado && <CaixaDica dica={resultado.dica!} primeira={respostaEmTexto(ex, resultado)} />}
+
+        <Widget ex={ex} resultado={respondido ? paraWidget(resultado) : null} onChange={onChange} />
 
         {respondido ? (
           <>
@@ -99,11 +113,18 @@ export function ExercicioView({ ex, resultado, treino, enviando, erroEnvio, ulti
         ) : (
           <div className="flex flex-wrap items-center justify-between gap-3">
             <p className="text-xs text-muted-foreground">
+              {dica && '2ª tentativa · '}
               {ex.tipo === 'producao' ? 'Enter quebra a linha · Ctrl+Enter envia' : 'Enter verifica · Enter de novo avança'}
               {ex.tipo === 'escolha' && ' · teclas 1–9 escolhem'}
             </p>
-            <div className="flex items-center gap-3">
+            <div className="flex flex-wrap items-center gap-3">
               {erroEnvio && <span className="text-sm text-erro">Não deu para enviar: {erroEnvio}</span>}
+              {dica && (
+                // data-sem-enter: com o foco aqui, o Enter clica neste botão em vez de verificar
+                <Button variant="outline" size="lg" className="h-11" data-sem-enter disabled={enviando || desistindo} onClick={onDesistir}>
+                  {desistindo ? <Loader2 className="animate-spin" /> : <Eye />} Ver a resposta
+                </Button>
+              )}
               <Button size="lg" className="h-11 px-6 text-base" disabled={!podeVerificar} onClick={verificar}>
                 {enviando && <Loader2 className="animate-spin" />}
                 {ex.tipo === 'producao' ? 'Enviar para o tutor' : 'Verificar'}
@@ -113,6 +134,29 @@ export function ExercicioView({ ex, resultado, treino, enviando, erroEnvio, ulti
         )}
       </CardContent>
     </Card>
+  )
+}
+
+/** "Quase": a dica do tutor e a resposta que ele deu, para a 2ª tentativa ter onde se apoiar. */
+function CaixaDica({ dica, primeira }: { dica: string; primeira: string }) {
+  return (
+    <div className="space-y-1.5 rounded-xl border border-aviso/40 bg-aviso-bg px-4 py-3" aria-live="polite">
+      <p className="flex items-start gap-2 text-base leading-relaxed">
+        <Lightbulb className="mt-1 size-4 shrink-0 text-aviso" />
+        <span>
+          <span className="font-medium text-aviso">Quase. Dica: </span>
+          <TextoMisto texto={dica} classeJa="text-[1.1em]" />
+        </span>
+      </p>
+      {primeira && (
+        <p className="pl-6 text-sm text-muted-foreground">
+          Sua resposta:{' '}
+          <span className="text-foreground">
+            <TextoMisto texto={primeira} classeJa="text-base" />
+          </span>
+        </p>
+      )}
+    </div>
   )
 }
 

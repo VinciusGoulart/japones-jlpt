@@ -65,3 +65,15 @@ export const ehExercicio = (ex: Exercicio) => ex.tipo !== 'explicacao'
 export function numerarExercicios(l: { exercicios: Exercicio[] }): Map<number, number> {
   return new Map(l.exercicios.filter(ehExercicio).map((e, i) => [e.id, i + 1]))
 }
+
+/** A 1ª resposta saiu errada num exercício com dica e a 2ª tentativa ainda não veio (§9.6). */
+export const aguardandoDica = (r: Resultado | null | undefined): boolean => !!r?.dica && !r.segunda
+
+/**
+ * O que o widget mostra depois da dica: a 2ª tentativa, se houve (a resposta e a correção dela);
+ * na desistência, a 1ª, já com o detalhe da correção. O placar continua sendo o da 1ª.
+ */
+export function paraWidget(r: Resultado): Resultado {
+  const s = r.segunda
+  return s && 'resposta' in s ? { ...r, veredito: s.veredito, resposta: s.resposta, detalhe: s.detalhe } : r
+}

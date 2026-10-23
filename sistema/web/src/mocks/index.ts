@@ -2,7 +2,7 @@
 import type { AulaCompleta, AulaResumo, Calendario, DiaCalendario, Hoje, LicaoResumo, Regra } from '@/api/types'
 import { ErroApi } from '@/api/client'
 import { diaDeEstudoLocal, paraData, paraIso, somarDias } from '@/lib/datas'
-import { licaoMock, responderExercicioMock } from './licao'
+import { desistirMock, licaoMock, responderExercicioMock } from './licao'
 
 const hojeIso = paraIso(diaDeEstudoLocal())
 const dia = (n: number) => paraIso(somarDias(paraData(hojeIso), n))
@@ -88,7 +88,7 @@ function calendario(de: string, ate: string): Calendario {
 // o caderno de regras (§13.6): uma por grupo, com o texto das regras que a lição fictícia já usa
 const regra = (r: Partial<Regra> & Pick<Regra, 'slug' | 'titulo' | 'status' | 'dias'>): Regra => ({
   categoria: null, ensinada_em: dia(-20), explicacao_md: null, intervalo: 2, proxima: r.dias === null ? null : dia(r.dias),
-  acertos: 1, erros: 0, ultima_revisao: dia(-2), ultima_falha: null, ...r,
+  acertos: 1, erros: 0, deslizes: 0, ultima_revisao: dia(-2), ultima_falha: null, ...r,
 })
 const regras: Regra[] = [
   regra({ slug: 'ni-de', titulo: 'に × で pelo verbo', categoria: 'particula:ni-de', status: 'vencida', dias: -1,
@@ -137,6 +137,8 @@ export async function responderMock<T>(caminho: string, init?: RequestInit): Pro
     const corpo = JSON.parse(String(init.body))
     corpos.push({ exercicio: Number(p.split('/')[3]), ...corpo })
     r = responderExercicioMock(Number(p.split('/')[3]), corpo)
+  } else if (/^\/api\/exercicios\/\d+\/desistir$/.test(p) && init?.method === 'POST') {
+    r = desistirMock(Number(p.split('/')[3]))
   } else throw new ErroApi(404, `mock sem rota: ${p}`)
   // cópia profunda: o React Query não pode segurar referência ao estado do mock
   return JSON.parse(JSON.stringify(r)) as T

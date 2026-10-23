@@ -180,6 +180,20 @@ def responder(exercicio_id: int, resposta: dict = Body(...), tempo_ms: int | Non
         con.close()
 
 
+@app.post("/api/exercicios/{exercicio_id}/desistir")
+def desistir(exercicio_id: int):
+    """"Ver a resposta" com a dica pendente (§9.6): grava a desistência (lacuna) e devolve a correção da 1ª."""
+    con = _con()
+    try:
+        return exercicios.desistir(con, exercicio_id)
+    except KeyError:
+        raise HTTPException(404, "exercício não encontrado")
+    except ValueError as e:     # sem dica esperando: nada a desistir
+        raise HTTPException(409, str(e))
+    finally:
+        con.close()
+
+
 @app.get("/api/regras")
 def listar_regras():
     """O caderno de regras (§13.6): todas, com o texto, a agenda e o status."""

@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
-import { BookOpen } from 'lucide-react'
+import { BookOpen, Lightbulb } from 'lucide-react'
 import { Badge } from '@/components/ui/badge'
 import { Progress } from '@/components/ui/progress'
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip'
@@ -12,14 +12,16 @@ import { cn } from '@/lib/utils'
 import { ExercicioView } from './ExercicioView'
 import { ExplicacaoView } from './Explicacao'
 import { IconeVeredito, Resumo } from './Resumo'
-import { ROTULO_BLOCO, ROTULO_TIPO, ehExercicio, numerarExercicios } from './tipos'
+import { ROTULO_BLOCO, ROTULO_TIPO, aguardandoDica, ehExercicio, numerarExercicios } from './tipos'
 
 type Posicao = number | 'fim'
-interface Local { resultado: Resultado; contou: boolean }
+/** treino = "Praticar de novo" (não conta); senão é a 1ª resposta, ou ela com a 2ª tentativa da dica (§9.6) */
+interface Local { resultado: Resultado; treino: boolean }
 interface Envio { ex: Exercicio; resposta: RespostaDe<TipoExercicio>; tempoMs: number }
 
 const primeiraPendente = (l: Licao): Posicao => {
-  let i = l.exercicios.findIndex((e) => ehExercicio(e) && !e.resultado)
+  // a dica esperando a 2ª tentativa também é pendência: ao reabrir a lição, ele volta para ela
+  let i = l.exercicios.findIndex((e) => ehExercicio(e) && (!e.resultado || aguardandoDica(e.resultado)))
   if (i === -1) return 'fim'
   // a explicação logo antes do exercício pendente aparece primeiro: é a regra que ele vai usar
   while (i > 0 && !ehExercicio(l.exercicios[i - 1])) i--
@@ -34,20 +36,55 @@ export function Runner({ licao }: { licao: Licao }) {
   const [locais, setLocais] = useState<Record<number, Local>>({})
   const [praticando, setPraticando] = useState<Record<number, number>>({})
 
+  const reler = () => {
+    void qc.invalidateQueries({ queryKey: ['licao'] })
+    void qc.invalidateQueries({ queryKey: ['licoes'] })
+    void qc.invalidateQueries({ queryKey: ['regras'] })     // um exercício com regra move a agenda dela
+    void qc.invalidateQueries({ queryKey: ['erros'] })      // e o deslize marca a linha do erro
+  }
+
+  // a 1ª resposta deste exercício (com a dica pendente), da tela ou do servidor, para somar a 2ª tentativa
+  const primeiraDe = (m: Record<number, Local>, ex: Exercicio): Resultado | null =>
+    (m[ex.id] && !m[ex.id].treino ? m[ex.id].resultado : null) ?? ex.resultado
+
   const envio = useMutation({
     mutationFn: ({ ex, resposta, tempoMs }: Envio): Promise<Correcao> =>
       api.responder(ex.id, { resposta, tempo_ms: tempoMs }),
     onSuccess: (c, { ex, resposta }) => {
-      // só a primeira resposta conta; a API diz em `contou`, e sem ela vale "não havia resultado"
-      const contou = c.contou ?? ex.resultado === null
-      setLocais((m) => ({ ...m, [ex.id]: { contou, resultado: { ...c, resposta, correcao: null } as Resultado } }))
+      setLocais((m) => {
+        const primeira = primeiraDe(m, ex)
+        let novo: Local
+        if (c.dica) {
+          // 1ª errada com dica (§9.6): sem gabarito ainda, a tela pede a 2ª tentativa
+          novo = { treino: false, resultado: { veredito: 'errado', resposta, gabarito: '', explicacao: null, detalhe: {}, correcao: null, dica: c.dica, segunda: null, autocorrigiu: null } }
+        } else if (c.autocorrigiu !== undefined && primeira) {
+          // a 2ª tentativa: o placar continua o da 1ª; a correção que chega agora é a desta
+          novo = { treino: false, resultado: { ...primeira, gabarito: c.gabarito, explicacao: c.explicacao, segunda: { resposta, veredito: c.veredito, detalhe: c.detalhe }, autocorrigiu: c.autocorrigiu } }
+        } else {
+          // só a primeira resposta conta; a API diz em `contou`, e sem ela vale "não havia resultado"
+          const contou = c.contou ?? primeira === null
+          novo = { treino: !contou, resultado: { ...c, resposta, correcao: null } as Resultado }
+        }
+        return { ...m, [ex.id]: novo }
+      })
       setPraticando((p) => {
         const { [ex.id]: _, ...resto } = p
         return resto
       })
-      void qc.invalidateQueries({ queryKey: ['licao'] })
-      void qc.invalidateQueries({ queryKey: ['licoes'] })
-      void qc.invalidateQueries({ queryKey: ['regras'] })     // um exercício com regra move a agenda dela
+      reler()
+    },
+  })
+
+  // "Ver a resposta" com a dica pendente: é lacuna, e a correção da 1ª aparece
+  const desistencia = useMutation({
+    mutationFn: (ex: Exercicio): Promise<Correcao> => api.desistir(ex.id),
+    onSuccess: (c, ex) => {
+      setLocais((m) => {
+        const primeira = primeiraDe(m, ex)
+        if (!primeira) return m
+        return { ...m, [ex.id]: { treino: false, resultado: { ...primeira, gabarito: c.gabarito, explicacao: c.explicacao, detalhe: c.detalhe, segunda: { desistiu: true }, autocorrigiu: false } } }
+      })
+      reler()
     },
   })
 
@@ -55,9 +92,12 @@ export function Runner({ licao }: { licao: Licao }) {
     (ex: Exercicio): Resultado | null => {
       if (ex.id in praticando) return null
       const l = locais[ex.id]
-      if (l && !l.contou) return l.resultado
-      // o do servidor ganha: é ele que recebe a correção do tutor depois
-      return ex.resultado ?? l?.resultado ?? null
+      if (l?.treino) return l.resultado
+      const s = ex.resultado
+      // O do servidor ganha: é ele que recebe a correção do tutor depois. A exceção é a dica: a
+      // 2ª tentativa já voltou aqui e a lição relida (ainda com a dica pendente) chega um instante depois.
+      if (s && !(aguardandoDica(s) && l && !aguardandoDica(l.resultado))) return s
+      return l?.resultado ?? s ?? null
     },
     [locais, praticando],
   )
@@ -75,6 +115,7 @@ export function Runner({ licao }: { licao: Licao }) {
 
   const irPara = (i: Posicao) => {
     envio.reset()
+    desistencia.reset()
     setPos(i)
   }
   const proximo = () => irPara(pos === 'fim' || pos + 1 >= itens ? 'fim' : pos + 1)
@@ -111,6 +152,8 @@ export function Runner({ licao }: { licao: Licao }) {
                   >
                     {!ehExercicio(e) ? (
                       <BookOpen className="size-4 text-muted-foreground" aria-label="explicação" />
+                    ) : aguardandoDica(r) ? (
+                      <Lightbulb className="size-4 text-aviso" aria-label="dica esperando a 2ª tentativa" />
                     ) : r || e.resultado ? (
                       <IconeVeredito v={(r ?? e.resultado)!.veredito} className="size-4" />
                     ) : (
@@ -144,15 +187,23 @@ export function Runner({ licao }: { licao: Licao }) {
             <ExplicacaoView key={ex.id} ex={ex} ultimo={(pos as number) + 1 >= itens} onEntendi={proximo} />
           ) : (
             <ExercicioView
-              // nova tentativa (treino) = widget novo, do zero
-              key={`${ex.id}-${praticando[ex.id] ?? 0}`}
+              // nova tentativa (treino) ou a 2ª tentativa da dica = tela nova, do zero (resposta e tempo zerados)
+              key={`${ex.id}-${praticando[ex.id] ?? 0}-${aguardandoDica(resultadoDe(ex)) ? 'dica' : 'r'}`}
               ex={ex}
               resultado={resultadoDe(ex)}
-              treino={!!locais[ex.id] && !locais[ex.id].contou && !(ex.id in praticando)}
+              treino={!!locais[ex.id]?.treino && !(ex.id in praticando)}
               enviando={envio.isPending && envio.variables?.ex.id === ex.id}
-              erroEnvio={envio.isError && envio.variables?.ex.id === ex.id ? envio.error.message : null}
+              desistindo={desistencia.isPending && desistencia.variables?.id === ex.id}
+              erroEnvio={
+                envio.isError && envio.variables?.ex.id === ex.id
+                  ? envio.error.message
+                  : desistencia.isError && desistencia.variables?.id === ex.id
+                    ? desistencia.error.message
+                    : null
+              }
               ultimo={(pos as number) + 1 >= itens}
               onVerificar={(resposta, tempoMs) => envio.mutate({ ex, resposta, tempoMs })}
+              onDesistir={() => desistencia.mutate(ex)}
               onProximo={proximo}
               onPraticar={() => {
                 envio.reset()

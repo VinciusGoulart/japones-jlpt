@@ -84,6 +84,8 @@ export const api = {
   licao: (id: number) => pedir<Licao>(`/api/licoes/${id}`),
   responder: (exercicioId: number, corpo: CorpoResposta) =>
     pedir<Correcao>(`/api/exercicios/${exercicioId}/resposta`, { method: 'POST', body: JSON.stringify(corpo) }),
+  /** "Ver a resposta" com a dica pendente (§9.6); 409 se não há dica esperando */
+  desistir: (exercicioId: number) => pedir<Correcao>(`/api/exercicios/${exercicioId}/desistir`, { method: 'POST' }),
   /** o caderno de regras (§13.6) */
   regras: () => pedir<Regra[]>('/api/regras'),
 

@@ -227,6 +227,11 @@ export interface PorTipo {
 export type RespostaDe<T extends TipoExercicio> = PorTipo[T]['resposta']
 export type DetalheDe<T extends TipoExercicio> = PorTipo[T]['detalhe']
 
+/** A 2ª tentativa depois da dica (§9.6): a resposta e a correção dela, ou a desistência ("Ver a resposta"). */
+export type SegundaTentativa<T extends TipoExercicio = TipoExercicio> =
+  | { resposta: RespostaDe<T>; veredito: Veredito; detalhe: Partial<DetalheDe<T>> }
+  | { desistiu: true }
+
 /** A primeira resposta (a que conta), como GET /api/licoes/{id} devolve. */
 export interface Resultado<T extends TipoExercicio = TipoExercicio> {
   veredito: Veredito
@@ -238,6 +243,14 @@ export interface Resultado<T extends TipoExercicio = TipoExercicio> {
   detalhe: Partial<DetalheDe<T>>
   /** a correção do tutor (markdown), ao fechar um 'revisar' */
   correcao: string | null
+  /**
+   * A dica do tutor (§9.6): vem quando a 1ª resposta saiu errada num exercício com dica_erro.
+   * Com a dica pendente (`segunda` nula) o servidor manda gabarito "", explicação null e detalhe {}.
+   */
+  dica?: string | null
+  segunda?: SegundaTentativa<T> | null
+  /** true = corrigiu com a dica (deslize) · false = não corrigiu ou desistiu (lacuna) · null = sem dica ou pendente */
+  autocorrigiu?: boolean | null
 }
 
 interface ExercicioBase<T extends TipoExercicio> {
@@ -286,8 +299,12 @@ export interface Correcao<T extends TipoExercicio = TipoExercicio> {
   gabarito: string
   explicacao: string | null
   detalhe: Partial<DetalheDe<T>>
-  /** a API também diz se esta resposta contou (só a primeira conta); não está no contrato do §10 */
+  /** só a primeira resposta conta (a 2ª tentativa e o treino vêm com false) */
   contou?: boolean
+  /** 1ª resposta errada num exercício com dica (§9.6): a 2ª tentativa vem agora; gabarito, explicação e detalhe vêm vazios */
+  dica?: string
+  /** só na resposta da 2ª tentativa e na desistência */
+  autocorrigiu?: boolean
 }
 
 // ------------------------------------------------------------------ caderno de regras (§13)
@@ -309,6 +326,8 @@ export interface Regra {
   dias: number | null
   acertos: number
   erros: number
+  /** erros corrigidos com a dica (§13.2); desde o esquema 5 `erros` conta só as lacunas */
+  deslizes: number
   ultima_revisao: string | null
   ultima_falha: string | null
   status: StatusRegra
@@ -333,12 +352,16 @@ export interface ErroRegistrado {
   escrito: string | null
   correto: string | null
   porque: string | null
+  /** corrigido com a dica na 2ª tentativa (§9.6): sabe a regra, escorregou */
+  deslize?: boolean
 }
 
 /** GET /api/erros?dias=&categoria= (o mesmo do erros() do MCP; no máximo 100, mais novo primeiro) */
 export interface Erros {
   desde: string
   por_categoria: Record<string, number>
+  /** só as categorias com deslize */
+  deslizes_por_categoria?: Record<string, number>
   erros: ErroRegistrado[]
 }
 

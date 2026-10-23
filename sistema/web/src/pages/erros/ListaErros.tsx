@@ -43,6 +43,12 @@ function ItemErro({ e, onFiltrar }: { e: ErroRegistrado; onFiltrar: (c: string) 
           </button>
         </Badge>
         <span className="text-xs text-muted-foreground">{ROTULO_BLOCO[e.bloco] ?? e.bloco}</span>
+        {e.deslize && (
+          // §9.6: errou a 1ª, acertou a 2ª depois da dica — sabe a regra, escorregou sob carga
+          <Badge variant="outline" className="border-ok/40 text-xs text-ok" title="Errou a 1ª e acertou a 2ª depois da dica">
+            corrigiu com a dica
+          </Badge>
+        )}
       </div>
       {/* Sem riscar o japonês: o traço no meio da linha come justamente o detalhe
           que errou (dakuten, ー, a perna do ん). O vermelho + ✗ já dizem "errado". */}

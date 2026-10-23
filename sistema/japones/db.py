@@ -4,11 +4,12 @@ from pathlib import Path
 
 from japones import config
 
-ESQUEMA_ATUAL = 4
+ESQUEMA_ATUAL = 5
 _DDL = Path(__file__).with_name("schema.sql")
 _DDL2 = Path(__file__).with_name("schema2.sql")
 _DDL3 = Path(__file__).with_name("schema3.sql")
 _DDL4 = Path(__file__).with_name("schema4.sql")
+_DDL5 = Path(__file__).with_name("schema5.sql")
 
 
 def conectar(caminho: Path | None = None) -> sqlite3.Connection:
@@ -40,6 +41,9 @@ def _migrar(con: sqlite3.Connection) -> None:
     if versao < 4:      # 23/10: caderno de regras e o tipo 'explicacao' (DESIGN §13) — refeita de novo
         _refazer_exercicio(con, _DDL4, 4)
         versao = 4
+    if versao < 5:      # 23/10: a 2ª tentativa com dica e o deslize (DESIGN §9.6, §13.2) — só colunas novas
+        _acrescentar(con, _DDL5, 5)
+        versao = 5
     # Esquemas futuros entram aqui, um `if versao < N` por vez, nunca editando os anteriores.
 
 
@@ -61,6 +65,21 @@ def _refazer_exercicio(con: sqlite3.Connection, ddl: Path, versao: int) -> None:
         raise
     finally:
         con.execute("PRAGMA foreign_keys = ON")
+
+
+def _acrescentar(con: sqlite3.Connection, ddl: Path, versao: int) -> None:
+    """Roda um esquema de ALTER TABLE ADD COLUMN numa transação com a troca da versão.
+
+    O ALTER do SQLite é transacional: se uma coluna falhar, nenhuma entra e a versão não muda,
+    e a próxima conexão tenta de novo do zero (23/10, esquema 5)."""
+    con.commit()
+    try:
+        con.executescript("BEGIN IMMEDIATE;\n" + ddl.read_text())
+        con.execute(f"PRAGMA user_version = {versao}")
+        con.commit()
+    except Exception:
+        con.rollback()
+        raise
 
 
 def linhas(cursor) -> list[dict]:

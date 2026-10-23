@@ -54,6 +54,7 @@ sistema/
       diario.py        entradas de progresso/diario.md
     schema2.sql        lições e exercícios (Fase 2) · schema3.sql: o tipo ouvir (Fase 3)
     schema4.sql        caderno de regras e o tipo explicacao (§13)
+    schema5.sql        a segunda tentativa com dica e o deslize (§9.6, §13.2)
     regras.py          caderno de regras: agenda de revisão espaçada e importador (§13)
     exercicios.py      motor de exercícios: validação, render, correção, sorteio (§9)
     audio.py           mp3 do exercício ouvir, pelo edge-tts (§12.3)
@@ -88,7 +89,7 @@ Ver o arquivo; resumo:
 |---|---|---|
 | `aula` | uma entrada do diário (inclui dias **sem mesa**) | `id`; `data` não é única (08/08 e 14/09 tiveram duas sessões) |
 | `trajeto` | um dia de trajeto: Anki (cartões, minutos) e áudio | `data` |
-| `erro` | um erro corrigido, com categoria | `id` |
+| `erro` | um erro corrigido, com categoria; desde o esquema 5, `exercicio_id` (o exercício do painel que gerou o erro) e `deslize` (§9.6) | `id` |
 | `padrao` | um padrão em vigília (o "topo de `pontos_fracos`") | `id` |
 | `registro` | o log livre herdado de `pontos_fracos` (busca por texto) | `id` |
 | `nota` | chave/valor: `lembrete_abertura` e afins | `chave` |
@@ -117,10 +118,10 @@ Toda ferramenta devolve JSON. **Nenhuma fonte externa derruba uma ferramenta:** 
 
 | Ferramenta | O que devolve / faz |
 |---|---|
-| `hoje()` | o Passo 0 inteiro numa chamada: data e hora, dia de estudo, dia do plano, streak e recorde, última aula, plano do dia, `lembrete_abertura`, padrões abertos, `regras_vencidas` (`{"total": N, "proximas": [até 5 slugs]}`, §13), pendências do Trello (vencidas e da semana), checklists da semana, resumo do Anki |
+| `hoje()` | o Passo 0 inteiro numa chamada: data e hora, dia de estudo, dia do plano, streak e recorde, última aula, plano do dia, `lembrete_abertura`, padrões abertos, `regras_vencidas` (`{"total": N, "proximas": [até 5 slugs]}`, §13), `avisos`, pendências do Trello (vencidas e da semana), checklists da semana, resumo do Anki. **Aviso da madrugada** (23/10): com o relógio **real** entre 01:00 e 03:59 e o dia do **calendário** de segunda a sexta (ele trabalha nesse dia), entra "Depois da 1h em véspera de trabalho: aula só de revisão (regras vencidas + produção curta, até 30 min); o conteúdo novo passa para a próxima sessão." — o resto do `hoje()` segue o dia de estudo (regra das 04:00) |
 | `aulas(ultimas, busca, desde)` | lista resumida (sem o texto) |
 | `aula(data)` | a(s) entrada(s) completa(s) do dia |
-| `erros(categoria, dias)` | erros recentes + contagem por categoria |
+| `erros(categoria, dias)` | erros recentes, cada um com `deslize` (bool, §9.6) + `por_categoria` (todos os erros) e `deslizes_por_categoria` (só as categorias com deslize) |
 | `padroes(status)` | padrões em vigília |
 | `anki()` | o status completo do Anki em dados |
 | `trello()` | o board em dados |
@@ -154,6 +155,7 @@ Toda ferramenta devolve JSON. **Nenhuma fonte externa derruba uma ferramenta:** 
 - **17/10** — Registro antigo: "ANIMACIDADE 3/5 NA ESTREIA (31/08)" estava datado de 03/05, porque a migração lia o placar como data. Agora vale a primeira data que cai dentro do plano (`migracao._data_do_registro`); o registro foi reimportado.
 - **17/10** — Fase 3 entregue: telas Erros, Anki e Kotoba, o tipo `ouvir` (testado numa CÓPIA do banco, porta 8788, com mp3 de verdade) e o esquema 3. Os gráficos usam 5 famílias de erro em vez dos grupos do §4.2 (15 cores numa pilha não se leem); a tabela de categorias mantém o detalhe.
 - **23/10** — Caderno de regras (§13), pedido dele. Diagnóstico: ele esquece regras antigas (てもいいですか, まだ) e, ao aplicar a regra nova, esquece a outra na mesma frase. O vocabulário tem Anki; a gramática não tinha agenda: cada regra era ensinada uma vez e só voltava se desse erro. Decisões dele: (1) caderno de regras no painel; (2) revisão espaçada de regras no painel **e** num deck de gramática no Anki; (3) uma etapa de **explicação** do conteúdo novo antes dos exercícios (tipo `explicacao`, bloco `novo`); (4) lição de **25** exercícios. O esquema 4 refaz a tabela `exercicio` (CHECK novo e `regra_id`), pela mesma receita do esquema 3.
+- **23/10** — Segunda tentativa com dica (§9.6) e agenda com deslize × lacuna (§13.2), recomendação do relatório de pesquisa aprovada por ele. Lyster & Saito (2010): dicas que fazem o aluno se corrigir (d = 0,83) superam mostrar a resposta certa (d = 0,53), sem perda no teste tardio, e treinam o automonitoramento. Separar **deslize** (corrigiu sozinho com a dica: sabe a regra, falhou sob carga) de **lacuna** (não corrigiu: não sabe) deixa uma regra madura que escorregou uma vez recuar um degrau em vez de voltar ao zero. Junto: o aviso da madrugada no `hoje()` (sono curto prejudica codificação e memória de trabalho) e a linha "avalie a REGRA" no cartão do deck de gramática. Esquema 5: só colunas novas (`ALTER TABLE ADD COLUMN`), sem refazer tabela.
 - **17/10** — Fase 2 entregue: motor de exercícios, 4 ferramentas MCP, API como serviço `systemd --user` (`japones-painel`) e o painel. A primeira lição (revisão do dia 68, os 8 tipos) foi respondida numa CÓPIA do banco para testar o fluxo inteiro; o banco real ficou intacto.
 
 ## 9. Exercícios [CONTRATO]
@@ -172,6 +174,7 @@ Campos comuns de um exercício:
 | `regra` | slug de uma regra do caderno (§13) que este exercício revisa; opcional. Grava `regra_id`; slug desconhecido recusa a lição. A primeira resposta certa/errada move a agenda da regra (§13.2) |
 | `enunciado` | a instrução, em português (pode conter japonês); opcional só no `explicacao` |
 | `explicacao` | a regra em uma ou duas linhas, mostrada depois da resposta (pedido dele em 16/10: toda correção reexplica a regra) |
+| `dica_erro` | opcional (23/10): dica curta (1 a 200 caracteres) para a **segunda tentativa** depois de uma primeira resposta errada (§9.6). Recusada no `producao` e no `explicacao` |
 | `dados` | por tipo, §9.2 |
 
 ### 9.2 Tipos: `dados` (servidor) → `render` (navegador) → resposta → correção
@@ -191,7 +194,7 @@ Campos comuns de um exercício:
 
 **Normalização** antes de comparar texto: NFKC, sem espaços, sem `。、.,!?！？`. Katakana e hiragana **não** se equivalem (trocar é erro de `katakana`/`kana:troca`).
 
-**Veredito:** `certo` · `errado` · `revisar`. Só a **primeira** resposta conta para placar e para a tabela `erro`; dá para responder de novo para praticar.
+**Veredito:** `certo` · `errado` · `revisar`. Só a **primeira** resposta conta para placar e para a tabela `erro`; dá para responder de novo para praticar. Num exercício com `dica_erro`, a primeira resposta `errado` abre a segunda tentativa com dica (§9.6), que não muda o placar.
 
 **Erro automático:** a primeira resposta `errado` de um exercício grava uma linha em `erro` (`categoria` do exercício ou `outro`; `escrito` = a resposta; `correto` = o gabarito; `porque` = a explicação; bloco `aquecimento`→`abertura`, `novo`→`verificacao`, `revisao`→`outro`). Um `revisar` corrigido como `errado` pelo tutor também grava.
 
@@ -213,7 +216,19 @@ CREATE TABLE resposta (id INTEGER PRIMARY KEY, exercicio_id INTEGER NOT NULL REF
 
 **Esquema 4** (23/10): a tabela `exercicio` é refeita (SQLite não altera CHECK) com `bloco` aceitando `novo`, `tipo` aceitando `explicacao` e a coluna `regra_id INTEGER REFERENCES regra(id) ON DELETE SET NULL`; e nasce a tabela `regra` (§13.1).
 
-A lição fica `concluida` quando todo exercício **que não é `explicacao`** tem resposta.
+**Esquema 5** (23/10, §9.6 e §13.2): só colunas novas — o SQLite acrescenta coluna sem refazer a tabela. Roda numa transação com a troca do `user_version` (tudo ou nada).
+
+```sql
+ALTER TABLE exercicio ADD COLUMN dica_erro TEXT;
+ALTER TABLE resposta  ADD COLUMN apos_dica INTEGER NOT NULL DEFAULT 0 CHECK (apos_dica IN (0, 1));
+ALTER TABLE erro      ADD COLUMN exercicio_id INTEGER REFERENCES exercicio(id) ON DELETE SET NULL;
+ALTER TABLE erro      ADD COLUMN deslize INTEGER NOT NULL DEFAULT 0 CHECK (deslize IN (0, 1));
+ALTER TABLE regra     ADD COLUMN deslizes INTEGER NOT NULL DEFAULT 0;
+ALTER TABLE regra     ADD COLUMN intervalo_dia REAL;
+ALTER TABLE regra     ADD COLUMN lacunas_dia INTEGER NOT NULL DEFAULT 0;
+```
+
+A lição fica `concluida` quando todo exercício **que não é `explicacao`** tem a primeira resposta (uma dica pendente não segura a lição, §9.6).
 
 ### 9.4 Sorteio dos tipos (`planejar_tipos`)
 
@@ -224,9 +239,22 @@ A lição fica `concluida` quando todo exercício **que não é `explicacao`** t
 | Ferramenta | Faz |
 |---|---|
 | `planejar_tipos(n, semente)` | a sequência sorteada (§9.4) e o porquê de cada peso |
-| `criar_licao(titulo, exercicios, data)` | valida cada exercício pelo tipo (e o `regra` de cada um contra o caderno), grava, devolve `id` e o link do painel |
-| `resultado_licao(id)` | resumo da lição (padrão: a mais recente): veredito, resposta e gabarito de cada exercício, e os `revisar` pendentes; ignora o `explicacao` |
+| `criar_licao(titulo, exercicios, data)` | valida cada exercício pelo tipo (e o `regra` de cada um contra o caderno, e o `dica_erro`), grava, devolve `id` e o link do painel |
+| `resultado_licao(id)` | resumo da lição (padrão: a mais recente): veredito, resposta e gabarito de cada exercício, e os `revisar` pendentes; ignora o `explicacao`. Os exercícios que passaram pela dica trazem `autocorrigiu` (`true` deslize · `false` lacuna · `null` dica ainda pendente; sem a chave = não houve dica). A `contagem` traz `certo`, `errado`, `revisar`, `sem_resposta`, `deslizes` (errados corrigidos com a dica) e `lacunas` (`errado − deslizes`) |
 | `corrigir_exercicio(exercicio_id, veredito, correcao)` | fecha um `revisar` (`certo`/`errado`) com a correção, que aparece no painel; se o exercício tem `regra`, move a agenda dela (só no primeiro fechamento) |
+
+### 9.6 Segunda tentativa com dica (23/10/2026)
+
+Recomendação do relatório de pesquisa, aprovada por ele (§8). Dica que faz o aluno se corrigir ensina mais que a resposta pronta, e o erro passa a ter dois tipos: **deslize** (corrigiu com a dica) e **lacuna** (não corrigiu).
+
+- **Campo** `dica_erro` (§9.1): aponta *onde* olhar, sem dar a resposta. O tutor escreve com o checklist da aula: tempo do verbo · partícula de cada substantivo · forma do verbo pedida pela estrutura. Ex.: "Confira o tempo do verbo: a frase fala do passado." Validação: texto não vazio, até 200 caracteres, nunca no `producao` nem no `explicacao`; tudo ou nada como o resto. Fica fora do `render`: só aparece depois da primeira resposta errada.
+- **Quando abre:** a **primeira** resposta sai `errado` pela correção **automática** e o exercício tem `dica_erro`. Vale para escolha, achar_erro, ligar, ordenar, completar, conjugar e ouvir (compreensão). No digitar e no ditado a correção automática só dá `certo` ou `revisar` (o `revisar` vai para o tutor, sem dica), então a dica deles só apareceria se esse veredito mudasse.
+- **Dica pendente:** o POST da primeira resposta devolve `dica` com `gabarito` vazio, `explicacao` nula e `detalhe` vazio; a leitura da lição (`resultado`) também os esconde. O gabarito não sai do servidor antes da segunda tentativa.
+- **Segunda tentativa:** o próximo POST de resposta do exercício **é** a segunda tentativa (quem decide é o servidor: primeira `errado` automática, exercício com dica e nenhuma linha `apos_dica`). Grava `resposta.apos_dica = 1` e devolve a correção completa com `autocorrigiu`. **Desistir** ("Ver a resposta") é `POST /api/exercicios/{id}/desistir`: grava a linha `apos_dica = 1` com `resposta = {"desistiu": true}` e veredito `errado`. Os POSTs seguintes são o "Praticar de novo", com `apos_dica = 0`, como antes.
+- **Placar:** só a primeira resposta conta — o exercício fica `errado` no placar, nas contagens, no acerto por tipo e no `planejar_tipos`. `autocorrigiu`: `true` = 2ª certa (**deslize**); `false` = 2ª errada ou desistência (**lacuna**); `null` = sem dica ou dica pendente.
+- **Tabela `erro`:** o erro da primeira resposta é gravado na hora, como sempre, agora com `exercicio_id`; a segunda tentativa certa liga `deslize = 1` nessa linha.
+- **Agenda da regra** (§13.2): a lacuna é aplicada já na primeira resposta; a segunda certa a reclassifica como deslize (`regras.deslize`).
+- **Dica abandonada** (fechou a aba, pulou de exercício e não voltou) fica como lacuna: a agenda já a tratou assim, e a lição conclui do mesmo jeito.
 
 ## 10. API HTTP (`japones/api.py`, `127.0.0.1:8787`) [CONTRATO]
 
@@ -240,9 +268,10 @@ Só escuta em `127.0.0.1`. JSON em tudo; datas `AAAA-MM-DD`.
 | `GET /api/calendario?de=&ate=` | `{"dias": [{"data", "aulas": [{tipo, titulo, dia_plano, verif_ok, verif_total, prod_ok, prod_total}], "trajeto": {anki_cartoes, anki_minutos, audio} \| null, "plano": str \| null, "licoes": [{id, titulo, status}]}], "eventos_trello": [{nome, vence, url, concluido, lista}]}` (Trello pode vir como `{"erro": ...}`) |
 | `GET /api/licoes?ultimas=20` | `[{id, data, titulo, status, total, certos, errados, revisar, pendentes}]` |
 | `GET /api/licoes/atual` | a lição aberta mais recente (ou a mais recente) renderizada; 404 se não houver |
-| `GET /api/licoes/{id}` | `{id, data, titulo, status, exercicios: [{id, ordem, bloco, tipo, categoria, enunciado, render, resultado}]}`; `resultado` é `null` ou `{veredito, resposta, gabarito, explicacao, detalhe, correcao}` da primeira resposta |
-| `POST /api/exercicios/{id}/resposta` | corpo `{"resposta": {...§9.2}, "tempo_ms": 1234}` → `{veredito, gabarito, explicacao, detalhe}`; 400 num `explicacao` (não tem resposta) |
-| `GET /api/regras` | o caderno (§13.6): `[{slug, titulo, categoria, ensinada_em, explicacao_md, intervalo, proxima, dias, acertos, erros, ultima_revisao, ultima_falha, status}]`, por `proxima` |
+| `GET /api/licoes/{id}` | `{id, data, titulo, status, exercicios: [{id, ordem, bloco, tipo, categoria, enunciado, render, resultado}]}`; `resultado` é `null` ou `{veredito, resposta, gabarito, explicacao, detalhe, correcao, dica, segunda, autocorrigiu}` da primeira resposta. `dica`: o texto, quando a primeira saiu errada num exercício com `dica_erro` (senão `null`); `segunda`: `null`, `{resposta, veredito, detalhe}` (a 2ª tentativa) ou `{"desistiu": true}`; `autocorrigiu`: `true`/`false`/`null` (§9.6). Com a dica pendente (`dica` e `segunda: null`), `gabarito` vem `""`, `explicacao` `null` e `detalhe` `{}` |
+| `POST /api/exercicios/{id}/resposta` | corpo `{"resposta": {...§9.2}, "tempo_ms": 1234}` → `{veredito, gabarito, explicacao, detalhe, contou}`. Primeira resposta errada com dica: `{veredito: "errado", gabarito: "", explicacao: null, detalhe: {}, contou: true, dica: "..."}`. Segunda tentativa: a correção dela, `contou: false` e `autocorrigiu`. 400 num `explicacao` (não tem resposta) |
+| `POST /api/exercicios/{id}/desistir` | "Ver a resposta" com a dica pendente (§9.6) → `{veredito: "errado", gabarito, explicacao, detalhe (da 1ª), contou: false, autocorrigiu: false}`; 409 se não há dica esperando; 404 se o exercício não existe |
+| `GET /api/regras` | o caderno (§13.6): `[{slug, titulo, categoria, ensinada_em, explicacao_md, intervalo, proxima, dias, acertos, erros, deslizes, ultima_revisao, ultima_falha, status}]`, por `proxima` |
 | `GET /api/erros?dias=30&categoria=` | o mesmo de `erros()` do MCP |
 | `GET /api/erros/painel?dias=90` | §12.1 |
 | `GET /api/registro?busca=&limite=20` | o mesmo de `registro_antigo()` do MCP |
@@ -265,11 +294,11 @@ React + Vite + TypeScript, Tailwind + shadcn/ui, TanStack Query, React Router, F
 | Rota | Tela |
 |---|---|
 | `/` | **Hoje**: dia do plano, streak e recorde; plano de hoje e o que a última aula deixou; lembrete de abertura; botão **Aula de hoje** (se houver lição); pendências do Trello com link (vencidas em vermelho); checklists da semana; Anki (hoje/ontem, fila, retenção, em loop); padrões abertos |
-| `/aula` e `/aula/:id` | **Aula**: um exercício por vez, barra de progresso, correção na hora com a explicação, resumo no fim. O item `explicacao` mostra o rótulo do bloco ("Conteúdo novo"), o markdown (o mesmo `Markdown` das correções: react-markdown com GFM, sem HTML cru) e um botão **Entendi** que só avança; a barra de progresso conta só os exercícios |
-| `/regras` | **Regras** (o caderno, 23/10): as regras em três grupos — **Vencem hoje**, **Frágeis** (mais erros que acertos) e **Em dia** —, cada uma expansível com a explicação e os números (acertos, erros, próxima revisão, intervalo, ensinada em) |
+| `/aula` e `/aula/:id` | **Aula**: um exercício por vez, barra de progresso, correção na hora com a explicação, resumo no fim. **Dica** (§9.6): primeira resposta errada num exercício com dica → em vez da correção, "Quase. Dica: …" com a resposta dele, o widget de novo em branco para a segunda tentativa e o botão **Ver a resposta** (desistir); depois, a correção de sempre com "Corrigiu com a dica" (deslize) ou "Errado — nem com a dica" / "você pediu a resposta". Na barra, a dica pendente tem ícone próprio; ao reabrir a lição, ela é a primeira pendente; o resumo conta os corrigidos com a dica. O item `explicacao` mostra o rótulo do bloco ("Conteúdo novo"), o markdown (o mesmo `Markdown` das correções: react-markdown com GFM, sem HTML cru) e um botão **Entendi** que só avança; a barra de progresso conta só os exercícios |
+| `/regras` | **Regras** (o caderno, 23/10): as regras em três grupos — **Vencem hoje**, **Frágeis** (mais erros que acertos) e **Em dia** —, cada uma expansível com a explicação e os números (acertos, erros, deslizes, próxima revisão, intervalo, ensinada em) |
 | `/calendario` | mês: cor do dia pelo tipo da aula (completa/parcial/sem mesa), plano, prazos do Trello, lições, ponto de áudio; clique abre o detalhe do dia |
 | `/aulas` e `/aulas/:data` | histórico com busca; a entrada do diário renderizada |
-| `/erros` | **Erros** (Fase 3): erros por semana empilhados por grupo de categoria; tabela de categorias (clicar filtra a lista); a lista (escrito → correto, porquê); padrões abertos e resolvidos; acerto por tipo de exercício; busca no registro antigo |
+| `/erros` | **Erros** (Fase 3): erros por semana empilhados por grupo de categoria; tabela de categorias (clicar filtra a lista); a lista (escrito → correto, porquê; o deslize leva a marca "corrigiu com a dica"); padrões abertos e resolvidos; acerto por tipo de exercício; busca no registro antigo |
 | `/anki` | **Anki** (Fase 3): hoje/ontem, fila, retenção 30 d com o alerta; mapa de calor dos cartões por dia desde 03/08 com o áudio; retenção por semana (linha dos 85%); previsão de 14 dias; maturidade; botões; em loop, travam, bandeira; baralhos |
 | `/kotoba` | **Kotoba** (Fase 3): busca (IME), verbete com leitura, JLPT, acento, glosas PT (EN recolhidas) e se já tem cartão; clicar num kanji abre a ficha; o histórico de consultas por dia de estudo; as candidatas a cartão; as listas |
 
@@ -349,17 +378,32 @@ CREATE TABLE regra (id INTEGER PRIMARY KEY, slug TEXT UNIQUE NOT NULL, titulo TE
   intervalo REAL NOT NULL DEFAULT 0, proxima TEXT,        -- a agenda (§13.2)
   acertos INTEGER NOT NULL DEFAULT 0, erros INTEGER NOT NULL DEFAULT 0,
   ultima_revisao TEXT, ultima_falha TEXT,
-  criada_em TEXT DEFAULT (datetime('now','localtime')));
+  criada_em TEXT DEFAULT (datetime('now','localtime')),
+  -- esquema 5 (§13.2): deslize × lacuna
+  deslizes INTEGER NOT NULL DEFAULT 0,  -- erros corrigidos com a dica; desde então `erros` conta só lacunas
+  intervalo_dia REAL,                   -- o intervalo antes do primeiro evento do dia `ultima_revisao`
+  lacunas_dia INTEGER NOT NULL DEFAULT 0);  -- lacunas no dia `ultima_falha`
 ```
 
 ### 13.2 Agenda (`regras.agendar(con, regra_id, veredito, dia)`)
 
 Repetição espaçada simples, por regra. `dia` = `dominio.dia_de_estudo()` (regra das 04:00). Chamada quando um exercício com `regra_id` recebe a **primeira** resposta com veredito automático `certo`/`errado`, e quando um `revisar` dele é fechado pelo tutor (`corrigir_exercicio`) como `certo`/`errado`.
 
-- `errado` → `intervalo = 1`, `proxima = dia + 1`, `erros += 1`, `ultima_falha = ultima_revisao = dia`.
+- Primeiro evento da regra num dia novo (`ultima_revisao != dia`): guarda `intervalo_dia = intervalo` (o intervalo de antes do dia) e zera `lacunas_dia`.
+- `errado` → `intervalo = 1`, `proxima = dia + 1`, `erros += 1`, `lacunas_dia += 1`, `ultima_falha = ultima_revisao = dia`. É a **lacuna**, e vale na hora mesmo com a dica pendente (§9.6).
 - `certo` → `acertos += 1`. Se `ultima_falha == dia` ou `ultima_revisao == dia`, o intervalo **não cresce** (um erro no dia segura a regra para amanhã; vários acertos no mesmo dia contam uma vez só). Senão `intervalo = 2` se `intervalo < 2`, senão `min(60, round(intervalo × 2,5))`. `proxima = dia + intervalo`, `ultima_revisao = dia`.
 
 Sequência resultante, só com acertos em dias diferentes: 2, 5, 12, 30, 60 dias. **Vencida** = `proxima <= dia de estudo`.
+
+**Deslize** (23/10, `regras.deslize(con, regra_id, dia_da_falha)`): a segunda tentativa depois da dica saiu certa (§9.6). `dia_da_falha` = o dia de estudo da primeira resposta.
+
+- `erros -= 1`, `deslizes += 1`: desde o esquema 5, `erros` conta só lacunas (e o status `fragil` = `erros > acertos` também).
+- Se a agenda não andou depois daquele dia (`ultima_falha == ultima_revisao == dia_da_falha`): `lacunas_dia -= 1`, e se não sobrou lacuna no dia a regra **recua um degrau** em vez de zerar: `intervalo = max(1, round(intervalo_dia / 2,5))`, `proxima = dia_da_falha + intervalo`. Se sobrou outra lacuna no dia, ela segura a regra em 1. Se houve evento num dia posterior, só os contadores mudam.
+- Exemplos: 12 → 5; 30 → 12; 60 → 24; 5 → 2; 2 → 1. `intervalo_dia` nulo (regra sem evento desde o esquema 5) usa o intervalo atual, que depois da lacuna é 1: na dúvida, o deslize vale como lacuna.
+
+O pior resultado do dia vence: lacuna > deslize > acerto. Vários deslizes no mesmo dia recuam um degrau só (o recuo parte sempre de `intervalo_dia`), como vários acertos crescem uma vez só. E `ultima_falha` continua sendo o dia: um acerto depois do deslize, no mesmo dia, não faz o intervalo crescer.
+
+**Por que a lacuna entra na primeira resposta, e não depois da dica:** a segunda tentativa pode nunca vir (aba fechada, pulou de exercício). Adiar a conta faria o erro sumir da agenda; aplicar na hora e reclassificar no deslize nunca perde um erro. O `intervalo_dia` e o `lacunas_dia` são o que o deslize precisa para refazer a conta.
 
 ### 13.3 Importador
 
@@ -368,6 +412,8 @@ Sequência resultante, só com acertos em dias diferentes: 2, 5, 12, 30, 60 dias
 ### 13.4 Deck "Japonês::Gramática" no Anki
 
 `tools/gerar_gramatica_apkg.py` espelha o `gerar_escrita_apkg.py`: lê `progresso/gramatica.tsv` (sentido em português | resposta em kana | nota | tags), gera `anki/gramatica.apkg` com cartão de digitar (`{{type:Resposta}}`, o Anki mostra o diff), modelo e deck com ids próprios e congelados, e importa pelo AnkiConnect (Anki fechado: só gera o arquivo). TSV sem linhas: não gera nem importa nada.
+
+O verso do cartão diz (23/10): "Avalie a REGRA (tempo · partícula · forma do verbo), não a frase exata: frase válida de outro jeito = Good." O diff caractere por caractere marca como diferença uma frase válida escrita de outro jeito, e a nota tem de ser da regra. O modelo mudou antes da primeira importação; daqui para frente, ids e campos ficam como estão.
 
 ### 13.5 Ferramentas MCP (respostas enxutas)
 
@@ -379,4 +425,4 @@ Sequência resultante, só com acertos em dias diferentes: 2, 5, 12, 30, 60 dias
 
 ### 13.6 `GET /api/regras`
 
-Lista de todas as regras, por `proxima` (sem agenda no fim). `status`: `vencida` se `proxima <= dia`; senão `fragil` se `erros > acertos`; senão `em_dia`. `dias` = `proxima − dia de estudo` (≤ 0 = vencida; `null` sem agenda).
+Lista de todas as regras, por `proxima` (sem agenda no fim). `status`: `vencida` se `proxima <= dia`; senão `fragil` se `erros > acertos` (`erros` = lacunas: o deslize não deixa a regra frágil); senão `em_dia`. `dias` = `proxima − dia de estudo` (≤ 0 = vencida; `null` sem agenda).

@@ -10,7 +10,7 @@ import random
 import re
 import sqlite3
 import unicodedata
-from datetime import timedelta
+from datetime import datetime, timedelta
 from typing import Literal
 
 from pydantic import BaseModel, Field, model_validator
@@ -25,6 +25,10 @@ BLOCOS = ("aquecimento", "novo", "verificacao", "producao", "revisao")
 # bloco do exercício -> bloco da tabela `erro` ('novo' é a verificação do conteúdo do dia)
 _BLOCO_ERRO = {"aquecimento": "abertura", "novo": "verificacao", "verificacao": "verificacao",
                "producao": "producao", "revisao": "outro"}
+# A dica da 2ª tentativa (§9.6) aponta onde olhar ("confira o tempo do verbo"), não explica a regra:
+# a explicação vem depois, com a correção. Nos tipos sem correção automática ela não tem como abrir.
+DICA_MAX = 200
+_SEM_DICA = ("producao", EXPLICACAO)
 
 
 class ExercicioIn(BaseModel):
@@ -37,6 +41,7 @@ class ExercicioIn(BaseModel):
     explicacao: str | None = Field(default=None, description="a regra, mostrada depois da resposta")
     categoria: str | None = Field(default=None, description="categoria de erro (DESIGN §4.2)")
     regra: str | None = Field(default=None, description="slug da regra do caderno que este exercício revisa (§13)")
+    dica_erro: str | None = Field(default=None, description="dica curta para a 2ª tentativa depois de um erro (§9.6)")
 
     @model_validator(mode="after")
     def _bloco_padrao(self):
@@ -88,6 +93,14 @@ def validar(ex: ExercicioIn) -> None:
     d, t = ex.dados, ex.tipo
     if t != EXPLICACAO and ex.enunciado is None:
         raise ValueError("falta 'enunciado'")
+    if ex.dica_erro is not None:
+        if t in _SEM_DICA:
+            raise ValueError(f"'dica_erro' não vale para {t}: a dica só abre depois de uma correção automática errada")
+        if not ex.dica_erro.strip():
+            raise ValueError("'dica_erro' é um texto não vazio (ou omita o campo)")
+        if len(ex.dica_erro.strip()) > DICA_MAX:
+            raise ValueError(f"'dica_erro' tem {len(ex.dica_erro.strip())} caracteres; o máximo é {DICA_MAX} "
+                             "(a dica aponta onde olhar; a regra vai na 'explicacao')")
     if t == "escolha":
         ops = _lista_str(d.get("opcoes"), "opcoes", 2)
         if len(set(ops)) != len(ops):
@@ -344,26 +357,61 @@ def criar_licao(con: sqlite3.Connection, titulo: str, exercicios: list[Exercicio
     cur = con.execute("INSERT INTO licao (data, titulo) VALUES (?, ?)", (data, titulo))
     lid = cur.lastrowid
     con.executemany("""INSERT INTO exercicio (licao_id, ordem, bloco, tipo, categoria, enunciado, dados, explicacao,
-                                             regra_id)
-                       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)""",
+                                             regra_id, dica_erro)
+                       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)""",
                     [(lid, i + 1, ex.bloco, ex.tipo, ex.categoria, ex.enunciado or "",
-                      json.dumps(d, ensure_ascii=False), ex.explicacao, rid)
+                      json.dumps(d, ensure_ascii=False), ex.explicacao, rid,
+                      ex.dica_erro.strip() if ex.dica_erro else None)
                      for i, (ex, d, rid) in enumerate(zip(exercicios, todos_dados, ids_regra))])
     con.commit()
     return lid
 
 
 def _primeira_resposta(con, exercicio_id: int):
-    return con.execute("SELECT * FROM resposta WHERE exercicio_id = ? ORDER BY id LIMIT 1", (exercicio_id,)).fetchone()
+    """A resposta que conta. Sempre a de menor id, e nunca uma 2ª tentativa (§9.6)."""
+    return con.execute("SELECT * FROM resposta WHERE exercicio_id = ? AND apos_dica = 0 ORDER BY id LIMIT 1",
+                       (exercicio_id,)).fetchone()
 
 
-def _resultado(ex, r) -> dict | None:
-    if not r:
+def _segunda_tentativa(con, exercicio_id: int):
+    """A 2ª tentativa depois da dica, ou a desistência (§9.6). Nunca mais de uma: o servidor só grava
+    `apos_dica = 1` enquanto a dica está pendente."""
+    return con.execute("SELECT * FROM resposta WHERE exercicio_id = ? AND apos_dica = 1 ORDER BY id LIMIT 1",
+                       (exercicio_id,)).fetchone()
+
+
+def _com_dica(ex, r1) -> bool:
+    """A 1ª resposta abriu a 2ª tentativa? Só se o exercício tem dica e a correção AUTOMÁTICA dela
+    deu errado. Recalcula em vez de ler o veredito gravado: um 'revisar' fechado como errado pelo
+    tutor não é caso de dica (§9.6), e a correção é determinística."""
+    return bool(ex["dica_erro"]) and corrigir(ex["tipo"], json.loads(ex["dados"]), json.loads(r1["resposta"]))[0] == "errado"
+
+
+def _aguardando_dica(con, ex, r1) -> bool:
+    return r1 is not None and _com_dica(ex, r1) and _segunda_tentativa(con, ex["id"]) is None
+
+
+def _resultado(ex, r1, r2=None) -> dict | None:
+    if not r1:
         return None
-    dados, resp = json.loads(ex["dados"]), json.loads(r["resposta"])
+    dados, resp = json.loads(ex["dados"]), json.loads(r1["resposta"])
     _v, gabarito, _d = corrigir(ex["tipo"], dados, resp)
-    return {"veredito": r["veredito"], "resposta": resp, "gabarito": gabarito, "explicacao": ex["explicacao"],
-            "detalhe": json.loads(r["detalhe"]) if r["detalhe"] else {}, "correcao": r["correcao"]}
+    res = {"veredito": r1["veredito"], "resposta": resp, "gabarito": gabarito, "explicacao": ex["explicacao"],
+           "detalhe": json.loads(r1["detalhe"]) if r1["detalhe"] else {}, "correcao": r1["correcao"],
+           "dica": None, "segunda": None, "autocorrigiu": None}
+    if not _com_dica(ex, r1):
+        return res
+    res["dica"] = ex["dica_erro"]
+    if r2 is None:      # dica pendente: o gabarito não sai do servidor antes da 2ª tentativa
+        return {**res, "gabarito": "", "explicacao": None, "detalhe": {}}
+    resp2 = json.loads(r2["resposta"])
+    if resp2.get("desistiu"):
+        res["segunda"] = {"desistiu": True}
+    else:
+        res["segunda"] = {"resposta": resp2, "veredito": r2["veredito"],
+                          "detalhe": json.loads(r2["detalhe"]) if r2["detalhe"] else {}}
+    res["autocorrigiu"] = r2["veredito"] == "certo" and not resp2.get("desistiu")
+    return res
 
 
 def licao_renderizada(con, licao_id: int) -> dict | None:
@@ -376,7 +424,7 @@ def licao_renderizada(con, licao_id: int) -> dict | None:
         rend = _render_explicacao(con, dados) if ex["tipo"] == EXPLICACAO else render(ex["tipo"], dados, semente=ex["id"])
         exs.append({"id": ex["id"], "ordem": ex["ordem"], "bloco": ex["bloco"], "tipo": ex["tipo"],
                     "categoria": ex["categoria"], "enunciado": ex["enunciado"], "render": rend,
-                    "resultado": _resultado(ex, _primeira_resposta(con, ex["id"]))})
+                    "resultado": _resultado(ex, _primeira_resposta(con, ex["id"]), _segunda_tentativa(con, ex["id"]))})
     return {"id": l["id"], "data": l["data"], "titulo": l["titulo"], "status": l["status"], "exercicios": exs}
 
 
@@ -386,35 +434,83 @@ def licao_atual_id(con) -> int | None:
     return r["id"] if r else None
 
 
-def responder(con, exercicio_id: int, resp: dict, tempo_ms: int | None = None) -> dict:
+def _exercicio(con, exercicio_id: int):
     ex = con.execute("""SELECT e.*, l.data AS data_licao FROM exercicio e JOIN licao l ON l.id = e.licao_id
                         WHERE e.id = ?""", (exercicio_id,)).fetchone()
     if not ex:
         raise KeyError(exercicio_id)
+    return ex
+
+
+def responder(con, exercicio_id: int, resp: dict, tempo_ms: int | None = None) -> dict:
+    """Grava uma resposta. Quem decide o que ela é, é o servidor: a 1ª (conta no placar), a 2ª
+    tentativa depois da dica (§9.6, `apos_dica = 1`) ou o "Praticar de novo" (não conta)."""
+    ex = _exercicio(con, exercicio_id)
     dados = json.loads(ex["dados"])
     veredito, gabarito, detalhe = corrigir(ex["tipo"], dados, resp)     # ValueError no explicacao
-    primeira = _primeira_resposta(con, exercicio_id) is None
-    con.execute("INSERT INTO resposta (exercicio_id, resposta, veredito, detalhe, tempo_ms) VALUES (?, ?, ?, ?, ?)",
+    r1 = _primeira_resposta(con, exercicio_id)
+    segunda = _aguardando_dica(con, ex, r1)
+    con.execute("""INSERT INTO resposta (exercicio_id, resposta, veredito, detalhe, tempo_ms, apos_dica)
+                   VALUES (?, ?, ?, ?, ?, ?)""",
                 (exercicio_id, json.dumps(resp, ensure_ascii=False), veredito,
-                 json.dumps(detalhe, ensure_ascii=False), tempo_ms))
-    if primeira and veredito == "errado":
-        _gravar_erro(con, ex, _escrito(ex["tipo"], resp), gabarito)
-    if primeira and ex["regra_id"] and veredito in ("certo", "errado"):    # o 'revisar' agenda quando o tutor fecha
-        regras.agendar(con, ex["regra_id"], veredito, dominio.dia_de_estudo())
+                 json.dumps(detalhe, ensure_ascii=False), tempo_ms, int(segunda)))
+    if r1 is None:
+        if veredito == "errado":
+            _gravar_erro(con, ex, _escrito(ex["tipo"], resp), gabarito)
+        if ex["regra_id"] and veredito in ("certo", "errado"):    # o 'revisar' agenda quando o tutor fecha
+            regras.agendar(con, ex["regra_id"], veredito, dominio.dia_de_estudo())
+    elif segunda and veredito == "certo":
+        _marcar_deslize(con, ex, r1)
     _fechar_se_completa(con, ex["licao_id"])
     con.commit()
-    return {"veredito": veredito, "gabarito": gabarito, "explicacao": ex["explicacao"], "detalhe": detalhe,
-            "contou": primeira}
+    if r1 is None and veredito == "errado" and ex["dica_erro"]:
+        # A dica no lugar da resposta certa (23/10/2026, §9.6): a dica que faz o aluno se corrigir
+        # ensina mais que a resposta pronta. Gabarito, explicação e detalhe ficam para depois.
+        return {"veredito": "errado", "gabarito": "", "explicacao": None, "detalhe": {}, "contou": True,
+                "dica": ex["dica_erro"]}
+    saida = {"veredito": veredito, "gabarito": gabarito, "explicacao": ex["explicacao"], "detalhe": detalhe,
+             "contou": r1 is None}
+    if segunda:
+        saida["autocorrigiu"] = veredito == "certo"
+    return saida
+
+
+def desistir(con, exercicio_id: int) -> dict:
+    """"Ver a resposta" com a dica pendente (§9.6): é lacuna. A agenda da regra já foi tratada como
+    lacuna na 1ª resposta; aqui só fica registrado que a 2ª tentativa não veio."""
+    ex = _exercicio(con, exercicio_id)
+    r1 = _primeira_resposta(con, exercicio_id)
+    if not _aguardando_dica(con, ex, r1):
+        raise ValueError("este exercício não tem dica esperando a 2ª tentativa")
+    con.execute("INSERT INTO resposta (exercicio_id, resposta, veredito, apos_dica) VALUES (?, ?, 'errado', 1)",
+                (exercicio_id, json.dumps({"desistiu": True})))
+    con.commit()
+    _v, gabarito, detalhe = corrigir(ex["tipo"], json.loads(ex["dados"]), json.loads(r1["resposta"]))
+    return {"veredito": "errado", "gabarito": gabarito, "explicacao": ex["explicacao"], "detalhe": detalhe,
+            "contou": False, "autocorrigiu": False}
+
+
+def _marcar_deslize(con, ex, r1) -> None:
+    """A 2ª tentativa saiu certa: o erro da 1ª vira deslize na tabela `erro` e na agenda da regra."""
+    con.execute("UPDATE erro SET deslize = 1 WHERE id = (SELECT MAX(id) FROM erro WHERE exercicio_id = ?)",
+                (ex["id"],))
+    if ex["regra_id"]:
+        # o dia da FALHA, não o de agora: a 2ª tentativa pode vir depois das 04:00 (§13.2)
+        dia_falha = dominio.dia_de_estudo(datetime.fromisoformat(r1["criado_em"]))
+        regras.deslize(con, ex["regra_id"], dia_falha)
 
 
 def _gravar_erro(con, ex, escrito: str, correto: str) -> None:
-    con.execute("INSERT INTO erro (data, bloco, categoria, escrito, correto, porque) VALUES (?, ?, ?, ?, ?, ?)",
+    con.execute("""INSERT INTO erro (data, bloco, categoria, escrito, correto, porque, exercicio_id)
+                   VALUES (?, ?, ?, ?, ?, ?, ?)""",
                 (ex["data_licao"], _BLOCO_ERRO[ex["bloco"]], ex["categoria"] or "outro", escrito, correto,
-                 ex["explicacao"]))
+                 ex["explicacao"], ex["id"]))
 
 
 def _fechar_se_completa(con, licao_id: int) -> None:
-    # o explicacao não tem resposta: se contasse, a lição nunca concluiria
+    # o explicacao não tem resposta: se contasse, a lição nunca concluiria. E a dica pendente (§9.6)
+    # não segura a lição: a 1ª resposta já está dada, e uma dica abandonada não pode deixar a lição
+    # aberta para sempre (a "lição atual" do painel é a aberta mais recente).
     (faltam,) = con.execute("""SELECT COUNT(*) FROM exercicio e WHERE e.licao_id = ? AND e.tipo != 'explicacao'
                                AND NOT EXISTS (SELECT 1 FROM resposta r WHERE r.exercicio_id = e.id)""",
                             (licao_id,)).fetchone()
@@ -430,8 +526,7 @@ def corrigir_revisao(con, exercicio_id: int, veredito: str, correcao: str) -> bo
     r = _primeira_resposta(con, exercicio_id)
     if not r:
         return False
-    ex = con.execute("""SELECT e.*, l.data AS data_licao FROM exercicio e JOIN licao l ON l.id = e.licao_id
-                        WHERE e.id = ?""", (exercicio_id,)).fetchone()
+    ex = _exercicio(con, exercicio_id)
     con.execute("UPDATE resposta SET veredito = ?, correcao = ? WHERE id = ?", (veredito, correcao, r["id"]))
     if veredito == "errado" and r["veredito"] != "errado":
         _gravar_erro(con, ex, _escrito(ex["tipo"], json.loads(r["resposta"])), correcao[:300])

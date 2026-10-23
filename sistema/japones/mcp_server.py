@@ -51,6 +51,24 @@ def _con():
     return db.conectar()
 
 
+def _agora() -> datetime:
+    """O relógio real, num ponto só: os testes trocam esta função (o aviso da madrugada do hoje()
+    depende da hora de verdade, não do dia de estudo)."""
+    return datetime.now()
+
+
+# 23/10/2026, recomendação do relatório de pesquisa aprovada por ele: o sono curto prejudica a
+# codificação e a memória de trabalho, e conteúdo novo depois da 1h de um dia de trabalho rende pouco.
+AVISO_MADRUGADA = ("Depois da 1h em véspera de trabalho: aula só de revisão (regras vencidas + produção curta, "
+                   "até 30 min); o conteúdo novo passa para a próxima sessão.")
+
+
+def _madrugada_de_trabalho(agora: datetime) -> bool:
+    """01:00–03:59 do relógio real num dia de CALENDÁRIO de segunda a sexta — o dia em que ele trabalha.
+    A 01:30 de sábado (sessão da sexta à noite) não avisa; a 01:30 de segunda avisa."""
+    return 1 <= agora.hour < 4 and agora.weekday() < 5
+
+
 def _amanha_da_entrada(texto: str) -> str | None:
     m = re.search(r"^\*\*Amanhã:\*\*\s*(.+)$", texto, re.M)
     return m.group(1).strip() if m else None
@@ -96,8 +114,9 @@ def hoje() -> dict:
     """O Passo 0 inteiro: dia de estudo (regra das 04:00), dia do plano, streak, última aula e o que ela
     deixou para hoje, plano do dia, lembrete de abertura, padrões abertos, regras de gramática vencidas
     (total e até 5 slugs), Trello (pendências da semana, checklists, avisos do JLPT) e Anki (fila, retenção,
-    cartões em loop, bandeira)."""
-    agora = datetime.now()
+    cartões em loop, bandeira). Entre 01:00 e 03:59 de um dia útil, `avisos` traz a regra da madrugada:
+    aula só de revisão."""
+    agora = _agora()
     d = dominio.dia_de_estudo(agora)
     con = _con()
     datas = _datas_com_aula(con)
@@ -116,6 +135,8 @@ def hoje() -> dict:
     dias_sem = (d - date.fromisoformat(ult["data"])).days if ult else None
     plano = curriculo.do_dia(d)
     avisos = []
+    if _madrugada_de_trabalho(agora):       # o relógio real; o resto do hoje() segue o dia de estudo
+        avisos.append(AVISO_MADRUGADA)
     if dias_sem is not None and dias_sem >= 3:
         avisos.append(f"RETOMADA: {dias_sem} dias desde a última aula — sessão só de revisão, zerar streak sem drama.")
     if not any(x.year == d.year and x.month == d.month and x < d for x in datas):
@@ -177,18 +198,23 @@ def aula(data: str) -> list[dict]:
 @mcp.tool()
 def erros(categoria: str | None = None, dias: int = 30) -> dict:
     """Erros categorizados dos últimos `dias` (filtro opcional por categoria ou prefixo, ex. 'particula')
-    e a contagem por categoria."""
+    e a contagem por categoria. `deslize` = corrigido com a dica na 2ª tentativa (sabe a regra, escorregou);
+    `deslizes_por_categoria` conta só esses (o resto do `por_categoria` são lacunas e erros de fora do painel)."""
     desde = (dominio.dia_de_estudo() - timedelta(days=dias)).isoformat()
     con = _con()
     # prefixo literal: um '_' ou '%' no nome não pode virar curinga do LIKE
     prefixo = (categoria or "").replace("\\", "\\\\").replace("%", "\\%").replace("_", "\\_")
     filtro, params = ("AND categoria LIKE ? ESCAPE '\\'", [desde, f"{prefixo}%"]) if categoria else ("", [desde])
-    lista = db.linhas(con.execute(f"SELECT data, bloco, categoria, escrito, correto, porque FROM erro "
+    lista = db.linhas(con.execute(f"SELECT data, bloco, categoria, escrito, correto, porque, deslize FROM erro "
                                   f"WHERE data >= ? {filtro} ORDER BY data DESC, id DESC LIMIT 100", params))
+    for e in lista:
+        e["deslize"] = bool(e["deslize"])
     contagem = dict(con.execute("SELECT categoria, COUNT(*) FROM erro WHERE data >= ? GROUP BY categoria "
                                 "ORDER BY COUNT(*) DESC", (desde,)).fetchall())
+    deslizes = dict(con.execute("SELECT categoria, COUNT(*) FROM erro WHERE data >= ? AND deslize = 1 "
+                                "GROUP BY categoria ORDER BY COUNT(*) DESC", (desde,)).fetchall())
     con.close()
-    return {"desde": desde, "por_categoria": contagem, "erros": lista}
+    return {"desde": desde, "por_categoria": contagem, "deslizes_por_categoria": deslizes, "erros": lista}
 
 
 @mcp.tool()
@@ -418,7 +444,12 @@ def criar_licao(titulo: str, exercicios: list[dict], data: str | None = None) ->
     revisao. `regra` (opcional) = slug do caderno que o exercício revisa: a 1ª resposta move a agenda dela.
     tipo 'explicacao' = o texto do conteúdo novo antes dos exercícios, sem resposta (botão Entendi):
     dados {"md": "..."} ou {"regra": "<slug>"} (usa a explicacao_md do caderno); bloco padrão 'novo';
-    enunciado opcional (vira o título). Tudo ou nada: um exercício inválido recusa a lição com a mensagem."""
+    enunciado opcional (vira o título). `dica_erro` (opcional, até 200 caracteres): se a 1ª resposta sair
+    errada, o painel mostra a dica em vez da resposta e pede uma 2ª tentativa (corrigiu = deslize; não
+    corrigiu ou desistiu = lacuna). Escreva pelo checklist — tempo do verbo · partícula de cada substantivo ·
+    forma do verbo pedida —, apontando onde olhar sem dar a resposta. Não vale em producao/explicacao; no
+    digitar e no ditado não abre (fora das aceitas vai para você). Tudo ou nada: um exercício inválido
+    recusa a lição com a mensagem."""
     from japones import exercicios as motor
     try:
         itens = [motor.ExercicioIn(**e) for e in exercicios]
@@ -433,7 +464,9 @@ def criar_licao(titulo: str, exercicios: list[dict], data: str | None = None) ->
 @mcp.tool()
 def resultado_licao(id: int | None = None) -> dict:
     """O resultado da lição (padrão: a mais recente): por exercício, tipo, enunciado, a resposta dele,
-    veredito e gabarito; e a lista dos 'revisar' que esperam correção sua (corrigir_exercicio)."""
+    veredito e gabarito; e a lista dos 'revisar' que esperam correção sua (corrigir_exercicio). Só a 1ª
+    resposta conta. Exercício que passou pela dica traz `autocorrigiu` (true = deslize, false = lacuna,
+    null = dica pendente); a contagem separa os errados em `deslizes` e `lacunas`."""
     from japones import exercicios
     con = _con()
     lid = id or exercicios.licao_atual_id(con)
@@ -441,7 +474,7 @@ def resultado_licao(id: int | None = None) -> dict:
     con.close()
     if not l:
         return {"erro": "nenhuma lição"}
-    itens, contagem, pendentes = [], {"certo": 0, "errado": 0, "revisar": 0, "sem_resposta": 0}, []
+    itens, contagem, pendentes = [], {"certo": 0, "errado": 0, "revisar": 0, "sem_resposta": 0, "deslizes": 0}, []
     for ex in l["exercicios"]:
         if ex["tipo"] == "explicacao":      # não é exercício: sem resposta, fora da contagem
             continue
@@ -450,11 +483,15 @@ def resultado_licao(id: int | None = None) -> dict:
         item = {"id": ex["id"], "tipo": ex["tipo"], "enunciado": ex["enunciado"][:120]}
         if r:
             item.update(veredito=r["veredito"], resposta=r["resposta"], gabarito=r["gabarito"])
+            if r.get("dica"):       # enxuto: a chave só existe quando houve dica (§9.6)
+                item["autocorrigiu"] = r["autocorrigiu"]
+                contagem["deslizes"] += r["autocorrigiu"] is True
             if r["correcao"]:
                 item["correcao"] = "(já corrigido)"
             elif r["veredito"] == "revisar":
                 pendentes.append(ex["id"])
         itens.append(item)
+    contagem["lacunas"] = contagem["errado"] - contagem["deslizes"]      # errado sem autocorreção
     return {"id": l["id"], "titulo": l["titulo"], "status": l["status"], "contagem": contagem,
             "revisar_pendentes": pendentes, "exercicios": itens}
 

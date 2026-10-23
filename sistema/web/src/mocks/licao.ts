@@ -1,6 +1,7 @@
 // Lição fictícia com os 9 tipos, para desenvolver e testar respostas sem tocar
 // no banco real. Conteúdo genérico de livro-texto N5: nada de dado pessoal aqui
 // (o repositório é público).
+import { ErroApi } from '@/api/client'
 import { normalizar } from '@/lib/texto'
 import type {
   Correcao,
@@ -19,6 +20,8 @@ interface ExMock {
   ex: Omit<Exercicio, 'resultado'>
   dados: Dados
   explicacao: string
+  /** a dica da 2ª tentativa (§9.6), quando a 1ª sai errada */
+  dica?: string
 }
 
 // o texto da explicação reaproveita as regras que os exercícios abaixo já explicam
@@ -52,6 +55,7 @@ const exercicios: ExMock[] = [
     },
     dados: { opcoes: ['で', 'に', 'を', 'が'], correta: 'で' },
     explicacao: 'Lugar onde a AÇÃO acontece leva で. に marca onde algo está ou para onde se vai.',
+    dica: 'Confira o verbo: 読みます é uma ação ou um estar/ir?',
   },
   {
     ex: {
@@ -248,6 +252,23 @@ export function responderExercicioMock(exercicioId: number, corpo: { resposta: R
   const e = exercicios.find((x) => x.ex.id === exercicioId)
   if (!e) throw new Error('exercício não encontrado')
   const [veredito, gabarito, detalhe] = corrigir(e.ex.tipo, e.dados, corpo.resposta)
+  const anterior = respostas.get(exercicioId)
+  // a 2ª tentativa depois da dica (§9.6): o placar fica com a 1ª
+  if (anterior?.dica && !anterior.segunda) {
+    const autocorrigiu = veredito === 'certo'
+    respostas.set(exercicioId, {
+      ...anterior, gabarito, explicacao: e.explicacao, autocorrigiu,
+      segunda: { resposta: corpo.resposta, veredito, detalhe },
+    } as unknown as Resultado)
+    return { veredito, gabarito, explicacao: e.explicacao, detalhe, contou: false, autocorrigiu } as Correcao
+  }
+  if (!anterior && veredito === 'errado' && e.dica) {
+    respostas.set(exercicioId, {
+      veredito, resposta: corpo.resposta, gabarito: '', explicacao: null, detalhe: {}, correcao: null,
+      dica: e.dica, segunda: null, autocorrigiu: null, primeiro: { gabarito, detalhe },
+    } as unknown as Resultado)
+    return { veredito, gabarito: '', explicacao: null, detalhe: {}, contou: true, dica: e.dica } as Correcao
+  }
   const contou = !respostas.has(exercicioId)
   if (contou) {
     respostas.set(exercicioId, {
@@ -268,4 +289,14 @@ export function responderExercicioMock(exercicioId: number, corpo: { resposta: R
     }
   }
   return { veredito, gabarito, explicacao: e.explicacao, detalhe, contou } as Correcao
+}
+
+/** "Ver a resposta" com a dica pendente: lacuna, e a correção da 1ª aparece (§9.6). */
+export function desistirMock(exercicioId: number): Correcao {
+  const e = exercicios.find((x) => x.ex.id === exercicioId)
+  const anterior = respostas.get(exercicioId) as (Resultado & { primeiro?: { gabarito: string; detalhe: object } }) | undefined
+  if (!e || !anterior?.dica || anterior.segunda) throw new ErroApi(409, 'este exercício não tem dica esperando a 2ª tentativa')
+  const { gabarito, detalhe } = anterior.primeiro ?? { gabarito: '', detalhe: {} }
+  respostas.set(exercicioId, { ...anterior, gabarito, detalhe, explicacao: e.explicacao, segunda: { desistiu: true }, autocorrigiu: false } as Resultado)
+  return { veredito: 'errado', gabarito, explicacao: e.explicacao, detalhe, contou: false, autocorrigiu: false } as Correcao
 }
