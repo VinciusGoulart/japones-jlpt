@@ -19,6 +19,7 @@ curl -sSL https://bootstrap.pypa.io/get-pip.py -o /tmp/get-pip.py && .venv/bin/p
 
 .venv/bin/python -m pytest -q                  # testes (usam banco e diário temporários)
 .venv/bin/python -m japones.migracao           # importa/reimporta o histórico (idempotente)
+.venv/bin/python -m japones.regras importar ../plano/regras.json   # caderno de regras (DESIGN §13; upsert, não zera a agenda)
 .venv/bin/python -m japones.mcp_server         # o servidor MCP (stdio) — o Claude Code sobe sozinho pelo ../.mcp.json
 .venv/bin/python -m japones.api                # a API + o painel em http://127.0.0.1:8787 (na máquina dele roda como serviço)
 

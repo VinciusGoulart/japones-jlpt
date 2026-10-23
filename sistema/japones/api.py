@@ -12,7 +12,7 @@ from fastapi import Body, FastAPI, HTTPException
 from fastapi.responses import FileResponse, HTMLResponse
 from fastapi.staticfiles import StaticFiles
 
-from japones import audio, db, exercicios, mcp_server, painel
+from japones import audio, db, dominio, exercicios, mcp_server, painel, regras
 from japones.fontes import curriculo
 
 DIST = Path(__file__).resolve().parents[1] / "web" / "dist"
@@ -174,6 +174,18 @@ def responder(exercicio_id: int, resposta: dict = Body(...), tempo_ms: int | Non
         return exercicios.responder(con, exercicio_id, resposta, tempo_ms)
     except KeyError:
         raise HTTPException(404, "exercício não encontrado")
+    except ValueError as e:     # o explicacao não tem resposta (§9.2)
+        raise HTTPException(400, str(e))
+    finally:
+        con.close()
+
+
+@app.get("/api/regras")
+def listar_regras():
+    """O caderno de regras (§13.6): todas, com o texto, a agenda e o status."""
+    con = _con()
+    try:
+        return regras.caderno(con, dominio.dia_de_estudo())
     finally:
         con.close()
 

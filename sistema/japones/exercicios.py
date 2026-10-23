@@ -13,24 +13,36 @@ import unicodedata
 from datetime import timedelta
 from typing import Literal
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, model_validator
 
-from japones import audio, dominio
+from japones import audio, dominio, regras
 
+# Os tipos que se respondem e entram no sorteio. O 'explicacao' (23/10/2026) fica fora de propósito:
+# não é exercício, é o texto do conteúdo novo antes dos exercícios — sem resposta, placar nem peso.
 TIPOS = ("escolha", "achar_erro", "ligar", "ordenar", "completar", "digitar", "conjugar", "ouvir", "producao")
-BLOCOS = ("aquecimento", "verificacao", "producao", "revisao")
-# bloco do exercício -> bloco da tabela `erro`
-_BLOCO_ERRO = {"aquecimento": "abertura", "verificacao": "verificacao", "producao": "producao", "revisao": "outro"}
+EXPLICACAO = "explicacao"
+BLOCOS = ("aquecimento", "novo", "verificacao", "producao", "revisao")
+# bloco do exercício -> bloco da tabela `erro` ('novo' é a verificação do conteúdo do dia)
+_BLOCO_ERRO = {"aquecimento": "abertura", "novo": "verificacao", "verificacao": "verificacao",
+               "producao": "producao", "revisao": "outro"}
 
 
 class ExercicioIn(BaseModel):
     tipo: Literal["escolha", "achar_erro", "ligar", "ordenar", "completar", "digitar", "conjugar", "ouvir",
-                  "producao"]
-    bloco: Literal["aquecimento", "verificacao", "producao", "revisao"] = "verificacao"
-    enunciado: str = Field(description="a instrução, em português")
+                  "producao", "explicacao"]
+    bloco: Literal["aquecimento", "novo", "verificacao", "producao", "revisao"] | None = Field(
+        default=None, description="padrão 'verificacao'; no explicacao, 'novo'")
+    enunciado: str | None = Field(default=None, description="a instrução, em português (opcional só no explicacao)")
     dados: dict = Field(description="por tipo, DESIGN §9.2 — com o gabarito")
     explicacao: str | None = Field(default=None, description="a regra, mostrada depois da resposta")
     categoria: str | None = Field(default=None, description="categoria de erro (DESIGN §4.2)")
+    regra: str | None = Field(default=None, description="slug da regra do caderno que este exercício revisa (§13)")
+
+    @model_validator(mode="after")
+    def _bloco_padrao(self):
+        if self.bloco is None:
+            self.bloco = "novo" if self.tipo == EXPLICACAO else "verificacao"
+        return self
 
 
 # ------------------------------------------------------------------ texto
@@ -74,6 +86,8 @@ def _lista_str(v, nome, minimo=1):
 def validar(ex: ExercicioIn) -> None:
     """Levanta ValueError com a mensagem do que está errado. Chamada antes de gravar."""
     d, t = ex.dados, ex.tipo
+    if t != EXPLICACAO and ex.enunciado is None:
+        raise ValueError("falta 'enunciado'")
     if t == "escolha":
         ops = _lista_str(d.get("opcoes"), "opcoes", 2)
         if len(set(ops)) != len(ops):
@@ -134,6 +148,15 @@ def validar(ex: ExercicioIn) -> None:
     elif t == "producao":
         if not isinstance(d.get("minimo", 1), int) or d.get("minimo", 1) < 1:
             raise ValueError("producao: 'minimo' é um inteiro ≥ 1")
+    elif t == EXPLICACAO:
+        # o slug é conferido contra o caderno no criar_licao, que tem o banco
+        md, slug = d.get("md"), d.get("regra")
+        if (md is None) == (slug is None):
+            raise ValueError("explicacao: 'dados' é {'md': '<markdown>'} ou {'regra': '<slug>'}, um dos dois")
+        if md is not None and (not isinstance(md, str) or not md.strip()):
+            raise ValueError("explicacao: 'md' é o texto em markdown, não vazio")
+        if slug is not None and (not isinstance(slug, str) or not slug.strip()):
+            raise ValueError("explicacao: 'regra' é o slug de uma regra do caderno")
 
 
 # ------------------------------------------------------------------ render
@@ -189,7 +212,20 @@ def render(tipo: str, dados: dict, semente: int) -> dict:
         return r
     if tipo == "producao":
         return {"minimo": dados.get("minimo", 1), "dicas": dados.get("dicas") or []}
+    if tipo == EXPLICACAO:      # o {'regra': slug} é resolvido em _render_explicacao, que tem o banco
+        return {"md": dados.get("md") or "", "titulo": None, "regra": None}
     raise ValueError(f"tipo desconhecido: {tipo}")
+
+
+def _render_explicacao(con, dados: dict) -> dict:
+    """O markdown de uma regra é lido na hora de mostrar: o tutor pode melhorar a explicação
+    no caderno depois de criar a lição, e a lição mostra a versão nova."""
+    if not dados.get("regra"):
+        return render(EXPLICACAO, dados, 0)
+    r = con.execute("SELECT titulo, explicacao_md FROM regra WHERE slug = ?", (dados["regra"],)).fetchone()
+    if not r:
+        return {"md": f"*(a regra `{dados['regra']}` não está mais no caderno)*", "titulo": None, "regra": dados["regra"]}
+    return {"md": r["explicacao_md"] or "*(regra sem explicação)*", "titulo": r["titulo"], "regra": dados["regra"]}
 
 
 # ------------------------------------------------------------------ correção
@@ -244,6 +280,9 @@ def corrigir(tipo: str, dados: dict, resp: dict) -> tuple[str, str, dict]:
     if tipo == "producao":
         return "revisar", "", {}
 
+    if tipo == EXPLICACAO:
+        raise ValueError("explicação não tem resposta: o botão Entendi só avança")
+
     raise ValueError(f"tipo desconhecido: {tipo}")
 
 
@@ -270,11 +309,25 @@ def _escrito(tipo: str, resp: dict) -> str:
 
 # ------------------------------------------------------------------ lições (banco)
 
+def _regra_id(con, slug: str, precisa_texto: bool = False) -> int:
+    r = con.execute("SELECT id, explicacao_md FROM regra WHERE slug = ?", (slug,)).fetchone()
+    if not r:
+        raise ValueError(f"a regra '{slug}' não está no caderno (crie com salvar_regra ou importe; "
+                         "regras(vencidas=False) lista as que existem)")
+    if precisa_texto and not (r["explicacao_md"] or "").strip():
+        raise ValueError(f"a regra '{slug}' não tem explicacao_md (grave com salvar_regra ou use {{'md': ...}})")
+    return r["id"]
+
+
 def criar_licao(con: sqlite3.Connection, titulo: str, exercicios: list[ExercicioIn], data: str | None = None) -> int:
     """Tudo ou nada: um exercício inválido recusa a lição inteira, com o índice dele na mensagem."""
+    ids_regra: list[int | None] = []
     for i, ex in enumerate(exercicios):
         try:
             validar(ex)
+            if ex.tipo == EXPLICACAO and ex.dados.get("regra"):
+                _regra_id(con, ex.dados["regra"], precisa_texto=True)
+            ids_regra.append(_regra_id(con, ex.regra) if ex.regra else None)
         except ValueError as e:
             raise ValueError(f"exercício {i + 1} ({ex.tipo}): {e}") from None
     todos_dados = []
@@ -290,11 +343,12 @@ def criar_licao(con: sqlite3.Connection, titulo: str, exercicios: list[Exercicio
     data = data or dominio.dia_de_estudo().isoformat()
     cur = con.execute("INSERT INTO licao (data, titulo) VALUES (?, ?)", (data, titulo))
     lid = cur.lastrowid
-    con.executemany("""INSERT INTO exercicio (licao_id, ordem, bloco, tipo, categoria, enunciado, dados, explicacao)
-                       VALUES (?, ?, ?, ?, ?, ?, ?, ?)""",
-                    [(lid, i + 1, ex.bloco, ex.tipo, ex.categoria, ex.enunciado,
-                      json.dumps(d, ensure_ascii=False), ex.explicacao)
-                     for i, (ex, d) in enumerate(zip(exercicios, todos_dados))])
+    con.executemany("""INSERT INTO exercicio (licao_id, ordem, bloco, tipo, categoria, enunciado, dados, explicacao,
+                                             regra_id)
+                       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)""",
+                    [(lid, i + 1, ex.bloco, ex.tipo, ex.categoria, ex.enunciado or "",
+                      json.dumps(d, ensure_ascii=False), ex.explicacao, rid)
+                     for i, (ex, d, rid) in enumerate(zip(exercicios, todos_dados, ids_regra))])
     con.commit()
     return lid
 
@@ -317,10 +371,11 @@ def licao_renderizada(con, licao_id: int) -> dict | None:
     if not l:
         return None
     exs = []
-    for ex in con.execute("SELECT * FROM exercicio WHERE licao_id = ? ORDER BY ordem", (licao_id,)):
+    for ex in con.execute("SELECT * FROM exercicio WHERE licao_id = ? ORDER BY ordem", (licao_id,)).fetchall():
+        dados = json.loads(ex["dados"])
+        rend = _render_explicacao(con, dados) if ex["tipo"] == EXPLICACAO else render(ex["tipo"], dados, semente=ex["id"])
         exs.append({"id": ex["id"], "ordem": ex["ordem"], "bloco": ex["bloco"], "tipo": ex["tipo"],
-                    "categoria": ex["categoria"], "enunciado": ex["enunciado"],
-                    "render": render(ex["tipo"], json.loads(ex["dados"]), semente=ex["id"]),
+                    "categoria": ex["categoria"], "enunciado": ex["enunciado"], "render": rend,
                     "resultado": _resultado(ex, _primeira_resposta(con, ex["id"]))})
     return {"id": l["id"], "data": l["data"], "titulo": l["titulo"], "status": l["status"], "exercicios": exs}
 
@@ -337,13 +392,15 @@ def responder(con, exercicio_id: int, resp: dict, tempo_ms: int | None = None) -
     if not ex:
         raise KeyError(exercicio_id)
     dados = json.loads(ex["dados"])
-    veredito, gabarito, detalhe = corrigir(ex["tipo"], dados, resp)
+    veredito, gabarito, detalhe = corrigir(ex["tipo"], dados, resp)     # ValueError no explicacao
     primeira = _primeira_resposta(con, exercicio_id) is None
     con.execute("INSERT INTO resposta (exercicio_id, resposta, veredito, detalhe, tempo_ms) VALUES (?, ?, ?, ?, ?)",
                 (exercicio_id, json.dumps(resp, ensure_ascii=False), veredito,
                  json.dumps(detalhe, ensure_ascii=False), tempo_ms))
     if primeira and veredito == "errado":
         _gravar_erro(con, ex, _escrito(ex["tipo"], resp), gabarito)
+    if primeira and ex["regra_id"] and veredito in ("certo", "errado"):    # o 'revisar' agenda quando o tutor fecha
+        regras.agendar(con, ex["regra_id"], veredito, dominio.dia_de_estudo())
     _fechar_se_completa(con, ex["licao_id"])
     con.commit()
     return {"veredito": veredito, "gabarito": gabarito, "explicacao": ex["explicacao"], "detalhe": detalhe,
@@ -357,7 +414,8 @@ def _gravar_erro(con, ex, escrito: str, correto: str) -> None:
 
 
 def _fechar_se_completa(con, licao_id: int) -> None:
-    (faltam,) = con.execute("""SELECT COUNT(*) FROM exercicio e WHERE e.licao_id = ?
+    # o explicacao não tem resposta: se contasse, a lição nunca concluiria
+    (faltam,) = con.execute("""SELECT COUNT(*) FROM exercicio e WHERE e.licao_id = ? AND e.tipo != 'explicacao'
                                AND NOT EXISTS (SELECT 1 FROM resposta r WHERE r.exercicio_id = e.id)""",
                             (licao_id,)).fetchone()
     if not faltam:
@@ -372,11 +430,15 @@ def corrigir_revisao(con, exercicio_id: int, veredito: str, correcao: str) -> bo
     r = _primeira_resposta(con, exercicio_id)
     if not r:
         return False
+    ex = con.execute("""SELECT e.*, l.data AS data_licao FROM exercicio e JOIN licao l ON l.id = e.licao_id
+                        WHERE e.id = ?""", (exercicio_id,)).fetchone()
     con.execute("UPDATE resposta SET veredito = ?, correcao = ? WHERE id = ?", (veredito, correcao, r["id"]))
     if veredito == "errado" and r["veredito"] != "errado":
-        ex = con.execute("""SELECT e.*, l.data AS data_licao FROM exercicio e JOIN licao l ON l.id = e.licao_id
-                            WHERE e.id = ?""", (exercicio_id,)).fetchone()
         _gravar_erro(con, ex, _escrito(ex["tipo"], json.loads(r["resposta"])), correcao[:300])
+    # Só o primeiro fechamento move a agenda: um certo/errado automático já agendou na resposta,
+    # e o tutor reescrever a correção não pode contar a mesma revisão duas vezes.
+    if r["veredito"] == "revisar" and ex["regra_id"]:
+        regras.agendar(con, ex["regra_id"], veredito, dominio.dia_de_estudo())
     con.commit()
     return True
 
@@ -386,7 +448,7 @@ def resumo_licoes(con, ultimas: int = 20) -> list[dict]:
     for l in con.execute("SELECT * FROM licao ORDER BY id DESC LIMIT ?", (ultimas,)):
         cont = {"certo": 0, "errado": 0, "revisar": 0}
         total = pend = 0
-        for ex in con.execute("SELECT id FROM exercicio WHERE licao_id = ?", (l["id"],)):
+        for ex in con.execute("SELECT id FROM exercicio WHERE licao_id = ? AND tipo != 'explicacao'", (l["id"],)):
             total += 1
             r = _primeira_resposta(con, ex["id"])
             if r:
@@ -420,7 +482,7 @@ def planejar_tipos(con, n: int = len(TIPOS), semente: int | None = None) -> dict
     outros = [t for t in TIPOS if t != "producao"]
     # Teto de 2 por tipo enquanto couber. Desde 21/10/2026 a lição tem 20 exercícios (pedido dele:
     # "mais questões sobre o conteúdo novo de cada dia"), e com 8 tipos o teto de 2 parava em 17:
-    # acima disso ele sobe só o necessário para fechar a conta (3 com 20).
+    # acima disso ele sobe só o necessário para fechar a conta (3 com 20; e com 25, desde 23/10).
     teto = max(2, -(-(n - 1) // len(outros)))
     escolha: list[str] = []
     if n - 1 >= len(outros):            # cabe todo mundo: cada tipo uma vez, o resto sorteado

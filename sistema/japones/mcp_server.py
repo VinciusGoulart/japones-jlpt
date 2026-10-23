@@ -19,6 +19,7 @@ from pydantic import BaseModel, Field
 from mcp.server import MCPServer
 
 from japones import config, db, dominio
+from japones import regras as caderno
 from japones.fontes import curriculo, diario
 
 mcp = MCPServer(
@@ -28,6 +29,8 @@ mcp = MCPServer(
         "date, trello.py status, anki_status.py, a leitura do estado.json e do curriculo.md. "
         "Depois de ensinar, monte os exercícios: planejar_tipos() → criar_licao() → ele faz no painel → "
         "resultado_licao() → corrigir_exercicio() nos 'revisar'. "
+        "Regras de gramática vencidas (hoje().regras_vencidas, regras()) entram na lição com o campo `regra`; "
+        "regra ensinada hoje vai para o caderno com salvar_regra(). "
         "No Passo 4, registre com registrar_aula, registrar_trajeto e registrar_erros, e feche com backup(). "
         "Antes de ensinar uma palavra ou leitura de que não tenha certeza, confira com dicionario()."
     ),
@@ -91,8 +94,9 @@ def _resumo_trello(hoje: date) -> dict:
 @mcp.tool()
 def hoje() -> dict:
     """O Passo 0 inteiro: dia de estudo (regra das 04:00), dia do plano, streak, última aula e o que ela
-    deixou para hoje, plano do dia, lembrete de abertura, padrões abertos, Trello (pendências da semana,
-    checklists, avisos do JLPT) e Anki (fila, retenção, cartões em loop, bandeira)."""
+    deixou para hoje, plano do dia, lembrete de abertura, padrões abertos, regras de gramática vencidas
+    (total e até 5 slugs), Trello (pendências da semana, checklists, avisos do JLPT) e Anki (fila, retenção,
+    cartões em loop, bandeira)."""
     agora = datetime.now()
     d = dominio.dia_de_estudo(agora)
     con = _con()
@@ -106,6 +110,7 @@ def hoje() -> dict:
                                     "WHERE status = 'aberto' ORDER BY aberto_em DESC"))
     ja_registrada = con.execute("SELECT tipo FROM aula WHERE data = ? AND origem IN ('mcp', 'migracao')",
                                 (d.isoformat(),)).fetchone()
+    regras_vencidas = caderno.resumo_vencidas(con, d)
     con.close()
 
     dias_sem = (d - date.fromisoformat(ult["data"])).days if ult else None
@@ -132,6 +137,7 @@ def hoje() -> dict:
         "proximos": [f"{p['data']} ({p['dia_semana']}): {p['conteudo']}" for p in curriculo.proximos(d + timedelta(days=1), 3)],
         "lembrete_abertura": ({"texto": nota["valor"], "de": nota["atualizado_em"]} if nota else None),
         "padroes_abertos": padroes,
+        "regras_vencidas": regras_vencidas,
         "avisos": avisos,
         "trello": _seguro(_resumo_trello, d),
         "anki": _seguro(_resumo_anki),
@@ -390,10 +396,11 @@ PAINEL = "http://127.0.0.1:8787"
 
 
 @mcp.tool()
-def planejar_tipos(n: int = 20, semente: int | None = None) -> dict:
+def planejar_tipos(n: int = 25, semente: int | None = None) -> dict:
     """Sorteia a sequência de tipos da lição: variada, sem deixar tipo de fora (com n ≥ 9 entra cada tipo uma
-    vez), com peso para o que ele erra mais e para o que não aparece há duas lições. 'producao' entra
-    sempre, no fim. Padrão 20 (pedido dele em 21/10/2026), com a maior parte no conteúdo novo."""
+    vez), no máximo 3 do mesmo tipo, com peso para o que ele erra mais e para o que não aparece há duas
+    lições. 'producao' entra sempre, no fim. Padrão 25 (pedido dele em 23/10/2026), com a maior parte no
+    conteúdo novo. O 'explicacao' não é sorteado: acrescente-o você, antes dos exercícios do conteúdo novo."""
     from japones import exercicios
     con = _con()
     r = exercicios.planejar_tipos(con, n, semente)
@@ -403,12 +410,15 @@ def planejar_tipos(n: int = 20, semente: int | None = None) -> dict:
 
 @mcp.tool()
 def criar_licao(titulo: str, exercicios: list[dict], data: str | None = None) -> dict:
-    """Cria a lição do dia no painel. Cada exercício: {tipo, bloco, enunciado, dados, explicacao, categoria}
-    no formato do DESIGN §9.2 (o `dados` leva o gabarito; o navegador nunca o recebe). Para texto japonês
-    aceito em mais de uma grafia, liste todas nas `aceitas` (kanji e kana). `ouvir` grava o mp3 aqui (precisa
-    de rede; ~2 s por frase): ditado {texto, aceitas} ou compreensão {texto, opcoes, correta}, com `fala` em
-    kana se algum kanji tiver leitura ambígua. Tudo ou nada: um exercício inválido recusa a lição com a
-    mensagem do problema."""
+    """Cria a lição do dia no painel. Cada exercício: {tipo, bloco, enunciado, dados, explicacao, categoria,
+    regra} no formato do DESIGN §9.2 (o `dados` leva o gabarito; o navegador nunca o recebe). Para texto
+    japonês aceito em mais de uma grafia, liste todas nas `aceitas` (kanji e kana). `ouvir` grava o mp3 aqui
+    (precisa de rede; ~2 s por frase): ditado {texto, aceitas} ou compreensão {texto, opcoes, correta}, com
+    `fala` em kana se algum kanji tiver leitura ambígua. bloco: aquecimento | novo | verificacao | producao |
+    revisao. `regra` (opcional) = slug do caderno que o exercício revisa: a 1ª resposta move a agenda dela.
+    tipo 'explicacao' = o texto do conteúdo novo antes dos exercícios, sem resposta (botão Entendi):
+    dados {"md": "..."} ou {"regra": "<slug>"} (usa a explicacao_md do caderno); bloco padrão 'novo';
+    enunciado opcional (vira o título). Tudo ou nada: um exercício inválido recusa a lição com a mensagem."""
     from japones import exercicios as motor
     try:
         itens = [motor.ExercicioIn(**e) for e in exercicios]
@@ -433,6 +443,8 @@ def resultado_licao(id: int | None = None) -> dict:
         return {"erro": "nenhuma lição"}
     itens, contagem, pendentes = [], {"certo": 0, "errado": 0, "revisar": 0, "sem_resposta": 0}, []
     for ex in l["exercicios"]:
+        if ex["tipo"] == "explicacao":      # não é exercício: sem resposta, fora da contagem
+            continue
         r = ex["resultado"]
         contagem[r["veredito"] if r else "sem_resposta"] += 1
         item = {"id": ex["id"], "tipo": ex["tipo"], "enunciado": ex["enunciado"][:120]}
@@ -460,6 +472,43 @@ def corrigir_exercicio(exercicio_id: int, veredito: str, correcao: str) -> dict:
     finally:
         con.close()
     return {"ok": ok}
+
+
+# ------------------------------------------------------------------ caderno de regras (DESIGN §13)
+
+@mcp.tool()
+def regras(vencidas: bool = True, limite: int = 10) -> list[dict]:
+    """Regras de gramática do caderno, pela próxima revisão. vencidas=True: só as que vencem hoje ou já
+    venceram (as que a lição deve revisar, com o campo `regra` nos exercícios); False: todas. Sem o texto
+    da regra — para ele, regra(slug)."""
+    con = _con()
+    r = caderno.listar(con, dominio.dia_de_estudo(), vencidas, limite)
+    con.close()
+    return r
+
+
+@mcp.tool()
+def regra(slug: str) -> dict:
+    """Uma regra do caderno inteira, com explicacao_md e a agenda (intervalo, próxima, acertos, erros)."""
+    con = _con()
+    r = caderno.obter(con, slug)
+    con.close()
+    return r or {"erro": f"a regra '{slug}' não está no caderno"}
+
+
+@mcp.tool()
+def salvar_regra(slug: str, titulo: str, categoria: str | None = None, explicacao_md: str | None = None,
+                 ensinada_em: str | None = None) -> dict:
+    """Cria ou atualiza uma regra do caderno pelo slug (ex. 'te-mo-ii'). Regra nova: primeira revisão amanhã.
+    Regra existente: a agenda não é zerada e campo omitido não apaga o que já está gravado.
+    categoria = a de erro associada (ex. 'gramatica:te-mo-ii'); ensinada_em = AAAA-MM-DD."""
+    con = _con()
+    try:
+        return caderno.salvar(con, slug, titulo, categoria, explicacao_md, ensinada_em)
+    except ValueError as e:
+        return {"erro": str(e)}
+    finally:
+        con.close()
 
 
 @mcp.tool()

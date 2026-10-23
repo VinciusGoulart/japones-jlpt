@@ -53,6 +53,8 @@ sistema/
       curriculo.py     tabelas de plano/curriculo.md
       diario.py        entradas de progresso/diario.md
     schema2.sql        lições e exercícios (Fase 2) · schema3.sql: o tipo ouvir (Fase 3)
+    schema4.sql        caderno de regras e o tipo explicacao (§13)
+    regras.py          caderno de regras: agenda de revisão espaçada e importador (§13)
     exercicios.py      motor de exercícios: validação, render, correção, sorteio (§9)
     audio.py           mp3 do exercício ouvir, pelo edge-tts (§12.3)
     rede.py            DNS só IPv4 para trello.com e bing.com (o AAAA deste PC leva 5 s)
@@ -90,6 +92,7 @@ Ver o arquivo; resumo:
 | `padrao` | um padrão em vigília (o "topo de `pontos_fracos`") | `id` |
 | `registro` | o log livre herdado de `pontos_fracos` (busca por texto) | `id` |
 | `nota` | chave/valor: `lembrete_abertura` e afins | `chave` |
+| `regra` | uma regra de gramática ensinada, com a agenda de revisão (§13) | `id`; `slug` único |
 
 Datas são sempre o **dia de estudo** (`AAAA-MM-DD`, regra das 04:00, §5).
 
@@ -114,7 +117,7 @@ Toda ferramenta devolve JSON. **Nenhuma fonte externa derruba uma ferramenta:** 
 
 | Ferramenta | O que devolve / faz |
 |---|---|
-| `hoje()` | o Passo 0 inteiro numa chamada: data e hora, dia de estudo, dia do plano, streak e recorde, última aula, plano do dia, `lembrete_abertura`, padrões abertos, pendências do Trello (vencidas e da semana), checklists da semana, resumo do Anki |
+| `hoje()` | o Passo 0 inteiro numa chamada: data e hora, dia de estudo, dia do plano, streak e recorde, última aula, plano do dia, `lembrete_abertura`, padrões abertos, `regras_vencidas` (`{"total": N, "proximas": [até 5 slugs]}`, §13), pendências do Trello (vencidas e da semana), checklists da semana, resumo do Anki |
 | `aulas(ultimas, busca, desde)` | lista resumida (sem o texto) |
 | `aula(data)` | a(s) entrada(s) completa(s) do dia |
 | `erros(categoria, dias)` | erros recentes + contagem por categoria |
@@ -129,6 +132,7 @@ Toda ferramenta devolve JSON. **Nenhuma fonte externa derruba uma ferramenta:** 
 | `abrir_padrao(...)` / `resolver_padrao(id, nota)` | ciclo de vida dos padrões |
 | `definir_nota(chave, valor)` | `lembrete_abertura` e afins |
 | `backup()` | copia `estudo.db` (API de backup do SQLite), `diario.md` e `estado.json` para `~/.local/share/japones/backup-progresso/` |
+| `regras(vencidas, limite)` / `regra(slug)` / `salvar_regra(...)` | o caderno de regras de gramática (§13.5) |
 
 ## 7. Fases e critério de pronto
 
@@ -149,6 +153,7 @@ Toda ferramenta devolve JSON. **Nenhuma fonte externa derruba uma ferramenta:** 
 - **17/10** — `tem_cartao` (§12.4): a grafia casa com qualquer campo de nota; a **leitura** só com a frente de nota escrita em kana. Casar a leitura com qualquer campo marcava お酢 e 雄 como "tem cartão" porque o Kaishi tem おす como campo da nota de 押す (achado no teste da tela Kotoba).
 - **17/10** — Registro antigo: "ANIMACIDADE 3/5 NA ESTREIA (31/08)" estava datado de 03/05, porque a migração lia o placar como data. Agora vale a primeira data que cai dentro do plano (`migracao._data_do_registro`); o registro foi reimportado.
 - **17/10** — Fase 3 entregue: telas Erros, Anki e Kotoba, o tipo `ouvir` (testado numa CÓPIA do banco, porta 8788, com mp3 de verdade) e o esquema 3. Os gráficos usam 5 famílias de erro em vez dos grupos do §4.2 (15 cores numa pilha não se leem); a tabela de categorias mantém o detalhe.
+- **23/10** — Caderno de regras (§13), pedido dele. Diagnóstico: ele esquece regras antigas (てもいいですか, まだ) e, ao aplicar a regra nova, esquece a outra na mesma frase. O vocabulário tem Anki; a gramática não tinha agenda: cada regra era ensinada uma vez e só voltava se desse erro. Decisões dele: (1) caderno de regras no painel; (2) revisão espaçada de regras no painel **e** num deck de gramática no Anki; (3) uma etapa de **explicação** do conteúdo novo antes dos exercícios (tipo `explicacao`, bloco `novo`); (4) lição de **25** exercícios. O esquema 4 refaz a tabela `exercicio` (CHECK novo e `regra_id`), pela mesma receita do esquema 3.
 - **17/10** — Fase 2 entregue: motor de exercícios, 4 ferramentas MCP, API como serviço `systemd --user` (`japones-painel`) e o painel. A primeira lição (revisão do dia 68, os 8 tipos) foi respondida numa CÓPIA do banco para testar o fluxo inteiro; o banco real ficou intacto.
 
 ## 9. Exercícios [CONTRATO]
@@ -161,10 +166,11 @@ Campos comuns de um exercício:
 
 | Campo | Valor |
 |---|---|
-| `tipo` | `escolha` · `achar_erro` · `ligar` · `ordenar` · `completar` · `digitar` · `conjugar` · `ouvir` · `producao` |
-| `bloco` | `aquecimento` · `verificacao` · `producao` · `revisao` |
+| `tipo` | `escolha` · `achar_erro` · `ligar` · `ordenar` · `completar` · `digitar` · `conjugar` · `ouvir` · `producao` · `explicacao` (não é exercício: ver abaixo) |
+| `bloco` | `aquecimento` · `novo` (rótulo "Conteúdo novo", desde 23/10) · `verificacao` · `producao` · `revisao`; padrão `verificacao` (`novo` no `explicacao`) |
 | `categoria` | categoria de erro (§4.2) que um erro neste exercício alimenta; opcional |
-| `enunciado` | a instrução, em português (pode conter japonês) |
+| `regra` | slug de uma regra do caderno (§13) que este exercício revisa; opcional. Grava `regra_id`; slug desconhecido recusa a lição. A primeira resposta certa/errada move a agenda da regra (§13.2) |
+| `enunciado` | a instrução, em português (pode conter japonês); opcional só no `explicacao` |
 | `explicacao` | a regra em uma ou duas linhas, mostrada depois da resposta (pedido dele em 16/10: toda correção reexplica a regra) |
 | `dados` | por tipo, §9.2 |
 
@@ -181,12 +187,15 @@ Campos comuns de um exercício:
 | `conjugar` | `{"verbo": "撮る", "leitura": "とる", "forma": "forma て", "aceitas": ["撮って","とって"]}` | `{"verbo", "leitura", "forma"}` | `{"texto": "..."}` | automática (conjunto fechado: as `aceitas` trazem kanji **e** kana) |
 | `ouvir` | ditado: `{"texto": "すしを食べたことがあります", "aceitas": [..]}`; compreensão: `{"texto": "...", "opcoes": [..], "correta": ".."}`. Opcionais: `fala` (o que a voz lê, padrão = `texto`; kana para kanji de leitura ambígua), `voz` (`F` padrão, ou `M`). O servidor acrescenta `audio` (§12.3) | `{"modo": "ditado" \| "escolha", "audio": "/api/audio/<nome>.mp3", "opcoes"?: [..]}` (nunca o texto) | ditado `{"texto": "...", "toques": 3}`; compreensão `{"opcao": "...", "toques": 3}` (`toques` = quantas vezes tocou, opcional, informativo) | ditado: como `digitar` (fora das `aceitas` → `revisar` com diff); compreensão: automática |
 | `producao` | `{"minimo": 3, "dicas": [..]}` | igual | `{"frases": [..]}` | sempre `revisar`: o tutor corrige pelo MCP |
+| `explicacao` | `{"md": "<markdown>"}` **ou** `{"regra": "<slug>"}` (o markdown vem de `regra.explicacao_md` na renderização; slug inexistente ou regra sem explicação recusa a lição) | `{"md": "...", "titulo": str \| null, "regra": slug \| null}` | **nenhum**: o painel mostra o texto e um botão "Entendi" que só avança; um POST de resposta devolve 400 | nenhuma |
 
 **Normalização** antes de comparar texto: NFKC, sem espaços, sem `。、.,!?！？`. Katakana e hiragana **não** se equivalem (trocar é erro de `katakana`/`kana:troca`).
 
 **Veredito:** `certo` · `errado` · `revisar`. Só a **primeira** resposta conta para placar e para a tabela `erro`; dá para responder de novo para praticar.
 
-**Erro automático:** a primeira resposta `errado` de um exercício grava uma linha em `erro` (`categoria` do exercício ou `outro`; `escrito` = a resposta; `correto` = o gabarito; `porque` = a explicação; bloco `aquecimento`→`abertura`, `revisao`→`outro`). Um `revisar` corrigido como `errado` pelo tutor também grava.
+**Erro automático:** a primeira resposta `errado` de um exercício grava uma linha em `erro` (`categoria` do exercício ou `outro`; `escrito` = a resposta; `correto` = o gabarito; `porque` = a explicação; bloco `aquecimento`→`abertura`, `novo`→`verificacao`, `revisao`→`outro`). Um `revisar` corrigido como `errado` pelo tutor também grava.
+
+**`explicacao` não é exercício** (23/10): fica fora do placar e das contagens (`resumo_licoes`, `resultado_licao`, acerto por tipo), da tabela `erro`, dos pesos e do sorteio do `planejar_tipos`, e do critério de lição concluída.
 
 ### 9.3 DDL (esquema 2)
 
@@ -202,20 +211,22 @@ CREATE TABLE resposta (id INTEGER PRIMARY KEY, exercicio_id INTEGER NOT NULL REF
   detalhe TEXT, correcao TEXT, tempo_ms INTEGER, criado_em TEXT NOT NULL DEFAULT (datetime('now','localtime')));
 ```
 
-A lição fica `concluida` quando todo exercício tem resposta.
+**Esquema 4** (23/10): a tabela `exercicio` é refeita (SQLite não altera CHECK) com `bloco` aceitando `novo`, `tipo` aceitando `explicacao` e a coluna `regra_id INTEGER REFERENCES regra(id) ON DELETE SET NULL`; e nasce a tabela `regra` (§13.1).
+
+A lição fica `concluida` quando todo exercício **que não é `explicacao`** tem resposta.
 
 ### 9.4 Sorteio dos tipos (`planejar_tipos`)
 
-"Sempre variando, mas utilizando todos." Peso de cada tipo = 1 + **2** se não apareceu nas últimas 2 lições + **2 × taxa de erro** do tipo nos últimos 30 dias. Com `n` ≥ número de tipos (o padrão da biblioteca, 9; o da ferramenta MCP, **20** desde 21/10/2026, pedido dele: "mais questões sobre o conteúdo novo de cada dia, um total de 20 questões por dia está ok"), cada tipo entra uma vez e o peso decide as vagas que sobram; com menos, o peso decide quem entra. No máximo 2 exercícios do mesmo tipo por lição enquanto couber; acima de 17 o teto sobe só o necessário (3 com 20); `producao` entra sempre, no fim (regra 4 do CLAUDE.md: produção ativa todo dia). O tutor recebe a sequência e escreve o conteúdo de cada exercício a partir da necessidade do dia (padrões abertos, erros recentes, conteúdo novo).
+"Sempre variando, mas utilizando todos." Peso de cada tipo = 1 + **2** se não apareceu nas últimas 2 lições + **2 × taxa de erro** do tipo nos últimos 30 dias. Com `n` ≥ número de tipos (o padrão da biblioteca, 9; o da ferramenta MCP, **25** desde 23/10/2026 — antes 20, desde 21/10, pedido dele: "mais questões sobre o conteúdo novo de cada dia"), cada tipo entra uma vez e o peso decide as vagas que sobram; com menos, o peso decide quem entra. O `explicacao` não entra no sorteio: o tutor o acrescenta à mão, antes dos exercícios do conteúdo novo. No máximo 2 exercícios do mesmo tipo por lição enquanto couber; acima de 17 o teto sobe só o necessário (3 com 20 e com 25); `producao` entra sempre, no fim (regra 4 do CLAUDE.md: produção ativa todo dia). O tutor recebe a sequência e escreve o conteúdo de cada exercício a partir da necessidade do dia (padrões abertos, erros recentes, conteúdo novo).
 
 ### 9.5 Ferramentas MCP novas
 
 | Ferramenta | Faz |
 |---|---|
 | `planejar_tipos(n, semente)` | a sequência sorteada (§9.4) e o porquê de cada peso |
-| `criar_licao(titulo, exercicios, data)` | valida cada exercício pelo tipo, grava, devolve `id` e o link do painel |
-| `resultado_licao(id)` | resumo da lição (padrão: a mais recente): veredito, resposta e gabarito de cada exercício, e os `revisar` pendentes |
-| `corrigir_exercicio(exercicio_id, veredito, correcao)` | fecha um `revisar` (`certo`/`errado`) com a correção, que aparece no painel |
+| `criar_licao(titulo, exercicios, data)` | valida cada exercício pelo tipo (e o `regra` de cada um contra o caderno), grava, devolve `id` e o link do painel |
+| `resultado_licao(id)` | resumo da lição (padrão: a mais recente): veredito, resposta e gabarito de cada exercício, e os `revisar` pendentes; ignora o `explicacao` |
+| `corrigir_exercicio(exercicio_id, veredito, correcao)` | fecha um `revisar` (`certo`/`errado`) com a correção, que aparece no painel; se o exercício tem `regra`, move a agenda dela (só no primeiro fechamento) |
 
 ## 10. API HTTP (`japones/api.py`, `127.0.0.1:8787`) [CONTRATO]
 
@@ -230,7 +241,8 @@ Só escuta em `127.0.0.1`. JSON em tudo; datas `AAAA-MM-DD`.
 | `GET /api/licoes?ultimas=20` | `[{id, data, titulo, status, total, certos, errados, revisar, pendentes}]` |
 | `GET /api/licoes/atual` | a lição aberta mais recente (ou a mais recente) renderizada; 404 se não houver |
 | `GET /api/licoes/{id}` | `{id, data, titulo, status, exercicios: [{id, ordem, bloco, tipo, categoria, enunciado, render, resultado}]}`; `resultado` é `null` ou `{veredito, resposta, gabarito, explicacao, detalhe, correcao}` da primeira resposta |
-| `POST /api/exercicios/{id}/resposta` | corpo `{"resposta": {...§9.2}, "tempo_ms": 1234}` → `{veredito, gabarito, explicacao, detalhe}` |
+| `POST /api/exercicios/{id}/resposta` | corpo `{"resposta": {...§9.2}, "tempo_ms": 1234}` → `{veredito, gabarito, explicacao, detalhe}`; 400 num `explicacao` (não tem resposta) |
+| `GET /api/regras` | o caderno (§13.6): `[{slug, titulo, categoria, ensinada_em, explicacao_md, intervalo, proxima, dias, acertos, erros, ultima_revisao, ultima_falha, status}]`, por `proxima` |
 | `GET /api/erros?dias=30&categoria=` | o mesmo de `erros()` do MCP |
 | `GET /api/erros/painel?dias=90` | §12.1 |
 | `GET /api/registro?busca=&limite=20` | o mesmo de `registro_antigo()` do MCP |
@@ -253,7 +265,8 @@ React + Vite + TypeScript, Tailwind + shadcn/ui, TanStack Query, React Router, F
 | Rota | Tela |
 |---|---|
 | `/` | **Hoje**: dia do plano, streak e recorde; plano de hoje e o que a última aula deixou; lembrete de abertura; botão **Aula de hoje** (se houver lição); pendências do Trello com link (vencidas em vermelho); checklists da semana; Anki (hoje/ontem, fila, retenção, em loop); padrões abertos |
-| `/aula` e `/aula/:id` | **Aula**: um exercício por vez, barra de progresso, correção na hora com a explicação, resumo no fim |
+| `/aula` e `/aula/:id` | **Aula**: um exercício por vez, barra de progresso, correção na hora com a explicação, resumo no fim. O item `explicacao` mostra o rótulo do bloco ("Conteúdo novo"), o markdown (o mesmo `Markdown` das correções: react-markdown com GFM, sem HTML cru) e um botão **Entendi** que só avança; a barra de progresso conta só os exercícios |
+| `/regras` | **Regras** (o caderno, 23/10): as regras em três grupos — **Vencem hoje**, **Frágeis** (mais erros que acertos) e **Em dia** —, cada uma expansível com a explicação e os números (acertos, erros, próxima revisão, intervalo, ensinada em) |
 | `/calendario` | mês: cor do dia pelo tipo da aula (completa/parcial/sem mesa), plano, prazos do Trello, lições, ponto de áudio; clique abre o detalhe do dia |
 | `/aulas` e `/aulas/:data` | histórico com busca; a entrada do diário renderizada |
 | `/erros` | **Erros** (Fase 3): erros por semana empilhados por grupo de categoria; tabela de categorias (clicar filtra a lista); a lista (escrito → correto, porquê); padrões abertos e resolvidos; acerto por tipo de exercício; busca no registro antigo |
@@ -321,3 +334,49 @@ Pedido dele em 17/10, depois da Fase 2 ("prossiga para a fase"). O que era ideia
 - `tem_cartao`: a palavra (ou a leitura, na busca) aparece como um **campo inteiro** de alguma nota do Anki, sem HTML. É uma pista, não uma verdade: o cartão de 食べる pode estar como たべます. `null` = o Anki não abriu.
 - `sem_cartao`: as palavras abertas (`tipo = entry`) sem cartão, mais consultadas primeiro: as candidatas do Passo 4 da `/estudo`. O MCP `consultas_kotoba` devolve a mesma lista no campo `sem_cartao`.
 - O link `kotoba://` **não** aparece no painel: no Linux o atalho do Kotoba não registra o esquema, e o link não abriria nada. O painel mostra o verbete inteiro.
+
+## 13. Caderno de regras: revisão espaçada da gramática [CONTRATO]
+
+Pedido dele em 23/10/2026 (ver §8). O vocabulário tem o Anki; a gramática passa a ter agenda própria, no painel e num deck de gramática no Anki.
+
+### 13.1 Tabela `regra` (esquema 4)
+
+```sql
+CREATE TABLE regra (id INTEGER PRIMARY KEY, slug TEXT UNIQUE NOT NULL, titulo TEXT NOT NULL,
+  categoria TEXT,                -- a categoria de erro associada (§4.2), ex. 'gramatica:te-mo-ii'
+  ensinada_em TEXT,              -- AAAA-MM-DD
+  explicacao_md TEXT,
+  intervalo REAL NOT NULL DEFAULT 0, proxima TEXT,        -- a agenda (§13.2)
+  acertos INTEGER NOT NULL DEFAULT 0, erros INTEGER NOT NULL DEFAULT 0,
+  ultima_revisao TEXT, ultima_falha TEXT,
+  criada_em TEXT DEFAULT (datetime('now','localtime')));
+```
+
+### 13.2 Agenda (`regras.agendar(con, regra_id, veredito, dia)`)
+
+Repetição espaçada simples, por regra. `dia` = `dominio.dia_de_estudo()` (regra das 04:00). Chamada quando um exercício com `regra_id` recebe a **primeira** resposta com veredito automático `certo`/`errado`, e quando um `revisar` dele é fechado pelo tutor (`corrigir_exercicio`) como `certo`/`errado`.
+
+- `errado` → `intervalo = 1`, `proxima = dia + 1`, `erros += 1`, `ultima_falha = ultima_revisao = dia`.
+- `certo` → `acertos += 1`. Se `ultima_falha == dia` ou `ultima_revisao == dia`, o intervalo **não cresce** (um erro no dia segura a regra para amanhã; vários acertos no mesmo dia contam uma vez só). Senão `intervalo = 2` se `intervalo < 2`, senão `min(60, round(intervalo × 2,5))`. `proxima = dia + intervalo`, `ultima_revisao = dia`.
+
+Sequência resultante, só com acertos em dias diferentes: 2, 5, 12, 30, 60 dias. **Vencida** = `proxima <= dia de estudo`.
+
+### 13.3 Importador
+
+`python -m japones.regras importar <arquivo.json> [--por-dia 5]` lê uma lista `[{"slug", "titulo", "categoria", "ensinada_em", "explicacao_md"}]` (só `slug` e `titulo` são obrigatórios; `{"regras": [...]}` também vale; campos a mais são ignorados) e faz upsert pelo `slug`. Tudo ou nada: um item inválido não grava nenhum. Campo ausente ou `null` não apaga o que já existe; a agenda de uma regra existente nunca é zerada. As regras sem agenda (`proxima` nula) recebem a primeira revisão espalhada: **5 por dia** a partir do dia de estudo atual (as 5 primeiras vencem hoje), na ordem de `ensinada_em` (as mais antigas primeiro; sem data, no fim). O conteúdo é do tutor (`plano/regras.json`).
+
+### 13.4 Deck "Japonês::Gramática" no Anki
+
+`tools/gerar_gramatica_apkg.py` espelha o `gerar_escrita_apkg.py`: lê `progresso/gramatica.tsv` (sentido em português | resposta em kana | nota | tags), gera `anki/gramatica.apkg` com cartão de digitar (`{{type:Resposta}}`, o Anki mostra o diff), modelo e deck com ids próprios e congelados, e importa pelo AnkiConnect (Anki fechado: só gera o arquivo). TSV sem linhas: não gera nem importa nada.
+
+### 13.5 Ferramentas MCP (respostas enxutas)
+
+| Ferramenta | Faz |
+|---|---|
+| `regras(vencidas=True, limite=10)` | `[{slug, titulo, ensinada_em, proxima, intervalo, acertos, erros}]` por `proxima`; `vencidas=True` = só `proxima <= dia de estudo` |
+| `regra(slug)` | o registro completo, com `explicacao_md` |
+| `salvar_regra(slug, titulo, categoria=None, explicacao_md=None, ensinada_em=None)` | upsert pelo `slug`; não zera a agenda de regra existente nem apaga campo passado como `null`; regra nova nasce com `intervalo 0` e `proxima = dia + 1` |
+
+### 13.6 `GET /api/regras`
+
+Lista de todas as regras, por `proxima` (sem agenda no fim). `status`: `vencida` se `proxima <= dia`; senão `fragil` se `erros > acertos`; senão `em_dia`. `dias` = `proxima − dia de estudo` (≤ 0 = vencida; `null` sem agenda).
