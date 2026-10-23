@@ -1,4 +1,70 @@
 #separator:tab
 #colunas: sentido (frente) | resposta a digitar | nota (aparece no verso) | tags
-# Deck de GRAMATICA (Japonês::Gramática): uma linha por regra ensinada, escrita
-# pelo tutor. O cartao pede para digitar a frase e o Anki mostra o diff.
+# Deck de GRAMATICA (23/10/2026): duas frases por regra do caderno (plano/regras.json), para o trajeto
+# treinar a REGRA e nao so a palavra. Resposta em kana, sem pontuacao, como no deck de escrita.
+ontem nao fui ao escritorio	きのうはじむしょにいきませんでした	palavra de passado pede ました/ませんでした: いきます → いきませんでした	gramatica masu-kei
+o que voce comeu ontem?	きのうなにをたべましたか	passado educado: radical + ました; なにを = o que	gramatica masu-kei
+tem um gato embaixo da mesa (つくえ)	つくえのしたにねこがいます	ser vivo → います; [referencia]の[posicao]に	gramatica aru-iru
+o livro esta em cima da cama	ほんはベッドのうえにあります	coisa → あります; onde algo esta: [coisa]は[lugar]に	gramatica aru-iru
+volto para casa as sete (帰る)	しちじにうちにかえります	destino → に; 帰る e do grupo う: かえります	gramatica iku-kuru-kaeru
+amanha um amigo vem a minha casa	あしたともだちがうちにきます	来る = vir para onde eu estou; destino → に, nunca を	gramatica iku-kuru-kaeru
+nao quer ir ao parque no fim de semana?	しゅうまつこうえんにいきませんか	convite: radical + ませんか (o outro decide)	gramatica masenka
+nao quer tomar um cafe comigo? (いっしょに)	いっしょにコーヒーをのみませんか	convite: のみます → のみませんか	gramatica masenka
+nao vejo muita televisao (あまり)	あまりテレビをみません	あまり pede verbo NEGATIVO	gramatica hindo
+as vezes vou ao parque	ときどきこうえんにいきます	advérbio de frequencia antes do verbo	gramatica hindo
+onde voce comeu?	どこでたべましたか	lugar da acao → で (a resposta usa a mesma: レストランで)	gramatica gimonshi
+com quem voce foi?	だれといきましたか	com quem → だれと (resposta: ともだちと)	gramatica gimonshi
+acordei, comi e fui trabalhar (forma て)	おきてたべてしごとにいきました	sequencia de acoes: forma て; o tempo vai no ultimo verbo	gramatica te-kei
+comprei um cafe e bebi (forma て)	コーヒーをかってのみました	う・つ・る → って (かって); o tempo vai no ultimo verbo	gramatica te-kei
+agora estou estudando japones	いまにほんごをべんきょうしています	acao em curso: forma て + います	gramatica te-iru
+moro em Ribeirao Preto	リベイラン・プレトにすんでいます	morar = すんでいる (む → んで)	gramatica te-iru
+espere um pouco, por favor	ちょっとまってください	pedido: forma て + ください; つ → って	gramatica te-kudasai
+nao tire fotos aqui, por favor	ここでしゃしんをとらないでください	pedido negativo: forma ない + でください	gramatica te-kudasai
+posso tirar uma foto?	しゃしんをとってもいいですか	permissao: forma て + もいいですか; 撮る → とって	gramatica te-mo-ii
+posso abrir a janela?	まどをあけてもいいですか	permissao: あける → あけて + もいいですか	gramatica te-mo-ii
+comprei tres macas (つ)	りんごをみっつかいました	[coisa]を[numero+contador][verbo]; 三つ = みっつ	gramatica josushi
+tem dois gatos no quarto	へやにねこがにひきいます	animal pequeno → 匹; 二匹 = にひき	gramatica josushi
+um dia quero ir ao Japao (いつか)	いつかにほんにいきたいです	radical + たい; いつか = algum dia	gramatica tai
+ontem eu nao queria trabalhar	きのうははたらきたくなかったです	たい e adjetivo い: たくない → たくなかった	gramatica tai
+gosto de tirar fotos	しゃしんをとるのがすきです	verbo (dicionario) + の + が好き	gramatica no-ga-suki
+nao gosto de cozinhar (料理をする)	りょうりをするのがすきじゃないです	好き e な: negativo すきじゃない	gramatica no-ga-suki
+ainda nao almocei	まだひるごはんをたべていません	まだ + ていません (nunca ませんでした)	gramatica mou-mada
+ja fiz a licao de casa (宿題)	もうしゅくだいをしました	もう + passado = ja; もう com う	gramatica mou-mada
+ontem fui ao parque (casual)	きのうこうえんにいった	行く → いった (excecao da linha く)	gramatica ta-kei
+bebi cafe (casual)	コーヒーをのんだ	む・ぶ・ぬ → んだ	gramatica ta-kei
+hoje nao vou (casual)	きょうはいかない	grupo う: く → か + ない	gramatica nai-kei
+nao comprei nada (casual)	なにもかわなかった	かう: う → わ + ない → なかった; なにも + negativo	gramatica nai-kei
+hoje e folga (casual)	きょうはやすみだ	substantivo + だ no casual	gramatica da-casual
+ontem estava frio (casual)	きのうはさむかった	adjetivo い sem だ; passado かった	gramatica da-casual
+acho que japones e interessante	にほんごはおもしろいとおもいます	forma casual + とおもいます; adjetivo い direto	gramatica to-omoimasu
+acho que ele nao vem	かれはこないとおもいます	来る → こない; forma casual antes do と	gramatica to-omoimasu
+como nao tenho tempo, vou de taxi	じかんがありませんからタクシーでいきます	motivo + から + resultado; transporte → で	gramatica kara
+estou com fome, entao quero comer alguma coisa	おなかがすきましたからなにかたべたいです	motivo + から; なにか = alguma coisa	gramatica kara
+japones e dificil, mas e interessante	にほんごはむずかしいですがおもしろいです	frase + が, frase = mas	gramatica ga-kedo
+quero ir, mas nao tenho tempo (casual)	いきたいけどじかんがない	けど = mas (falado)	gramatica ga-kedo
+depois de fazer a licao de casa, jogo videogame	しゅくだいをしてからゲームをします	forma て + から = depois de	gramatica te-kara-mae-ni
+antes de dormir, leio um livro	ねるまえにほんをよみます	forma de DICIONARIO + まえに = antes de	gramatica te-kara-mae-ni
+esfriou (ficou frio)	さむくなりました	adjetivo い: い → く + なる	gramatica naru
+quero virar engenheiro	エンジニアになりたいです	substantivo + に + なる	gramatica naru
+o Japao e menor que o Brasil	にほんはブラジルよりちいさいです	A は B より + adjetivo	gramatica hikaku
+qual e mais rapido, trem ou onibus?	でんしゃとバスとどちらがはやいですか	A と B と どちらが〜ですか → A のほうが	gramatica hikaku
+no fim de semana leio, jogo videogame, essas coisas	しゅうまつはほんをよんだりゲームをしたりします	forma た + り ... + り + する	gramatica tari
+ontem estudei, vi TV, essas coisas	きのうはべんきょうしたりテレビをみたりしました	o tempo vai no する final: しました	gramatica tari
+este restaurante e barato e gostoso	このレストランはやすくておいしいです	adjetivo い: い → くて	gramatica adj-te
+o quarto e bonito e silencioso (静か)	へやはきれいでしずかです	adjetivo な: + で	gramatica adj-te
+a prova nao foi dificil	テストはむずかしくなかったです	adjetivo い: くなかった	gramatica adj-familias
+o parque estava bonito	こうえんはきれいでした	きれい e な: でした (きれいかった nao existe)	gramatica adj-familias
+nao pode comer na sala de aula (教室)	きょうしつでたべてはいけません	proibicao: forma て + はいけません; lugar da regra → で	gramatica te-wa-ikemasen
+aqui nao pode falar ao telefone	ここででんわをしてはいけません	でんわをする = telefonar; する → して	gramatica te-wa-ikemasen
+nunca subi uma montanha (登る)	やまにのぼったことがありません	forma た + ことがありません; のぼる → のぼった	gramatica ta-koto-ga-aru
+voce ja foi a Toquio?	とうきょうにいったことがありますか	experiencia: forma た + ことがありますか	gramatica ta-koto-ga-aru
+eu estudo japones no quarto	わたしはへやでにほんごをべんきょうします	quem age は · lugar de FAZER で · objeto を	gramatica joshi-yakuwari
+o gato esta no quarto	ねこはへやにいます	quem existe は · lugar de ESTAR に	gramatica joshi-yakuwari
+fui ao parque tirar fotos	こうえんにしゃしんをとりにいきました	destino に · radical + に (objetivo)	gramatica ni-iku
+vou fazer compras	かいものにいきます	substantivo de acao + に + いく	gramatica ni-iku
+vamos estudar juntos!	いっしょにべんきょうしましょう	proposta: radical + ましょう	gramatica mashou
+quer que eu abra a janela?	まどをあけましょうか	oferta: radical + ましょうか (quer que EU…?)	gramatica mashou
+nao comi nada	なにもたべませんでした	なにも + verbo negativo	gramatica ka-mo
+tem alguem no escritorio?	じむしょにだれかいますか	だれか = alguem; pessoa → いる	gramatica ka-mo
+quero um computador novo	あたらしいパソコンがほしいです	COISA: が + ほしい	gramatica hoshii-tai
+agora nao quero nada	いまはなにもほしくないです	ほしい → ほしくない; なにも + negativo	gramatica hoshii-tai

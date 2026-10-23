@@ -294,3 +294,5 @@ Shin Kanzen Master N3 ou Quartet I.
 *Aquecimentos da semana: os 7 kanji em loop que sobram (結構, 関係, 程度, 呼ぶ, 終わる, しばらく, 実は), um ou dois por dia; 撮る (esquecido em 16 e 18/10); こと × とこ (trocado em 17 e 18/10); quem faz a ação → は, não に (私にベッドの上で, 18/10).*
 
 *Achado de 20/10, das questões oficiais do N5 (9 de 14: vocabulário 4/4, gramática e leitura 4/6, audição 1/4): a questão 6 pedia **oração relativa** (わたしが海でとった写真, "a foto que eu tirei no mar"), que ainda não foi ensinada. Entra na Semana 9. A audição foi a seção mais fraca, mas nos dois erros discutidos ele ouviu as palavras e errou a pergunta (課題理解 com virada "いいえ…"; お国はどちらですか → país, não あちら). O Diagnóstico #2 (07/11) cobra esses dois formatos.*
+
+*Ajuste 23/10 (o caderno de regras entrou): toda aula passa a ter explicação + 25 exercícios, com 5 de revisão das regras que vencem (DESIGN §13). Para manter gramática nova em todo dia útil, **だけ** passa para sexta 23/10 e o **Diário #6 em casual** vai para sábado 24/10, junto da conversa dirigida #5.*

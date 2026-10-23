@@ -1,0 +1,233 @@
+[
+ {
+  "slug": "masu-kei",
+  "titulo": "Forma ます e o radical",
+  "categoria": "conjugacao",
+  "ensinada_em": "2026-08-14",
+  "explicacao_md": "**Estrutura:** o verbo educado tem 4 formas, e todas saem do **radical** (o que sobra sem o ます):\n\n| | afirmativo | negativo |\n|---|---|---|\n| presente/futuro | 行きます (vou) | 行きません (não vou) |\n| passado | 行きました (fui) | 行きませんでした (não fui) |\n\n- Grupo う: o う final vira い → 書く → 書きます · 飲む → 飲みます · 帰る → 帰ります\n- Grupo る: tira o る → 食べる → 食べます · 見る → 見ます\n- Irregulares: する → します · 来る → 来ます（きます）\n\n**O radical alimenta outras formas:** 行き + たい · 食べ + に行く · 行き + ましょう · 飲み + ませんか.\n\n**Exemplos:**\n- 昨日、何を食べましたか。（きのう、なにを たべましたか）— \"O que você comeu ontem?\"\n- 昨日は事務所に行きませんでした。（きのうは じむしょに いきませんでした）— \"Ontem não fui ao escritório.\"\n\n**Não esqueça:** palavra de passado (昨日, 去年, 先週) pede ました/ませんでした. Em 22/10 saiu きのう…いきません."
+ },
+ {
+  "slug": "aru-iru",
+  "titulo": "あります × います: existir",
+  "categoria": "iru-aru",
+  "ensinada_em": "2026-08-31",
+  "explicacao_md": "**Estrutura:** [lugar]に [o que existe]が あります／います\n- **ある** → coisa (e planta): 本があります\n- **いる** → ser vivo que se move (gente, animal): 猫がいます\n- Para dizer ONDE algo está: [coisa]は [lugar]に あります\n\n**Posições:** [referência]の[posição]に: 上（うえ, em cima）· 下（した, embaixo）· 中（なか, dentro）· 前（まえ, na frente）· 後ろ（うしろ, atrás）· 隣（となり, ao lado）\n\n**Exemplos:**\n- 机の下に猫がいます。（つくえの したに ねこが います）— \"Tem um gato embaixo da mesa.\"\n- さいふはかばんの中にあります。（さいふは かばんの なかに あります）— \"A carteira está dentro da bolsa.\"\n\n**Não confunda:** ある e いる não têm objeto, então nunca levam を (かばんをあります ✗). Quem existe leva は/が; o lugar leva に."
+ },
+ {
+  "slug": "iku-kuru-kaeru",
+  "titulo": "行く・来る・帰る + destino",
+  "categoria": "particula:ni-de",
+  "ensinada_em": "2026-09-01",
+  "explicacao_md": "**Estrutura:** [destino]に（ou へ）行きます／来ます／帰ります\n- 行く（いく）ir · 来る（くる）vir, para onde quem fala está · 帰る（かえる）voltar para a base (casa, país)\n\n**Exemplos:**\n- 来年、日本に行きます。（らいねん、にほんに いきます）— \"Ano que vem vou ao Japão.\"\n- 明日、友だちがうちに来ます。（あした、ともだちが うちに きます）— \"Amanhã um amigo vem à minha casa.\"\n- 七時にうちに帰ります。（しちじに うちに かえります）— \"Volto para casa às sete.\"\n\n**Não confunda:** o destino nunca leva を (日本を行った ✗, 16/10). 帰る é do grupo う: 帰ります, 帰って, 帰った."
+ },
+ {
+  "slug": "masenka",
+  "titulo": "〜ませんか: convite",
+  "categoria": "gramatica:masenka",
+  "ensinada_em": "2026-09-02",
+  "explicacao_md": "**Estrutura:** radical do ます + **ませんか** = \"não quer…?\" (convite educado; o outro decide)\n\n**Exemplos:**\n- 週末、公園に行きませんか。（しゅうまつ、こうえんに いきませんか）— \"Não quer ir ao parque no fim de semana?\"\n- いっしょにコーヒーを飲みませんか。（いっしょに コーヒーを のみませんか）— \"Não quer tomar um café comigo?\"\n\n**Respostas:** aceitar → ええ、〜ましょう（ええ、行きましょう）· recusar com jeito → すみません、ちょっと…\n\n**Não confunda:** 〜ませんか (convite) × 〜ませんでしたか (pergunta sobre o passado: \"você não…?\")."
+ },
+ {
+  "slug": "hindo",
+  "titulo": "Frequência: よく・ときどき・あまり・ぜんぜん",
+  "categoria": "gramatica:frequencia",
+  "ensinada_em": "2026-09-02",
+  "explicacao_md": "**Estrutura:** o advérbio vem antes do verbo.\n- 毎日（まいにち）todo dia · よく com frequência · ときどき às vezes\n- **あまり + negativo** = não muito · **ぜんぜん + negativo** = nada, nunca\n\n**Exemplos:**\n- よくコーヒーを飲みます。（よく コーヒーを のみます）— \"Bebo café com frequência.\"\n- あまりテレビを見ません。（あまり テレビを みません）— \"Não vejo muita TV.\"\n- ぜんぜん分かりません。（ぜんぜん わかりません）— \"Não entendo nada.\"\n\n**Não confunda:** あまり e ぜんぜん pedem o verbo no NEGATIVO (あまり見ます ✗)."
+ },
+ {
+  "slug": "gimonshi",
+  "titulo": "Palavras de pergunta",
+  "categoria": "gramatica:interrogativas",
+  "ensinada_em": "2026-09-04",
+  "explicacao_md": "**As palavras:** 何（なに／なん）o quê · だれ quem · どこ onde · いつ quando · どう como · どれ qual (de 3 ou mais) · どちら qual (de 2), ou o どこ educado\n\n**A partícula da pergunta é a mesma da resposta:**\n- どこで食べましたか → レストランで食べました。（lugar da ação → で）\n- だれと行きましたか → 友だちと行きました。（com quem → と）\n\n**Exemplos:**\n- いつ日本に行きますか。（いつ にほんに いきますか）— \"Quando você vai ao Japão?\"\n- お国はどちらですか。（おくには どちらですか）— \"De que país você é?\" → アメリカです (não あちらです; questão 14 do N5)\n\n**Leitura:** 何 é なん antes de です, の e contadores (何ですか, 何時); nos outros casos, なに."
+ },
+ {
+  "slug": "te-kei",
+  "titulo": "Forma て (a tabela)",
+  "categoria": "forma-te",
+  "ensinada_em": "2026-09-07",
+  "explicacao_md": "**Grupo う: a troca depende do fim do verbo**\n\n| fim | vira | exemplos |\n|---|---|---|\n| う・つ・る | って | 買う→買って · 待つ→待って · 撮る→撮って |\n| む・ぶ・ぬ | んで | 飲む→飲んで · 遊ぶ→遊んで |\n| く | いて | 書く→書いて |\n| ぐ | いで | 泳ぐ→泳いで |\n| す | して | 話す→話して |\n| 行く | 行って | a exceção da linha く |\n\n**Grupo る:** tira o る + て → 食べる→食べて · 見る→見て\n**Irregulares:** する→して · 来る→来て（きて）\n\n**Como saber o grupo:** verbo em る com som a/u/o antes do る é sempre do grupo う (登る→登って, 撮る→撮って). Com i/e antes do る, quase sempre é do grupo る (食べる), com exceções que é preciso decorar: 帰る→帰って, 入る→入って.\n\n**Ligar ações em sequência:** 起きて、食べて、仕事に行きました。（おきて、たべて、しごとに いきました）— \"Acordei, comi e fui trabalhar.\"\n\n**Seus erros:** linhas trocadas (く ↔ う・つ・る, 17/10), あそっだ (18/10), のばだ (21/10)."
+ },
+ {
+  "slug": "ta-kei",
+  "titulo": "Forma た (passado casual)",
+  "categoria": "forma-ta",
+  "ensinada_em": "2026-09-20",
+  "explicacao_md": "**Estrutura:** é a forma て com た/だ no lugar de て/で, com a mesma tabela:\n- 行く→行った · 飲む→飲んだ · 書く→書いた · 話す→話した · 撮る→撮った · 食べる→食べた · する→した · 来る→来た（きた）\n\n**Exemplos:**\n- 昨日、公園に行った。（きのう、こうえんに いった）— \"Ontem fui ao parque.\"\n- コーヒーを飲んだ。（コーヒーを のんだ）— \"Bebi café.\"\n\n**Onde mais aparece:** 〜たことがあります (experiência), 〜たり〜たりする.\n\n**Não confunda:** nunca radical + た (いきた ✗ → 行った). O passado de たい é たかった (adjetivo い), não たいでした."
+ },
+ {
+  "slug": "te-iru",
+  "titulo": "〜ています: em curso e estado",
+  "categoria": "gramatica:te-iru",
+  "ensinada_em": "2026-09-08",
+  "explicacao_md": "**Estrutura:** forma て + います\n1. **Ação em curso:** 今、日本語を勉強しています。（いま、にほんごを べんきょうしています）— \"Estou estudando japonês agora.\"\n2. **Estado ou situação que dura:** リベイラン・プレトに住んでいます。（すんでいます）— \"Moro em Ribeirão Preto.\" · 姉は銀行で働いています。— \"Minha irmã trabalha num banco.\"\n\n**Não confunda:**\n- \"Moro\" é 住んでいます, não 住みます.\n- \"Sei\" é 知っています, mas \"não sei\" é **知りません** (não 知っていません).\n- \"Ainda não fiz\" é まだ〜ていません (ver もう／まだ)."
+ },
+ {
+  "slug": "te-kudasai",
+  "titulo": "〜てください: pedido",
+  "categoria": "gramatica:te-kudasai",
+  "ensinada_em": "2026-09-09",
+  "explicacao_md": "**Estrutura:** forma て + ください = \"por favor, faça…\"\n- Negativo: forma ない + **でください** = \"por favor, não faça…\"\n\n**Exemplos:**\n- ちょっと待ってください。（ちょっと まってください）— \"Espere um pouco, por favor.\"\n- 窓を開けてください。（まどを あけてください）— \"Abra a janela, por favor.\"\n- ここで写真を撮らないでください。（ここで しゃしんを とらないでください）— \"Não tire fotos aqui, por favor.\"\n\n**Não confunda:** 〜てください (peço que VOCÊ faça) × 〜てもいいですか (peço permissão para EU fazer)."
+ },
+ {
+  "slug": "te-mo-ii",
+  "titulo": "〜てもいいですか: permissão",
+  "categoria": "gramatica:te-mo-ii",
+  "ensinada_em": "2026-09-09",
+  "explicacao_md": "**Estrutura:** forma て + **もいいですか** = \"posso…?\"; afirmando: 〜てもいいです = \"pode…\"\n\n**Exemplos:**\n- 写真を撮ってもいいですか。（しゃしんを とっても いいですか）— \"Posso tirar uma foto?\"\n- 窓を開けてもいいですか。（まどを あけても いいですか）— \"Posso abrir a janela?\"\n\n**Respostas:** ええ、いいですよ (sim, pode) · すみません、ちょっと… (recusa suave) · いいえ、〜てはいけません (proibição, mais forte)\n\n**Não confunda:** 〜てもいい (pode) × 〜てはいけない (não pode). E o pedaço antes do も é a forma て, com a tabela: 撮る → 撮って."
+ },
+ {
+  "slug": "josushi",
+  "titulo": "Contadores: つ・枚・本・匹・人",
+  "categoria": "gramatica:contadores",
+  "ensinada_em": "2026-09-10",
+  "explicacao_md": "**Os contadores:**\n- **つ** coisas em geral (até 10): 一つ（ひとつ）· 二つ（ふたつ）· 三つ（みっつ）· 四つ（よっつ）· 五つ（いつつ）\n- **枚（まい）** coisas planas: papel, camisa, foto\n- **本（ほん）** coisas longas: caneta, garrafa · 一本（いっぽん）· 二本（にほん）· 三本（さんぼん）\n- **匹（ひき）** animais pequenos · 一匹（いっぴき）· 二匹（にひき）· 三匹（さんびき）\n- **人（にん）** pessoas · 一人（ひとり）· 二人（ふたり）· 三人（さんにん）\n\n**Posição:** [coisa]を／が + [número+contador] + verbo\n- りんごを三つ買いました。（りんごを みっつ かいました）— \"Comprei três maçãs.\"\n- 部屋に猫が二匹います。（へやに ねこが にひき います）— \"Tem dois gatos no quarto.\""
+ },
+ {
+  "slug": "tai",
+  "titulo": "〜たい: querer FAZER",
+  "categoria": "conjugacao",
+  "ensinada_em": "2026-09-14",
+  "explicacao_md": "**Estrutura:** radical do ます + **たいです**\n- 行きます → 行き + たい = 行きたいです（いきたいです）— \"Quero ir.\"\n- O objeto pode levar を ou が: 水を／水が飲みたいです.\n\n**Muda como adjetivo い:**\n- 行きたくないです (não quero) · 行きたかったです (queria) · 行きたくなかったです (não queria)\n\n**Exemplos:**\n- いつか日本で働きたいです。（いつか にほんで はたらきたいです）— \"Um dia quero trabalhar no Japão.\"\n- 昨日は働きたくなかったです。（きのうは はたらきたくなかったです）— \"Ontem eu não queria trabalhar.\"\n\n**Não confunda:** たい é para AÇÃO; para COISA, use ほしい. Fala do SEU desejo (ou pergunta o do outro).\n**Seus erros:** 働たい (18/10), 行ったい (19/10), 行きたいです com 去年 (22/10)."
+ },
+ {
+  "slug": "no-ga-suki",
+  "titulo": "〜のが好き: gostar de FAZER",
+  "categoria": "gramatica:no-ga-suki",
+  "ensinada_em": "2026-09-15",
+  "explicacao_md": "**Estrutura:** verbo (forma de dicionário) + **の** + が好きです\n- O の transforma a ação em substantivo, como embrulhar a função num valor, e aí ela pode receber o が好き.\n\n**Exemplos:**\n- 写真を撮るのが好きです。（しゃしんを とるのが すきです）— \"Gosto de tirar fotos.\"\n- 料理をするのが好きじゃないです。（りょうりを するのが すきじゃないです）— \"Não gosto de cozinhar.\"\n\n**Não confunda:** com substantivo, vai direto: ゲームが好きです. 好き é adjetivo な, então o negativo é 好きじゃない, e a coisa de que se gosta leva **が** (não を)."
+ },
+ {
+  "slug": "mou-mada",
+  "titulo": "もう × まだ",
+  "categoria": "gramatica:mou-mada",
+  "ensinada_em": "2026-09-16",
+  "explicacao_md": "**Estrutura:**\n- **もう + afirmativo (passado)** = já: もう昼ご飯を食べました。— \"Já almocei.\"\n- **まだ + 〜ていません** = ainda não: まだ食べていません。（まだ たべていません）— \"Ainda não comi.\"\n- Resposta curta para \"ainda não\": いいえ、まだです。\n- **もう + negativo** = não… mais: もう行きません。— \"Não vou mais.\"\n\n**Exemplo de diálogo:**\n- もう昼ご飯を食べましたか。（もう ひるごはんを たべましたか）— \"Você já almoçou?\" → いいえ、まだです。\n\n**Não confunda:** \"ainda não comi\" é まだ食べて**いません**, não まだ食べませんでした. **もう** se escreve com う (もお ✗, 16 e 17/10)."
+ },
+ {
+  "slug": "nai-kei",
+  "titulo": "Forma ない (negativo casual)",
+  "categoria": "gramatica:nai",
+  "ensinada_em": "2026-09-22",
+  "explicacao_md": "**Estrutura:**\n- Grupo う: o う final vira あ + ない → 行く→行かない · 飲む→飲まない · 撮る→撮らない · **買う→買わない** (う vira わ)\n- Grupo る: tira o る + ない → 食べる→食べない\n- Irregulares: する→しない · 来る→来ない（こない）· ある→**ない**\n\n**Passado:** ない → **なかった** → 行かなかった (não fui)\n\n**Exemplos:**\n- 今日は行かない。（きょうは いかない）— \"Hoje não vou.\"\n- 何も買わなかった。（なにも かわなかった）— \"Não comprei nada.\"\n\n**Onde mais aparece:** 〜ないでください (por favor, não…)."
+ },
+ {
+  "slug": "da-casual",
+  "titulo": "だ e a frase casual",
+  "categoria": "registro",
+  "ensinada_em": "2026-09-23",
+  "explicacao_md": "**Estrutura do casual:**\n- Substantivo e adjetivo な: です → **だ** · passado **だった** · negativo **じゃない** · negativo passado **じゃなかった**\n- Adjetivo い: **sem だ** · さむい · さむかった · さむくない · さむくなかった\n- Verbo: forma de dicionário, ない ou た, sem です\n\n**Exemplos:**\n- 今日は休みだ。（きょうは やすみだ）— \"Hoje é folga.\"\n- 昨日は寒かった。（きのうは さむかった）— \"Ontem estava frio.\"\n- この本はおもしろい。（この ほんは おもしろい）— \"Este livro é interessante.\"\n\n**Não confunda:** adjetivo い nunca leva だ (さむいだ ✗). O passado de い é かった, e o de な/substantivo é だった (o padrão かった × だった)."
+ },
+ {
+  "slug": "to-omoimasu",
+  "titulo": "〜と思います: acho que",
+  "categoria": "gramatica:to-omou",
+  "ensinada_em": "2026-09-24",
+  "explicacao_md": "**Estrutura:** frase na forma **casual** + と思います\n- Substantivo e な levam だ: 雨だと思います\n- Adjetivo い e verbo vão direto: おもしろいと思います · 来ないと思います\n\n**Exemplos:**\n- 日本語はおもしろいと思います。（にほんごは おもしろいと おもいます）— \"Acho que japonês é interessante.\"\n- 彼は来ないと思います。（かれは こないと おもいます）— \"Acho que ele não vem.\"\n- 明日は雨だと思います。（あしたは あめだと おもいます）— \"Acho que amanhã vai chover.\"\n\n**Não confunda:** antes do と nunca vem a forma ます (行きますと思います ✗ → 行くと思います)."
+ },
+ {
+  "slug": "kara",
+  "titulo": "から: porque",
+  "categoria": "gramatica:kara",
+  "ensinada_em": "2026-09-28",
+  "explicacao_md": "**Estrutura:** [motivo] + **から**、[resultado]. O motivo vem PRIMEIRO, o contrário do \"porque\" do português.\n\n**Exemplos:**\n- 時間がありませんから、タクシーで行きます。（じかんが ありませんから、タクシーで いきます）— \"Como não tenho tempo, vou de táxi.\"\n- おなかがすきましたから、何か食べたいです。（おなかが すきましたから、なにか たべたいです）— \"Estou com fome, então quero comer alguma coisa.\"\n\n**Não confunda:** から também é \"a partir de\" (九時から, das nove em diante). Pelo contexto se separa: depois de uma frase inteira, é \"porque\"."
+ },
+ {
+  "slug": "ga-kedo",
+  "titulo": "が／けど: mas",
+  "categoria": "gramatica:kedo",
+  "ensinada_em": "2026-09-28",
+  "explicacao_md": "**Estrutura:** [frase A] + **が**／**けど**、[frase B] = \"A, mas B\". が é mais formal ou escrito; けど, mais falado.\n\n**Exemplos:**\n- 日本語は難しいですが、おもしろいです。（にほんごは むずかしいですが、おもしろいです）— \"Japonês é difícil, mas interessante.\"\n- 行きたいけど、時間がない。（いきたいけど、じかんが ない）— \"Quero ir, mas não tenho tempo.\"\n\n**Não confunda:** esse が vem depois de uma frase inteira (com です ou verbo); o が de sujeito vem depois de substantivo. でも (mas) abre uma frase NOVA: 〜ません。でも、〜 (16/10)."
+ },
+ {
+  "slug": "te-kara-mae-ni",
+  "titulo": "〜てから × 〜前に",
+  "categoria": "gramatica:te-kara",
+  "ensinada_em": "2026-09-30",
+  "explicacao_md": "**Estrutura:**\n- **depois de:** forma て + から → 宿題をしてから、ゲームをします。（しゅくだいを してから、ゲームを します）— \"Depois de fazer a lição, jogo videogame.\"\n- **antes de:** forma de DICIONÁRIO + 前に → 寝る前に、本を読みます。（ねる まえに、ほんを よみます）— \"Antes de dormir, leio um livro.\"\n- Com substantivo: 〜の前に → 食事の前に (antes da refeição)\n\n**Não confunda:** 前に pede a forma de dicionário, nunca a た nem a ます (寝た前に ✗)."
+ },
+ {
+  "slug": "naru",
+  "titulo": "なる: tornar-se",
+  "categoria": "gramatica:naru",
+  "ensinada_em": "2026-10-01",
+  "explicacao_md": "**Estrutura:**\n- Adjetivo い: い → **く** + なる → 寒くなりました。（さむく なりました）— \"Esfriou.\"\n- Adjetivo な e substantivo: + **に** + なる → 上手になりたいです。· エンジニアになりたいです。\n\n**Exemplos:**\n- 日本語が上手になりたいです。（にほんごが じょうずに なりたいです）— \"Quero ficar bom em japonês.\"\n- 暑くなりました。（あつく なりました）— \"Esquentou.\"\n\n**Não confunda:** \"ficar bom em algo\" é algo em que você se transforma (なる), não uma coisa que você ganha: 上手な日本語がほしい ✗ → 日本語が上手になりたい (22/10)."
+ },
+ {
+  "slug": "hikaku",
+  "titulo": "Comparações: より・のほうが・いちばん",
+  "categoria": "gramatica:hikaku",
+  "ensinada_em": "2026-10-02",
+  "explicacao_md": "**Estrutura:**\n- **A は B より** + adjetivo = A é mais … que B\n- **A と B と どちらが** + adjetivo + ですか = qual é mais…? → **A のほうが** + adjetivo + です\n- [grupo]**の中で** X が **いちばん** + adjetivo = X é o mais … do grupo\n\n**Exemplos:**\n- 日本はブラジルより小さいです。（にほんは ブラジルより ちいさいです）— \"O Japão é menor que o Brasil.\"\n- 電車とバスとどちらが速いですか。— 電車のほうが速いです。（でんしゃの ほうが はやいです）\n- 日本の食べ物の中で、すしがいちばん好きです。— \"De comida japonesa, gosto mais de sushi.\"\n\n**Não confunda:** より marca quem PERDE a comparação; のほうが marca quem ganha."
+ },
+ {
+  "slug": "tari",
+  "titulo": "〜たり〜たりする: coisas como",
+  "categoria": "gramatica:tari",
+  "ensinada_em": "2026-10-05",
+  "explicacao_md": "**Estrutura:** forma た + り、forma た + り + **する** = \"faço coisas como A e B\" (exemplos, sem ordem e sem lista completa)\n\n**Exemplos:**\n- 週末は本を読んだり、ゲームをしたりします。（しゅうまつは ほんを よんだり、ゲームを したり します）— \"No fim de semana leio, jogo videogame, essas coisas.\"\n- 昨日は勉強したり、テレビを見たりしました。— \"Ontem estudei, vi TV, essas coisas.\"\n\n**Não confunda:** para uma SEQUÊNCIA na ordem, use a forma て (起きて、食べて、出かけました). O する no fim da たり é obrigatório, e é nele que vai o tempo (します／しました)."
+ },
+ {
+  "slug": "adj-te",
+  "titulo": "Ligar adjetivos: 〜くて／〜で",
+  "categoria": "adjetivo:familia",
+  "ensinada_em": "2026-10-09",
+  "explicacao_md": "**Estrutura (a família decide o conector):**\n- Adjetivo い: い → **くて** → 安くておいしい (barato e gostoso) · いい → **よくて**\n- Adjetivo な e substantivo: + **で** → きれいで静か (bonito e tranquilo)\n\n**Exemplos:**\n- このレストランは安くておいしいです。（やすくて おいしいです）— \"Este restaurante é barato e gostoso.\"\n- 部屋はきれいで静かです。（へやは きれいで しずかです）— \"O quarto é bonito e tranquilo.\"\n\n**Seus erros (09 e 13/10):** 難しいで → 難しくて · ながいで → 長くて · 退屈って → 退屈で."
+ },
+ {
+  "slug": "adj-familias",
+  "titulo": "As duas famílias de adjetivo",
+  "categoria": "adjetivo:familia",
+  "ensinada_em": "2026-09-10",
+  "explicacao_md": "**Adjetivo い (o tempo vai no próprio adjetivo):**\nさむい → さむくない (não) → さむかった (passado) → さむくなかった (não, no passado). Educado: + です. いい → よくない · よかった.\n\n**Adjetivo な e substantivo (o tempo vai no だ/です):**\nきれい → きれいじゃない → きれいだった → きれいじゃなかった. Educado: きれいです · きれいじゃありません · きれいでした · きれいじゃありませんでした.\n\n**Exemplos:**\n- テストは難しくなかったです。（むずかしくなかったです）— \"A prova não foi difícil.\"\n- 公園はきれいでした。（こうえんは きれいでした）— \"O parque estava bonito.\"\n\n**Não confunda:** さむいでした ✗ → さむかったです · きれいかった ✗ → きれいでした. きれい e 嫌い（きらい）terminam em い, mas são な. ほしい e 〜たい mudam como adjetivo い."
+ },
+ {
+  "slug": "te-wa-ikemasen",
+  "titulo": "〜てはいけません: proibição",
+  "categoria": "gramatica:proibicao",
+  "ensinada_em": "2026-10-14",
+  "explicacao_md": "**Estrutura:** forma て + **はいけません** = \"não pode / é proibido\"\n- É o par de 〜てもいいです (pode).\n- O lugar onde a regra vale leva で: ここで…\n\n**Exemplos:**\n- ここで写真を撮ってはいけません。（ここで しゃしんを とっては いけません）— \"Aqui não pode tirar fotos.\"\n- 教室で食べてはいけません。（きょうしつで たべては いけません）— \"Não pode comer na sala de aula.\"\n\n**Não confunda:** a resposta negativa a 〜てもいいですか pode ser 〜てはいけません (forte) ou すみません、ちょっと… (suave). Antes do は vem a forma て (撮る → 撮って)."
+ },
+ {
+  "slug": "ta-koto-ga-aru",
+  "titulo": "〜たことがあります: experiência",
+  "categoria": "gramatica:experiencia",
+  "ensinada_em": "2026-10-16",
+  "explicacao_md": "**Estrutura:** forma た + **ことがあります** = \"já fiz (alguma vez na vida)\"; com ありません = \"nunca fiz\"\n\n**Exemplos:**\n- すしを食べたことがあります。（すしを たべた ことが あります）— \"Já comi sushi.\"\n- 日本に行ったことがありません。（にほんに いった ことが ありません）— \"Nunca fui ao Japão.\"\n- 東京に行ったことがありますか。（とうきょうに いった ことが ありますか）— \"Você já foi a Tóquio?\"\n\n**Não confunda:**\n- Com um momento definido (ontem), use o passado simples: 昨日すしを食べました.\n- É forma た, não たい (食べたいこと ✗).\n- こと se escreve こ + と, não とこ (17 e 18/10)."
+ },
+ {
+  "slug": "joshi-yakuwari",
+  "titulo": "Partículas pelo papel",
+  "categoria": "particula:posicao",
+  "ensinada_em": "2026-10-17",
+  "explicacao_md": "**A regra:** a partícula é a etiqueta do substantivo ANTES dela. Pergunte qual é o papel dele na frase:\n- quem existe ou age → **は／が** (私は, 猫が)\n- o que sofre a ação → **を** (写真を撮る)\n- lugar onde se ESTÁ e destino de IR → **に** (部屋にいる, 日本に行く)\n- lugar onde se FAZ algo → **で** (部屋で勉強する)\n- substantivo + substantivo → **の** (部屋の掃除, 空の写真)\n\n**Exemplos:**\n- 私は部屋で日本語を勉強します。（わたしは へやで にほんごを べんきょうします）\n- 猫は部屋にいます。（ねこは へやに います）\n- 公園に写真を撮りに行きました。（こうえんに しゃしんを とりに いきました）\n\n**Seus erros:** 私にベッドの上で (quem age com に, 18/10) · 写真で撮る (o objeto com で, 17/19/21/10) · さいふにかばんの中に (17/10).\n**Nuance (23/10):** em 公園で写真を撮りに行く, o で pode estar ligado ao 撮る, e a frase também se ouve. Para destino com 行く, o padrão é に／へ."
+ },
+ {
+  "slug": "ni-iku",
+  "titulo": "〜に行く: ir FAZER algo",
+  "categoria": "gramatica:ni-iku",
+  "ensinada_em": "2026-10-19",
+  "explicacao_md": "**Estrutura:** radical do ます + **に** + 行く／来る／帰る\n- Com substantivo de ação, direto: 買い物に行きます (vou fazer compras)\n\n**Exemplos:**\n- 昼ご飯を食べに行きます。（ひるごはんを たべに いきます）— \"Vou almoçar (sair para comer).\"\n- 公園に写真を撮りに行きました。（こうえんに しゃしんを とりに いきました）— \"Fui ao parque tirar fotos.\"\n- 日本に働きに行きたいです。（にほんに はたらきに いきたいです）— \"Quero ir ao Japão trabalhar.\"\n\n**Não confunda:**\n- Antes do に vai o radical (撮るに ✗ → 撮りに).\n- Só serve para uma AÇÃO que alguém decide fazer (日本語ができに行く ✗, 19/10)."
+ },
+ {
+  "slug": "mashou",
+  "titulo": "〜ましょう／〜ましょうか",
+  "categoria": "gramatica:mashou",
+  "ensinada_em": "2026-10-20",
+  "explicacao_md": "**Estrutura:** radical do ます +\n- **ましょう** = \"vamos…!\" (proposta, ou aceite de convite): 行きましょう\n- **ましょうか** = \"quer que eu…?\" (oferta) ou \"vamos?\" (proposta, perguntando)\n\n**Exemplos:**\n- いっしょに勉強しましょう。（いっしょに べんきょうしましょう）— \"Vamos estudar juntos!\"\n- 荷物を持ちましょうか。（にもつを もちましょうか）— \"Quer que eu carregue a bagagem?\"\n- A: 一緒に帰りませんか。 B: ええ、帰りましょう。— convite com ませんか, aceite com ましょう\n\n**Não confunda:** precisa de alguém que FAZ (eu ou nós). 仕事が終わりましょうか ✗ (20/10): o trabalho não oferece nada."
+ },
+ {
+  "slug": "ka-mo",
+  "titulo": "何か × 何も: algum × nenhum",
+  "categoria": "gramatica:ka-mo",
+  "ensinada_em": "2026-10-21",
+  "explicacao_md": "**Estrutura:**\n- Interrogativa + **か** = algum: 何か (alguma coisa) · だれか (alguém) · どこか(に) (algum lugar)\n- Interrogativa + **も** + verbo NEGATIVO = nenhum: 何も (nada) · だれも (ninguém) · どこにも (lugar nenhum)\n- が e を somem; に e へ ficam (どこかに, どこにも)\n\n**Exemplos:**\n- 何か食べましたか。— いいえ、何も食べませんでした。（なにも たべませんでした）\n- 部屋にだれかいますか。— いいえ、だれもいません。\n- 週末はどこにも行きませんでした。（どこにも いきませんでした）\n\n**Não confunda:** 何か食べましたか (pergunta de sim ou não) × 何を食べましたか (o quê). も com verbo afirmativo ✗. どこも sem o に (21/10)."
+ },
+ {
+  "slug": "hoshii-tai",
+  "titulo": "ほしい × たい: querer coisa × querer fazer",
+  "categoria": "gramatica:hoshii",
+  "ensinada_em": "2026-10-22",
+  "explicacao_md": "**Estrutura:**\n- COISA: [substantivo]**が ほしいです** → 新しいパソコンがほしいです。\n- AÇÃO: radical do ます + **たいです** → 新しいパソコンを買いたいです。\n- Os dois mudam como adjetivo い: ほしくない · ほしかった · 〜たくない · 〜たかった\n\n**Exemplos:**\n- 車がほしいです。（くるまが ほしいです）— \"Quero um carro.\"\n- 今は何もほしくないです。（いまは なにも ほしくないです）— \"Agora não quero nada.\"\n- 去年、日本に行きたかったです。（きょねん、にほんに いきたかったです）— \"No ano passado eu queria ir ao Japão.\"\n\n**Não confunda:** 買いほしい ✗ → 買いたい · 時間がありたい ✗ → 時間がほしい · 上手な日本語がほしい → 日本語が上手になりたい (22/10)."
+ }
+]
