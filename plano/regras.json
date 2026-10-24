@@ -229,5 +229,12 @@
   "categoria": "gramatica:hoshii",
   "ensinada_em": "2026-10-22",
   "explicacao_md": "**Estrutura:**\n- COISA: [substantivo]**が ほしいです** → 新しいパソコンがほしいです。\n- AÇÃO: radical do ます + **たいです** → 新しいパソコンを買いたいです。\n- Os dois mudam como adjetivo い: ほしくない · ほしかった · 〜たくない · 〜たかった\n\n**Exemplos:**\n- 車がほしいです。（くるまが ほしいです）— \"Quero um carro.\"\n- 今は何もほしくないです。（いまは なにも ほしくないです）— \"Agora não quero nada.\"\n- 去年、日本に行きたかったです。（きょねん、にほんに いきたかったです）— \"No ano passado eu queria ir ao Japão.\"\n\n**Não confunda:** 買いほしい ✗ → 買いたい · 時間がありたい ✗ → 時間がほしい · 上手な日本語がほしい → 日本語が上手になりたい (22/10)."
+ },
+ {
+  "slug": "dake",
+  "titulo": "だけ: só, apenas",
+  "categoria": "gramatica:dake",
+  "ensinada_em": "2026-10-23",
+  "explicacao_md": "**Estrutura:** [substantivo ou quantidade] + **だけ** = só, apenas.\n- だけ vem **depois** do que ele limita, como uma partícula. Em português o \"só\" vem antes (\"só água\"); em japonês vem depois: **水だけ**.\n- Com を e が, a partícula **cai** ou vem **depois**: 水だけ飲みます · 水だけを飲みます. Antes do だけ, nunca: 水をだけ ✗.\n- **O verbo não muda.** \"Só bebo água\" continua afirmativo (飲みます), e o tempo continua o da frase: com 昨日, 飲みました.\n- Com quantidade: 一つだけ（só um）· 一人だけ（só uma pessoa）· 少しだけ（só um pouco）.\n\n**Exemplos:**\n- 朝はコーヒーだけ飲みます。（あさは コーヒーだけ のみます）— \"De manhã só tomo café.\"\n- 休みは日曜日だけです。（やすみは にちようびだけです）— \"A folga é só no domingo.\"\n- 昨日は漢字を少しだけ勉強しました。（きのうは かんじを すこしだけ べんきょうしました）— \"Ontem estudei kanji só um pouquinho.\"\n\n**Analogia:** だけ é um método encadeado à direita, `水.だけ()`: ele filtra o item que vem antes e o resto da frase (verbo, tempo) não percebe a diferença.\n\n**Não confunda:**\n- だけ水 ✗ → 水だけ (vem depois)\n- 水をだけ ✗ → 水だけ／水だけを (o を cai ou vai depois)\n- 日曜日だけ公園に行きます = \"vou ao parque só no domingo\" × 日曜日は公園にだけ行きます = \"no domingo vou só ao parque\": だけ limita o que vem logo antes dele."
  }
 ]
