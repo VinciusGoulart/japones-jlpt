@@ -416,7 +416,8 @@ export interface StatusAnki {
   botoes_30d_pct: { again: number; hard: number; good: number; easy: number }
   travam: { frente: string; lapses: number; baralho: string }[]
   em_loop: { frente: string; again_7d: number; baralho: string }[]
-  bandeira: { frente: string; baralho: string }[]
+  /** roxa primeiro; roxa = ele não assimila, laranja = trocadilho falta ou está ruim (25/10) */
+  bandeira: { frente: string; baralho: string; cor: string }[]
 }
 
 export interface GraficosAnki {

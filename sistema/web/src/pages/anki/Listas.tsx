@@ -45,7 +45,10 @@ export function Listas({ status }: { status: StatusAnki }) {
         />
       </Secao>
       <Secao titulo="Com bandeira" icone={<Flag />}>
-        <Lista itens={status.bandeira} vazio="Nenhum cartão com bandeira." />
+        <Lista
+          itens={status.bandeira.map((x) => ({ frente: x.frente, baralho: x.baralho, n: x.cor }))}
+          vazio="Nenhum cartão com bandeira."
+        />
       </Secao>
     </div>
   )

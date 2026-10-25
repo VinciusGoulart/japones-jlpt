@@ -123,7 +123,7 @@ Toda ferramenta devolve JSON. **Nenhuma fonte externa derruba uma ferramenta:** 
 | `aula(data)` | a(s) entrada(s) completa(s) do dia |
 | `erros(categoria, dias)` | erros recentes, cada um com `deslize` (bool, §9.6) + `por_categoria` (todos os erros) e `deslizes_por_categoria` (só as categorias com deslize) |
 | `padroes(status)` | padrões em vigília |
-| `anki()` | o status completo do Anki em dados |
+| `anki()` | o status completo do Anki em dados. `bandeira`: até 30 cartões `{frente, baralho, cor}`, roxa primeiro (no `hoje()`, a frente com a cor: `"程度 (roxa)"`). Combinado de 25/10: **roxa** = ele não assimila sentido e fala → lista para a análise na mesa; **laranja** = trocadilho do Kaishi falta ou está ruim → o tutor reescreve (pipeline em `~/Documentos/kaishi-pt`) e tira a bandeira |
 | `trello()` | o board em dados |
 | `dicionario(termo)` / `kanji(literal)` | verificação pelo banco do Kotoba |
 | `consultas_kotoba(data)` | o que ele procurou no Kotoba naquele dia de estudo, e `sem_cartao`: as palavras abertas que não estão em nenhuma nota do Anki (§12.4) |

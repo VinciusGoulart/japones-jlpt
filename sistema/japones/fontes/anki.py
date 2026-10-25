@@ -50,6 +50,12 @@ def _frente(flds: str) -> str:
     return flds.split("\x1f")[0][:60]
 
 
+#: cor da bandeira (cards.flags & 7). Desde 25/10 duas têm combinado com ele: ROXA = "não consigo
+#: assimilar o sentido e a fala" (vai para a análise na mesa) e LARANJA = "o trocadilho falta ou está
+#: ruim" (o tutor reescreve e tira a bandeira).
+CORES = {1: "vermelha", 2: "laranja", 3: "verde", 4: "azul", 5: "rosa", 6: "turquesa", 7: "roxa"}
+
+
 def status() -> dict:
     with colecao() as (con, tool, fonte):
         (crt,) = con.execute("SELECT crt FROM col").fetchone()
@@ -92,10 +98,10 @@ def status() -> dict:
                     WHERE r.id >= ? AND r.ease = 1
                     GROUP BY r.cid HAVING agains >= 3 ORDER BY agains DESC LIMIT 15""",
                     (tool.inicio_do_dia_ms(6),))]
-        bandeira = [{"frente": _frente(f), "baralho": decks.get(did, "")}
-                    for f, did in con.execute("""
-                        SELECT n.flds, c.did FROM cards c JOIN notes n ON n.id = c.nid
-                        WHERE c.flags & 7 != 0 ORDER BY c.mod DESC LIMIT 20""")]
+        bandeira = [{"frente": _frente(f), "baralho": decks.get(did, ""), "cor": CORES[fl & 7]}
+                    for f, did, fl in con.execute("""
+                        SELECT n.flds, c.did, c.flags FROM cards c JOIN notes n ON n.id = c.nid
+                        WHERE c.flags & 7 != 0 ORDER BY (c.flags & 7) = 7 DESC, c.mod DESC LIMIT 30""")]
 
     retencao = round(ok / tot * 100, 1) if tot else None
     return {

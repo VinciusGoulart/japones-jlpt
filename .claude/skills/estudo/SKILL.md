@@ -205,7 +205,10 @@ Esta seção registra o que mudou desde que a skill foi escrita. **Quando confli
 **Passo 1**
 - Perguntar o **áudio (Teppei)** e **marcar o checklist de áudio no Trello a partir da resposta**. Ele ouve todo dia e esquece de marcar.
 - Ele costuma **abrir a sessão em japonês**: responder com o diff da frase dele (certo / errado e por quê / corrigido).
-- **Kanji travados:** se ele trouxer kanji do Kaishi (3 a 5), decompor por componentes (radical + história) antes do conteúdo novo. É o método que ele pediu em 20/09.
+- **Kanji travados:** se ele trouxer kanji do Kaishi (3 a 5), decompor por componentes (radical + história) antes do conteúdo novo. É o método que ele pediu em 20/09. Desde 24/10 todo kanji do Kaishi já tem ficha de montagem no verso: o conserto vai na ficha (pipeline em `~/Documentos/kaishi-pt`), não numa explicação solta.
+- **Bandeiras do Anki (combinado de 25/10):** `hoje().bandeira` traz a cor ao lado da frente ("程度 (roxa)").
+  - **Roxa = "não consigo assimilar o sentido e a fala".** Ele quer uma lista para entender o *porquê*. No aquecimento, 2 ou 3 por aula (nunca no lugar do novo): para cada uma, pergunte primeiro o que falha — (a) o sentido, (b) a leitura, (c) confunde com outra palavra (qual?), (d) não reconhece o kanji — e só então conserte conforme a causa: (a) cena/trocadilho novo; (b) gancho de som; (c) exercício de contraste do par; (d) ficha de kanji. Registre a causa com `registrar_erros` e tire a bandeira (AnkiConnect `setFlags`, flag 0) só quando o cartão firmar.
+  - **Laranja = trocadilho falta ou está ruim.** Não é assunto da aula: o tutor reescreve fora dela (`work/troc_fix.json` → `gen_ficha.py` → `apply_ficha.py` no kaishi-pt), tira a bandeira laranja e diz quantos foram trocados. Se ainda estiver ruim, ele marca de novo.
 
 **Passo 3**
 - **Produção dirigida:** além das frases livres, perguntas que forçam a partícula ou estrutura que a rotina dele não usa (で, が, contadores).

@@ -90,7 +90,7 @@ def _resumo_anki() -> dict:
         "fila_atrasados": a["fila_atrasados"], "alerta_fila": a["alerta_fila"],
         "retencao_30d": a["retencao_30d"], "alerta_retencao": a["alerta_retencao"],
         "em_loop": [f"{x['frente']} ({x['again_7d']}x)" for x in a["em_loop"][:10]],
-        "bandeira": [x["frente"] for x in a["bandeira"]],
+        "bandeira": [f"{x['frente']} ({x['cor']})" for x in a["bandeira"]],
     }
 
 
