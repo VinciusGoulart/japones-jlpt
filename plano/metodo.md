@@ -92,6 +92,16 @@ O número definitivo se descobre medindo: rodar 10/dia por duas semanas e olhar 
 
 ⚠️ **Nunca limite o máximo de revisões/dia** (deixe 9999). Limitar não reduz trabalho, **adia**: o cartão que não apareceu hoje volta amanhã somado aos de amanhã, e a fila vira bola de neve enquanto o app mostra um número confortável.
 
+### O verso do Kaishi: a ficha de montagem dos kanji (desde 24/10/2026)
+
+Em 24/10 ele passou 45 minutos no Kaishi travando em kanji: *"não consigo entender o 'desenho' do kanji, independente da frase ou imagem do final"*. A medição confirmou: 20 dos 90 cartões do dia comeram 53% do tempo, quase todos em loop de Again (程度 apareceu 9 vezes). O problema não era a demora em cada cartão, mas tentar entender o desenho no meio da revisão, sem nada no cartão que mostrasse as peças.
+
+Por isso o campo "Kanji" do Kaishi traz, para cada um dos 836 kanji do deck, uma ficha na ordem que ele pediu: **① peças** (onde fica cada uma, qual dá o sentido e qual dá o som, e em que outros kanji já vistos ela aparece) → **② história** que passa por todas as peças, com o desenho ao lado de cada nome → **③ significado** → **④ som**. Peças, posições e leituras vêm do KanjiVG e do KANJIDIC (via Kotoba); só a história é inventada, e o cartão avisa isso. A peça que "dá o som" só aparece quando a leitura bate de verdade, o que vale para 28% dos kanji do deck: nos outros, a ficha diz que o desenho não dá o som.
+
+**A regra que vem junto: revisão é para lembrar, não para entender.** Kanji que não vem em ~10 segundos: virar o cartão, ler a ficha uma vez, marcar Again e seguir. Entender é trabalho da primeira vez que o cartão aparece, e da ficha, não de olhar o desenho no ônibus.
+
+O código fica fora deste repositório, em `~/Documentos/kaishi-pt/tools` (`prep_ficha.py` → textos → `check_ficha.py` → `gen_ficha.py` → `apply_ficha.py`, com backup do campo anterior em `backup/`).
+
 **Formato importa:** o AnkiDroid importa **`.apkg`**, não aceita TSV. Os TSV em `anki/` servem só para o Anki de computador; o que vai para o celular são os `.apkg`.
 
 **Já pronto para importar:** `anki/kana-fase0-completo.apkg` — 150 notas, 300 cartões (cada nota gera dois: reconhecer kana→leitura e produzir leitura→kana), cobrindo hiragana, katakana, dakuten e yōon, com tags por linha (`hira-a`, `hira-ka`, …).
