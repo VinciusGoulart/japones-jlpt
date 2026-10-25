@@ -100,6 +100,10 @@ Por isso o campo "Kanji" do Kaishi traz, para cada um dos 836 kanji do deck, uma
 
 **A regra que vem junto: revisão é para lembrar, não para entender.** Kanji que não vem em ~10 segundos: virar o cartão, ler a ficha uma vez, marcar Again e seguir. Entender é trabalho da primeira vez que o cartão aparece, e da ficha, não de olhar o desenho no ônibus.
 
+**Som da palavra (desde 25/10/2026).** No topo do mesmo bloco, 1.019 cartões ganharam um trocadilho com o som da palavra inteira, que leva ao sentido: `Entrou na fonte termal sem pagar nada? TÁ DAdo: é **de graça** (ただ).` É o único gancho das palavras só em kana, que não têm ficha de kanji. As MAIÚSCULAS seguem o som do português do Brasil (R inicial soa H, E/O finais soam I/U), e cada frase termina com a leitura certa entre parênteses, que é a referência. Cerca de 30% das palavras ficaram sem trocadilho: frase forçada atrapalha mais do que ajuda.
+
+**Palavra repetida no Kaishi** (ただ, 人, 聞く, 高い…): são 24 pares com a mesma escrita e sentidos diferentes, e a frase da frente diz qual dos dois o cartão pede. Deu o outro sentido = Again. Já a palavra repetida entre decks não deve existir: as 125 do Japonês::Vocabulário que também estão no Kaishi foram suspensas em 25/10, e palavra que já está no Kaishi não entra mais no `vocabulario.tsv`.
+
 O código fica fora deste repositório, em `~/Documentos/kaishi-pt/tools` (`prep_ficha.py` → textos → `check_ficha.py` → `gen_ficha.py` → `apply_ficha.py`, com backup do campo anterior em `backup/`).
 
 **Formato importa:** o AnkiDroid importa **`.apkg`**, não aceita TSV. Os TSV em `anki/` servem só para o Anki de computador; o que vai para o celular são os `.apkg`.

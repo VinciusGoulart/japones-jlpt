@@ -107,6 +107,7 @@ Erros de partícula e de leitura de kanji são os que mais importam. Não deixe 
    日本語	にほんご — língua japonesa<br>例: 日本語を勉強します。	fase0 vocab
    ```
    Só entram palavras que apareceram na sessão de hoje. Diga a ele quantas foram e lembre de importar no Anki.
+   **Palavra que já está no Kaishi não entra** (o Kaishi já a cobre, com ficha de kanji e trocadilho). Em 25/10 ele achou a mesma palavra em dois decks, e 125 cartões repetidos do Japonês::Vocabulário foram suspensos a pedido dele. Para conferir: AnkiConnect `findNotes` com `"deck:Kaishi 1.5k" "Word:<palavra>"`.
 
 2. **Atualize `progresso/estado.json`:**
    - `dia_do_plano` +1 · `sessoes_completas` ou `sessoes_parciais` +1
