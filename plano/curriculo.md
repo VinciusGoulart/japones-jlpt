@@ -303,3 +303,23 @@ Shin Kanzen Master N3 ou Quartet I.
 |---|---|---|
 | 75 | sex 23/10 | **だけ** (só, apenas) · feito: misturado 10 de 11 |
 | 76 | sáb 24/10 | **Diário #6**, em casual (adiado desde 10/10), que faz o papel da conversa dirigida #5 · escuta semanal no formato da prova (課題理解 e 即時応答) |
+
+*Fechamento 25/10: o sábado 24 ficou sem mesa, e a aula de domingo (dia 76) começou às 01:02 de segunda, então foi só revisão (regra da madrugada): 13 regras do caderno, 10 certas no automático e 2 erradas na correção (上手になりたい pela 3ª vez; ぜんぜん com verbo afirmativo). A produção livre foi pulada pela 2ª aula seguida. A linha do す na tabela saiu certa pela 1ª vez (話した, 渡してください). Mesa em 6 de 7 dias. Início das aulas na semana: 22:28, 00:18, 22:24, 01:18, 02:19 e 01:02, ou seja, 2 de 6 antes das 23h. Diário #6 e 中・外・右・左 passam para a Semana 9.*
+
+## Fase 1 — Semana 9 (dias 77–83, 26/10 a 01/11): descrever coisas com frases, pedir que não, de… até…
+
+*Detalhada em 25/10. Entra a **oração relativa**, que o N5 oficial cobrou (Q6, 20/10) e ainda não tinha sido ensinada, e quatro pontos de N5 que se apoiam no que ele já tem: a forma ない vira o pedido negativo, o から ganha o sentido de "desde/a partir de" (contraste com o から de "porque"), a posição completa a família の中に/の上に que ele já usa, e o 〜た後で fecha o trio de sequência com 〜てから e 〜前に. O Diário #6, adiado desde 10/10, vai para sábado, que não é véspera de trabalho. **Domingo 01/11 é a primeira sessão do mês:** card "Ação do mês" do Projeto Japão e a prova do Diagnóstico #2 (sáb 07/11) escrita e gravada.*
+
+| Dia | Data | Conteúdo |
+|---|---|---|
+| 77 | seg 26/10 | **Oração relativa**: frase casual colada antes do substantivo (私が撮った写真 = "a foto que eu tirei"). Conserta a Q6 do N5 oficial |
+| 78 | ter 27/10 | **〜ないでください** (pedido negativo: 写真を撮らないでください), em contraste com 〜てください e 〜てはいけません |
+| 79 | qua 28/10 | **から〜まで** (de… até…: 九時から五時まで), em contraste com o から de "porque" (frase + から) |
+| 80 | qui 29/10 | **Posição: 中・外・右・左・となり・近く** (X の Y に／で), com os kanji 中・外・右・左 (adiados desde 11/10) |
+| 81 | sex 30/10 | **〜た後で** (depois de: 食べた後で), fechando o trio 〜てから × 〜前に × 〜た後で · *card do Kaishi: reavaliar os novos pela retenção* |
+| 82 | sáb 31/10 | **Diário #6**, em casual (adiado desde 10/10), corrigido frase a frase com o linter · escuta semanal no formato da prova (課題理解 e 即時応答) |
+| 83 | dom 01/11 | Revisão das regras vencidas + 2 ou 3 cartões de bandeira roxa · **primeira sessão do mês**: card "Ação do mês" e prova do Diagnóstico #2 · planejamento da Semana 10 |
+
+*Aquecimentos da semana: a frase 来年の初めに、日本語が上手になりたいです (3 erros: 22, 23 e 25/10; a lacuna é o なる, não o たい); o contador depois do substantivo (padrão 10: 二匹犬が, 三枚写真を); ぜんぜん/あまり com o verbo no negativo; um verbo novo em ぶ/む na tabela て/た; vogal longa na segunda, quarta e sexta.*
+
+*Se a aula começar depois da 1h em véspera de trabalho, ela vira revisão e o ponto novo desliza um dia. O sábado e o domingo seguram o que sobrar.*
